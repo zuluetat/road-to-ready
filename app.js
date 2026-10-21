@@ -46,7 +46,7 @@ const SYNC_NOTE = {
   unavailable: 'Progress sync is unavailable right now. It\'s saved on this device and will try again.',
 };
 let cleanup = () => {};
-let siteTitle = 'Study';
+let siteTitle = document.title || 'Study'; // the page's own name until the index says otherwise
 let studying = null; // deck id of the session on screen, or exam:<bankId> during a practice exam
 // During a study session the top bar steps aside, so the round has the whole screen.
 function setStudying(v) {

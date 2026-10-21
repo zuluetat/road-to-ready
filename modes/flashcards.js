@@ -3,7 +3,7 @@
 
 import { h, mount } from '../core/dom.js';
 import { shuffle } from '../core/progress.js';
-import { topBar, endScreen, keys, inPractice, FILLER_NOTE } from './common.js';
+import { topBar, endScreen, keys, inPractice, reportLink, FILLER_NOTE } from './common.js';
 
 export const id = 'flashcards';
 export const title = 'Flashcards';
@@ -42,6 +42,7 @@ export function start(deck, ctx) {
       step.filler ? h('p', { class: 'note' }, FILLER_NOTE) : null,
       card,
       flipped ? inPractice(step.card) : null, // the answer side only: the example often names the term
+      flipped ? reportLink({ deck: ctx.deck.title, card: step.card }) : null,
       h('div', { class: 'answer-row' },
         h('button', { class: 'miss', type: 'button', onclick: () => answer(false) }, "Didn't know"),
         h('button', { class: 'got', type: 'button', onclick: () => answer(true) }, 'Knew it')),

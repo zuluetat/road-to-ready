@@ -487,3 +487,6 @@ body.in-session .topbar { display: none; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .flag.on { background: #3a2c17; } }
 :root[data-theme="dark"] .flag.on { background: #3a2c17; }
 .actions[hidden] { display: none; }
+
+/* "Report a problem" on the public copy: quiet, under the answer */
+.report-link { margin: 0.25rem 0 0; text-align: right; }

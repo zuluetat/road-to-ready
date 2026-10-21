@@ -8,7 +8,7 @@ import { h, mount } from '../core/dom.js';
 import { questionFor } from '../adapters/questions.js';
 import { shuffleOptions, isCorrect } from '../core/exam.js';
 import { learnStatus, LEARNED } from '../core/learn.js';
-import { topBar, endScreen, keys, optionList, checkButton, inPractice } from './common.js';
+import { topBar, endScreen, keys, optionList, checkButton, inPractice, reportLink } from './common.js';
 import { togglePick, ready } from '../core/choice.js';
 import { linkText, hiddenFor } from '../core/vocab.js';
 
@@ -145,6 +145,7 @@ export function start(deck, ctx) {
       // the explanation in its own labeled box, so it doesn't read as a note on the last option
       answered !== null && q.explanation ? h('section', { class: 'panel explain' }, h('p', {}, h('strong', {}, 'Why: '), q.explanation)) : null,
       answered !== null ? inPractice(step.card) : null,
+      answered !== null ? reportLink({ deck: ctx.deck.title, card: step.card, question: q.kind === 'scenario' ? q : null }) : null,
       answered !== null ? feedback() : null,
       h('p', { class: 'hint keys' }, answered !== null ? 'Enter goes on.'
         : `Keys 1 to ${q.options.length} select; Enter checks.`));
@@ -160,6 +161,7 @@ export function start(deck, ctx) {
       card,
       lookupPill(),
       answered !== null ? inPractice(step.card) : null,
+      answered !== null ? reportLink({ deck: ctx.deck.title, card: step.card }) : null,
       answered !== null ? feedback() : h('div', { class: 'answer-row' },
         h('button', { class: 'miss', type: 'button', onclick: () => record(false) }, "Didn't know"),
         h('button', { class: 'got', type: 'button', onclick: () => record(true) }, 'Knew it')),

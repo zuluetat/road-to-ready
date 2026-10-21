@@ -3,6 +3,17 @@
 import { h, mount } from '../core/dom.js';
 import { retakeIds } from '../core/progress.js';
 import { optionMarks } from '../core/choice.js';
+import { isLocalCopy } from '../core/account.js';
+import { reportUrl } from '../core/report.js';
+
+// "Report a problem with this card": the public copy only (the owner fixes his own site directly).
+// what: { deck, card?, question? } as core/report.js takes it.
+export function reportLink(what) {
+  if (!isLocalCopy(globalThis.document)) return null;
+  return h('p', { class: 'report-link muted small' },
+    h('a', { href: reportUrl(what), target: '_blank', rel: 'noopener noreferrer' },
+      what.question ? 'Report a problem with this question' : 'Report a problem with this card'));
+}
 
 export function topBar(ctx, title, status) {
   return h('header', { class: 'study-bar' },

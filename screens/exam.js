@@ -6,7 +6,7 @@
 
 import { h, mount } from '../core/dom.js';
 import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf } from '../core/exam.js';
-import { keys, celebration, optionList, checkButton } from '../modes/common.js';
+import { keys, celebration, optionList, checkButton, reportLink } from '../modes/common.js';
 import { togglePick, ready } from '../core/choice.js';
 
 const LENGTHS = [15, 30];
@@ -98,6 +98,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
           h('p', {}, h('strong', {}, right ? 'Correct. ' : 'Not quite. '), q.explanation),
           h('p', { class: 'cards-line muted' }),
           h('p', { class: 'muted small' }, 'Generated practice question, checked against ', h('a', { href: q.checkedAgainst, target: '_blank', rel: 'noopener noreferrer' }, 'this AWS page'), '.'),
+          reportLink({ deck: bank.title, question: { id: q.id, bankId: bank.id } }),
           h('div', { class: 'actions' }, h('button', { class: 'primary', type: 'button', onclick: next }, at + 1 < ids.length ? 'Next question' : 'See my score'))) : null,
         h('p', { class: 'hint keys' }, answered ? 'Enter goes on.' : `Keys 1 to ${q.options.length} select; Enter checks.`));
       if (answered) {

@@ -5,7 +5,7 @@
   <meta name="study-mode" content="local">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
   <title>Road to Ready</title>
   <meta name="apple-mobile-web-app-title" content="Road to Ready">
@@ -15,6 +15,7 @@
   <link rel="icon" type="image/png" href="apple-touch-icon.png">
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="app.js"></script>
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "2c5bbc044bcb4564ad92fddf6d75151b"}'></script>
 </head>
 <body>
   <header id="topbar" class="topbar wrap"></header>

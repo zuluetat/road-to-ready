@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-ai-services",
+  "title": "AWS AI and ML Services",
+  "description": "Managed AWS services for foundation models, ML, and AI application services.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "amazon-bedrock",
+      "term": "Amazon Bedrock",
+      "definition": "Fully managed service providing access to foundation models from multiple providers through one API",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "bedrock-knowledge-bases",
+      "term": "Bedrock Knowledge Bases",
+      "definition": "Managed RAG capability that connects foundation models to your data sources",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "bedrock-agents",
+      "term": "Bedrock Agents",
+      "definition": "Managed capability for building agents that call APIs and use knowledge bases to complete tasks",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "bedrock-guardrails",
+      "term": "Bedrock Guardrails",
+      "definition": "Configurable safeguards that filter harmful content, block topics, and redact sensitive information",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "bedrock-model-evaluation",
+      "term": "Bedrock model evaluation",
+      "definition": "Tooling to compare and assess foundation model outputs using automatic or human evaluation",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "provisioned-throughput-bedrock",
+      "term": "Provisioned Throughput (Bedrock)",
+      "definition": "Reserved model capacity for consistent performance at a fixed hourly rate",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-sagemaker",
+      "term": "Amazon SageMaker",
+      "definition": "Fully managed service to build, train, tune, and deploy ML models",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-jumpstart",
+      "term": "SageMaker JumpStart",
+      "definition": "Hub of pretrained models and solution templates within SageMaker",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-canvas",
+      "term": "SageMaker Canvas",
+      "definition": "No-code visual interface for building ML models and generating predictions",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-ground-truth",
+      "term": "SageMaker Ground Truth",
+      "definition": "Data labeling service combining human labelers and automated labeling",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-clarify",
+      "term": "SageMaker Clarify",
+      "definition": "Tool to detect bias in data and models and explain predictions",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "Before launching a model that ranks job applicants, a staffing firm runs SageMaker Clarify on its training data and finds applicants over 50 are badly underrepresented. After rebalancing and retraining, the post-training bias metrics look acceptable, and Clarify's feature attributions show the model relies mostly on skills and experience, not graduation year. The firm hands the report to its compliance team.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-configure-processing-jobs.html"
+      }
+    },
+    {
+      "id": "sagemaker-model-monitor",
+      "term": "SageMaker Model Monitor",
+      "definition": "Monitors deployed models for data quality and drift",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A food-delivery company predicts delivery times from a live SageMaker endpoint. SageMaker Model Monitor compares the captured requests with a baseline built from the training data. When a new partner app starts sending distances in kilometers instead of miles, the data quality check reports violations, a CloudWatch alert fires, and the team fixes the feed before customers see wildly wrong arrival times.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html"
+      }
+    },
+    {
+      "id": "sagemaker-feature-store",
+      "term": "SageMaker Feature Store",
+      "definition": "Central repository for storing and sharing ML features",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-data-wrangler",
+      "term": "SageMaker Data Wrangler",
+      "definition": "Tool for preparing and transforming data for ML",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-pipelines",
+      "term": "SageMaker Pipelines",
+      "definition": "Service for automating ML workflows from data prep through deployment",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-q-business",
+      "term": "Amazon Q Business",
+      "definition": "Generative AI assistant that answers questions over your enterprise data",
+      "hint": null,
+      "tags": [
+        "group:assistants-search",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-q-developer",
+      "term": "Amazon Q Developer",
+      "definition": "Generative AI assistant that helps with coding, debugging, and AWS tasks",
+      "hint": null,
+      "tags": [
+        "group:assistants-search",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-comprehend",
+      "term": "Amazon Comprehend",
+      "definition": "NLP service for sentiment analysis, entity recognition, and topic modeling",
+      "hint": null,
+      "tags": [
+        "group:language-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-rekognition",
+      "term": "Amazon Rekognition",
+      "definition": "Service for image and video analysis, such as object and face detection",
+      "hint": null,
+      "tags": [
+        "group:vision-documents",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-textract",
+      "term": "Amazon Textract",
+      "definition": "Service that extracts text, forms, and tables from scanned documents",
+      "hint": null,
+      "tags": [
+        "group:vision-documents",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-transcribe",
+      "term": "Amazon Transcribe",
+      "definition": "Speech-to-text service",
+      "hint": null,
+      "tags": [
+        "group:language-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-polly",
+      "term": "Amazon Polly",
+      "definition": "Text-to-speech service",
+      "hint": null,
+      "tags": [
+        "group:language-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-translate",
+      "term": "Amazon Translate",
+      "definition": "Neural machine translation service",
+      "hint": null,
+      "tags": [
+        "group:language-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-lex",
+      "term": "Amazon Lex",
+      "definition": "Service for building conversational chatbots with voice and text",
+      "hint": null,
+      "tags": [
+        "group:language-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-kendra",
+      "term": "Amazon Kendra",
+      "definition": "Intelligent enterprise search service using natural language queries",
+      "hint": null,
+      "tags": [
+        "group:assistants-search",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-personalize",
+      "term": "Amazon Personalize",
+      "definition": "Service for building real-time recommendation systems",
+      "hint": null,
+      "tags": [
+        "group:prediction-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-forecast",
+      "term": "Amazon Forecast",
+      "definition": "Service for time-series forecasting",
+      "hint": null,
+      "tags": [
+        "group:prediction-services",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-a2i-augmented-ai",
+      "term": "Amazon A2I (Augmented AI)",
+      "definition": "Adds human review workflows to ML predictions when confidence is low",
+      "hint": null,
+      "tags": [
+        "group:oversight",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A city permit office uses Amazon Textract to read fields from scanned, often handwritten, building-permit applications. With Amazon A2I, any form where Textract has low confidence in a key field goes to a permit clerk, who checks the original and corrects the value. High-confidence forms go straight through, so staff spend their time only on the hard cases.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/a2i-use-augmented-ai-a2i-human-review-loops.html"
+      }
+    },
+    {
+      "id": "aws-trainium",
+      "term": "AWS Trainium",
+      "definition": "AWS custom chip optimized for training ML models",
+      "hint": null,
+      "tags": [
+        "group:chips",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-inferentia",
+      "term": "AWS Inferentia",
+      "definition": "AWS custom chip optimized for running (inferring) ML models cost-effectively",
+      "hint": null,
+      "tags": [
+        "group:chips",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "siteTitle": "Road to Ready",
+  "decks": [
+    {
+      "id": "aws-ai-fundamentals",
+      "title": "AI and ML Fundamentals",
+      "file": "decks/aws-ai-fundamentals.json",
+      "cardCount": 34
+    },
+    {
+      "id": "aws-genai-foundation-models",
+      "title": "Generative AI and Foundation Models",
+      "file": "decks/aws-genai-foundation-models.json",
+      "cardCount": 38
+    },
+    {
+      "id": "aws-ai-services",
+      "title": "AWS AI and ML Services",
+      "file": "decks/aws-ai-services.json",
+      "cardCount": 30
+    },
+    {
+      "id": "aws-responsible-ai",
+      "title": "Responsible AI, Security, and Governance",
+      "file": "decks/aws-responsible-ai.json",
+      "cardCount": 25
+    },
+    {
+      "id": "aws-frameworks",
+      "title": "Frameworks to Understand",
+      "file": "decks/aws-frameworks.json",
+      "cardCount": 16
+    }
+  ],
+  "exams": [
+    {
+      "id": "aif-c01",
+      "title": "AWS Certified AI Practitioner (AIF-C01) practice exam",
+      "file": "questions/aif-c01.json",
+      "questionCount": 214
+    }
+  ],
+  "collections": [
+    {
+      "id": "aws-ai-practitioner",
+      "title": "AWS Certified AI Practitioner (AIF-C01)",
+      "purpose": "Why these decks: I'm studying for the AWS Certified AI Practitioner exam. The decks cover what each exam domain asks for, and the practice exam pulls them together in the exam's own question style.",
+      "decks": [
+        "aws-ai-fundamentals",
+        "aws-genai-foundation-models",
+        "aws-ai-services",
+        "aws-responsible-ai",
+        "aws-frameworks"
+      ],
+      "exams": [
+        "aif-c01"
+      ],
+      "foundations": [
+        1
+      ],
+      "badges": [
+        {
+          "image": "assets/badges/aws-ai-practitioner.png",
+          "name": "AWS Certified AI Practitioner",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-certified-ai-practitioner"
+        }
+      ],
+      "officialPractice": {
+        "name": "the Official Practice Exam on AWS Skill Builder",
+        "url": "https://skillbuilder.aws/"
+      }
+    }
+  ]
+}

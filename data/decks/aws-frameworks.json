@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-frameworks",
+  "title": "Frameworks to Understand",
+  "description": "Lifecycles, decision frameworks, and the AWS pricing and architecture ideas the exam expects you to apply.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "machine-learning-lifecycle",
+      "term": "Machine learning lifecycle",
+      "definition": "Business goal, data collection and preparation, feature engineering, training, evaluation, deployment, monitoring, then iteration",
+      "hint": null,
+      "tags": [
+        "group:lifecycles",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "An office's email sorter keeps letting invoices slip into the wrong folder. Here is each stage for that one project.",
+        "steps": [
+          {
+            "name": "Business goal",
+            "text": "Catch every invoice. A stray newsletter in the invoice folder is fine; a missed invoice is a late fee."
+          },
+          {
+            "name": "Data collection and preparation",
+            "text": "Export a year of emails people already sorted by hand, and remove duplicates and empty messages."
+          },
+          {
+            "name": "Feature engineering",
+            "text": "Turn each email into signals the model can use: the sender's domain, \"invoice\" in the subject, a PDF attached."
+          },
+          {
+            "name": "Training",
+            "text": "The model learns which signals go with invoices from those labeled examples."
+          },
+          {
+            "name": "Evaluation",
+            "text": "Test it on emails it never saw, and look at recall on invoices, since a missed invoice is the costly mistake."
+          },
+          {
+            "name": "Deployment",
+            "text": "It starts sorting new mail as it arrives."
+          },
+          {
+            "name": "Monitoring",
+            "text": "A vendor switches to a new invoice format, and invoices start slipping through again."
+          },
+          {
+            "name": "Iteration",
+            "text": "Label some of the new-format emails, retrain, and check recall again before switching over."
+          }
+        ],
+        "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/machine-learning-lifecycle.html"
+      }
+    },
+    {
+      "id": "generative-ai-project-lifecycle",
+      "term": "Generative AI project lifecycle",
+      "definition": "Define use case, select a foundation model, adapt it, evaluate, deploy, then gather feedback and iterate",
+      "hint": null,
+      "tags": [
+        "group:lifecycles",
+        "domain:aif-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "An insurer wants a tool that drafts replies to policyholder emails. Here is each stage for that one project.",
+        "steps": [
+          {
+            "name": "Define use case",
+            "text": "Draft replies for agents to review and send. Success means fewer edits and no wrong policy details."
+          },
+          {
+            "name": "Select a foundation model",
+            "text": "Try a few models in Amazon Bedrock and pick one that writes clear replies at an acceptable cost per message."
+          },
+          {
+            "name": "Adapt it",
+            "text": "Connect the policy documents through a Bedrock knowledge base, so replies quote the customer's actual coverage."
+          },
+          {
+            "name": "Evaluate",
+            "text": "Score sample replies with a Bedrock evaluation job, and have senior agents rate a sample by hand."
+          },
+          {
+            "name": "Deploy",
+            "text": "Launch to ten agents first, not the whole team."
+          },
+          {
+            "name": "Gather feedback and iterate",
+            "text": "Agents flag replies quoting the wrong deductible. The team fixes the source documents and reruns the evaluation before opening it to everyone."
+          }
+        ],
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html"
+      }
+    },
+    {
+      "id": "model-adaptation-ladder",
+      "term": "Model adaptation ladder",
+      "definition": "Prompt engineering, then RAG, then fine-tuning, then pre-training: increasing cost, complexity, and data needs",
+      "hint": null,
+      "tags": [
+        "group:lifecycles",
+        "domain:aif-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A travel agency wants a chatbot that answers questions about its own tour packages. It climbs only as far as it needs to.",
+        "steps": [
+          {
+            "name": "Prompt engineering",
+            "text": "Better instructions fix the tone, but the bot still makes up prices."
+          },
+          {
+            "name": "RAG",
+            "text": "Connect the package catalog through an Amazon Bedrock knowledge base. Prices are now right, so the team stops here."
+          },
+          {
+            "name": "Fine-tuning",
+            "text": "Not needed. It would take thousands of example conversations, to teach a style or format the bot already gets right."
+          },
+          {
+            "name": "Pre-training",
+            "text": "Never considered. Training a model from scratch costs far more and only makes sense when no existing model fits."
+          }
+        ],
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html"
+      }
+    },
+    {
+      "id": "when-to-use-prompt-engineering",
+      "term": "When to use prompt engineering",
+      "definition": "Fast, cheap option when a general model can handle the task with good instructions",
+      "hint": null,
+      "tags": [
+        "group:when-to-customize",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "when-to-use-rag",
+      "term": "When to use RAG",
+      "definition": "When answers must reflect current or proprietary data without retraining the model",
+      "hint": null,
+      "tags": [
+        "group:when-to-customize",
+        "domain:aif-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A hospital's HR team wants staff to ask a chatbot about leave policies, which change several times a year. They put the policy PDFs in Amazon S3 and connect them to an Amazon Bedrock knowledge base. When a policy changes, they replace the file and re-run ingestion. The next answer reflects the change and cites the source document, and no model is retrained.",
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html"
+      }
+    },
+    {
+      "id": "when-to-use-fine-tuning",
+      "term": "When to use fine-tuning",
+      "definition": "When the model needs a consistent style, format, or specialized domain behavior",
+      "hint": null,
+      "tags": [
+        "group:when-to-customize",
+        "domain:aif-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A law firm needs contract summaries in its fixed five-heading layout and house writing style. Prompt instructions get the layout right only about half the time. The team gathers 2,000 past contracts paired with approved summaries and runs supervised fine-tuning in Amazon Bedrock. The customized model now follows the layout reliably. The facts in each summary still come from the contract being summarized, not from training.",
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/custom-models.html"
+      }
+    },
+    {
+      "id": "when-to-use-pre-training",
+      "term": "When to use pre-training",
+      "definition": "Rarely needed; only when no existing foundation model fits the domain or data",
+      "hint": null,
+      "tags": [
+        "group:when-to-customize",
+        "domain:aif-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A seismic-survey company works with raw sensor waveforms unlike any text or image, and none of the foundation models it tests can interpret them. With nothing useful to fine-tune, it trains its own model from scratch on ten years of survey recordings. The job runs for months on a large GPU cluster in Amazon SageMaker HyperPod. That cost makes sense only because no existing model fits.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod.html"
+      }
+    },
+    {
+      "id": "aws-well-architected-framework",
+      "term": "AWS Well-Architected Framework",
+      "definition": "Set of best practices for building reliable, secure, efficient, and cost-effective systems on AWS",
+      "hint": null,
+      "tags": [
+        "group:well-architected",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "six-well-architected-pillars",
+      "term": "Six Well-Architected pillars",
+      "definition": "Operational excellence, security, reliability, performance efficiency, cost optimization, sustainability",
+      "hint": null,
+      "tags": [
+        "group:well-architected",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "bedrock-pricing-models",
+      "term": "Bedrock pricing models",
+      "definition": "On-demand (pay per token), provisioned throughput (reserved capacity), and batch inference",
+      "hint": null,
+      "tags": [
+        "group:pricing",
+        "domain:aif-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "An online retailer uses Amazon Bedrock three ways. Its shopping assistant runs on-demand, paying per token as traffic rises and falls. Its customized returns model runs on Provisioned Throughput, bought with a one-month commitment for steady, dedicated capacity. Each night it rewrites 50,000 product descriptions with batch inference, which costs about half the on-demand price on supported models. The results are waiting by morning.",
+        "checkedAgainst": "https://aws.amazon.com/bedrock/pricing/"
+      }
+    },
+    {
+      "id": "batch-inference",
+      "term": "Batch inference",
+      "definition": "Running many requests asynchronously at lower cost when real-time responses aren't needed",
+      "hint": null,
+      "tags": [
+        "group:pricing",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A market-research firm needs sentiment labels on 200,000 survey comments by Friday, and nobody is waiting on any single answer. Instead of sending comments one at a time, the team uploads them as files to Amazon S3 and submits one Amazon Bedrock batch inference job. The job runs in the background and writes its results back to S3 at a lower price than real-time requests.",
+        "checkedAgainst": "https://aws.amazon.com/bedrock/pricing/"
+      }
+    },
+    {
+      "id": "cost-performance-tradeoff",
+      "term": "Cost-performance tradeoff",
+      "definition": "Larger models give better quality but cost more and respond more slowly; smaller models are faster and cheaper",
+      "hint": null,
+      "tags": [
+        "group:performance",
+        "domain:aif-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "A support team tests two models in Amazon Bedrock for tagging incoming tickets by topic. The largest model tags 96 percent correctly. A small one tags 93 percent, answers in under a second, and costs a fraction as much per token. At 40,000 tickets a day, the team picks the small model and keeps the large one for the few tickets agents escalate.",
+        "checkedAgainst": "https://aws.amazon.com/bedrock/pricing/"
+      }
+    },
+    {
+      "id": "business-value-of-ai",
+      "term": "Business value of AI",
+      "definition": "Measure outcomes such as cost savings, productivity gains, revenue impact, and customer experience",
+      "hint": null,
+      "tags": [
+        "group:ai-strategy",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "human-evaluation-vs-automatic-evaluation",
+      "term": "Human evaluation vs automatic evaluation",
+      "definition": "Human review captures nuance; automated metrics scale but may miss quality issues",
+      "hint": null,
+      "tags": [
+        "group:evaluation",
+        "domain:aif-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A pharmacy chain is choosing a model to answer medication questions. An automatic Amazon Bedrock evaluation job scores two candidates on hundreds of prompts in an afternoon, and they score about the same. The team then runs a human evaluation job in which five pharmacists rate a sample of answers. They notice that one model leaves out drug-interaction warnings, which the metrics missed, so that model is dropped.",
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html"
+      }
+    },
+    {
+      "id": "evaluation-metrics-for-generative-text",
+      "term": "Evaluation metrics for generative text",
+      "definition": "ROUGE for summarization, BLEU for translation, plus human ratings for accuracy, helpfulness, and safety",
+      "hint": null,
+      "tags": [
+        "group:evaluation",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "supervised-vs-generative-ai-use-cases",
+      "term": "Supervised vs generative AI use cases",
+      "definition": "Supervised ML predicts from labeled data; generative AI creates new content from patterns learned in pre-training",
+      "hint": null,
+      "tags": [
+        "group:ai-strategy",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    }
+  ]
+}

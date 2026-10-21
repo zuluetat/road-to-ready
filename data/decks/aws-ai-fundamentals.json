@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-ai-fundamentals",
+  "title": "AI and ML Fundamentals",
+  "description": "Core machine learning vocabulary, evaluation metrics, and model behavior.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "artificial-intelligence-ai",
+      "term": "Artificial Intelligence (AI)",
+      "definition": "Broad field of building systems that perform tasks requiring human-like intelligence",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "machine-learning-ml",
+      "term": "Machine Learning (ML)",
+      "definition": "Subset of AI where models learn patterns from data instead of following explicit rules",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "deep-learning",
+      "term": "Deep Learning",
+      "definition": "ML using multi-layer neural networks to learn representations from large amounts of data",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:1",
+        "kind-of:machine-learning-ml"
+      ],
+      "media": null
+    },
+    {
+      "id": "neural-network",
+      "term": "Neural network",
+      "definition": "Layers of connected nodes (neurons) whose weights are adjusted during training",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "supervised-learning",
+      "term": "Supervised learning",
+      "definition": "Learning from labeled input-output examples, such as classification and regression",
+      "hint": null,
+      "tags": [
+        "group:learning-types",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "unsupervised-learning",
+      "term": "Unsupervised learning",
+      "definition": "Finding structure in unlabeled data, such as clustering or dimensionality reduction",
+      "hint": null,
+      "tags": [
+        "group:learning-types",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "reinforcement-learning",
+      "term": "Reinforcement learning",
+      "definition": "An agent learns by taking actions and receiving rewards or penalties",
+      "hint": null,
+      "tags": [
+        "group:learning-types",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "semi-supervised-learning",
+      "term": "Semi-supervised learning",
+      "definition": "Training with a small labeled dataset plus a large unlabeled one",
+      "hint": null,
+      "tags": [
+        "group:learning-types",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "classification",
+      "term": "Classification",
+      "definition": "Predicting a discrete category or label",
+      "hint": null,
+      "tags": [
+        "group:ml-tasks",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "regression",
+      "term": "Regression",
+      "definition": "Predicting a continuous numeric value",
+      "hint": null,
+      "tags": [
+        "group:ml-tasks",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "clustering",
+      "term": "Clustering",
+      "definition": "Grouping similar unlabeled data points together (e.g., k-means)",
+      "hint": null,
+      "tags": [
+        "group:ml-tasks",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "training-set",
+      "term": "Training set",
+      "definition": "Data used to fit the model's parameters",
+      "hint": null,
+      "tags": [
+        "group:datasets",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "validation-set",
+      "term": "Validation set",
+      "definition": "Data used to tune hyperparameters and compare model versions",
+      "hint": null,
+      "tags": [
+        "group:datasets",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "test-set",
+      "term": "Test set",
+      "definition": "Held-out data used to estimate performance on unseen data",
+      "hint": null,
+      "tags": [
+        "group:datasets",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "overfitting",
+      "term": "Overfitting",
+      "definition": "Model learns training data too closely, including noise, and performs poorly on new data",
+      "hint": null,
+      "tags": [
+        "group:fit",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "underfitting",
+      "term": "Underfitting",
+      "definition": "Model is too simple to capture the underlying pattern and performs poorly even on training data",
+      "hint": null,
+      "tags": [
+        "group:fit",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "bias-variance-tradeoff",
+      "term": "Bias-variance tradeoff",
+      "definition": "High bias means underfitting; high variance means overfitting; the goal is to balance them",
+      "hint": null,
+      "tags": [
+        "group:fit",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A property firm builds models to predict apartment rents. A simple version that uses only square footage misses badly on both training and test listings. A very complex version scores almost perfectly on training listings but poorly on new ones, because it memorized quirks of individual buildings. The team ships a middle version that does about equally well on both.",
+        "checkedAgainst": "https://docs.aws.amazon.com/machine-learning/latest/dg/model-fit-underfitting-vs-overfitting.html"
+      }
+    },
+    {
+      "id": "feature",
+      "term": "Feature",
+      "definition": "An input variable used by a model to make predictions",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "feature-engineering",
+      "term": "Feature engineering",
+      "definition": "Creating, transforming, or selecting input variables to improve model performance",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A gym chain wants to predict which members will cancel. Its raw data is sign-up dates plus a log of every check-in. In SageMaker Data Wrangler, an analyst turns these into new columns: months as a member, visits in the last 30 days, and days since the last visit. A model trained on those columns predicts cancellations much better than one trained on the raw log.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/canvas-data-prep.html"
+      }
+    },
+    {
+      "id": "hyperparameter",
+      "term": "Hyperparameter",
+      "definition": "A setting chosen before training (e.g., learning rate, number of layers), not learned from data",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "parameters-weights",
+      "term": "Parameters (weights)",
+      "definition": "Values the model learns during training",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "loss-function",
+      "term": "Loss function",
+      "definition": "Measures the error between predictions and actual values; training works to minimize it",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "gradient-descent",
+      "term": "Gradient descent",
+      "definition": "Iterative optimization that adjusts weights to reduce the loss",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "inference",
+      "term": "Inference",
+      "definition": "Using a trained model to generate predictions on new inputs",
+      "hint": null,
+      "tags": [
+        "group:training-internals",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "precision",
+      "term": "Precision",
+      "definition": "Of all predicted positives, the fraction that are truly positive: TP / (TP + FP)",
+      "hint": null,
+      "tags": [
+        "group:metrics",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "recall",
+      "term": "Recall",
+      "definition": "Of all actual positives, the fraction the model correctly identifies: TP / (TP + FN)",
+      "hint": null,
+      "tags": [
+        "group:metrics",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "accuracy",
+      "term": "Accuracy",
+      "definition": "Fraction of all predictions that are correct",
+      "hint": null,
+      "tags": [
+        "group:metrics",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "f1-score",
+      "term": "F1 score",
+      "definition": "Harmonic mean of precision and recall; useful when classes are imbalanced",
+      "hint": null,
+      "tags": [
+        "group:metrics",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "confusion-matrix",
+      "term": "Confusion matrix",
+      "definition": "Table of true vs. predicted classes showing TP, FP, TN, and FN counts",
+      "hint": null,
+      "tags": [
+        "group:metrics",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A clinic builds a model in SageMaker Canvas to flag patients likely to miss appointments. Overall accuracy looks fine at 90 percent, but the confusion matrix under Advanced metrics shows that of 200 patients who actually missed, the model flagged only 60. Those 140 false negatives would get no reminder call, so the clinic rebuilds the model with more no-show examples before using it.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/canvas-advanced-metrics.html"
+      }
+    },
+    {
+      "id": "transfer-learning",
+      "term": "Transfer learning",
+      "definition": "Reusing knowledge from a model pretrained on one task to speed up learning on a related task",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A furniture recycler wants to sort photos of donated items into sofas, tables, chairs and lamps, but has only 300 labeled photos of each. Instead of training from scratch, the team picks a pretrained image classification model in SageMaker JumpStart, which already recognizes general shapes and textures. It trains that model further on its own photos from Amazon S3 and gets an accurate sorter from little data and short training.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-fine-tune.html"
+      }
+    },
+    {
+      "id": "data-drift",
+      "term": "Data drift",
+      "definition": "Change in the statistical distribution of input data after deployment",
+      "hint": null,
+      "tags": [
+        "group:drift",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A food-delivery app predicts delivery times with a model trained mostly on city orders. After the app expands into rural towns, the data quality check in SageMaker Model Monitor flags that incoming trip distances are far longer than in the training baseline. Distance still affects delivery time the same way, but the model is seeing inputs it rarely saw in training, so the team retrains it with rural orders.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-data-quality.html"
+      }
+    },
+    {
+      "id": "concept-drift",
+      "term": "Concept drift",
+      "definition": "Change in the relationship between inputs and the target after deployment",
+      "hint": null,
+      "tags": [
+        "group:drift",
+        "domain:aif-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A retailer's fraud model checks the same purchase signals as always, and SageMaker Model Monitor shows the incoming data still matches its training baseline. But when confirmed fraud outcomes are compared with the model's predictions, the model quality check shows accuracy falling, because fraudsters now make small, normal-looking purchases. The inputs look the same but mean something different, so the team retrains on recent labeled cases.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality.html"
+      }
+    },
+    {
+      "id": "model-drift",
+      "term": "Model drift",
+      "definition": "Gradual decline in model performance as real-world data changes over time",
+      "hint": null,
+      "tags": [
+        "group:drift",
+        "domain:aif-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "explainability",
+      "term": "Explainability",
+      "definition": "The ability to describe why a model made a specific prediction",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "same:explainability",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    }
+  ]
+}

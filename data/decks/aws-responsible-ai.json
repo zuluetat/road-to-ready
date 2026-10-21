@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-responsible-ai",
+  "title": "Responsible AI, Security, and Governance",
+  "description": "Principles, documentation, and the AWS security and compliance services that support them.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "responsible-ai",
+      "term": "Responsible AI",
+      "definition": "Developing and using AI in ways that are safe, fair, transparent, and accountable",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "fairness",
+      "term": "Fairness",
+      "definition": "Ensuring the model does not produce systematically worse outcomes for particular groups",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "bias-in-ai",
+      "term": "Bias (in AI)",
+      "definition": "Systematic skew in data or models that produces unfair or inaccurate outcomes",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "explainability-responsible-ai",
+      "term": "Explainability (responsible AI)",
+      "definition": "Ability to understand and communicate how and why a model reached its output",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "same:explainability",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "privacy-and-security-responsible-ai",
+      "term": "Privacy and security (responsible AI)",
+      "definition": "Protecting personal data and systems from unauthorized access or misuse",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "safety-responsible-ai",
+      "term": "Safety (responsible AI)",
+      "definition": "Preventing a system from generating harmful or dangerous content or actions",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "controllability",
+      "term": "Controllability",
+      "definition": "Ability to monitor and steer a system's behavior with mechanisms that let humans intervene",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "veracity-and-robustness",
+      "term": "Veracity and robustness",
+      "definition": "Producing accurate outputs and performing reliably under varied or adversarial conditions",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "governance-responsible-ai",
+      "term": "Governance (responsible AI)",
+      "definition": "Defining processes, roles, and policies for AI development and use",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "A hospital network sets up an AI review board and a written policy: no model touches patient scheduling until clinical, legal and security leads sign off. In SageMaker Model Registry, each new model version sits at PendingManualApproval until the board's named owner changes it to Approved, which starts deployment. At the next audit, the hospital can show who approved each version and when.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry-approve.html"
+      }
+    },
+    {
+      "id": "transparency",
+      "term": "Transparency",
+      "definition": "Openly communicating how an AI system works, its limits, and its data sources",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A city utility launches a chatbot for billing questions. Its first message says it is an AI assistant and can make mistakes, and each answer, built with Amazon Bedrock Knowledge Bases, cites the rate documents it drew on. When a resident disputes a charge, they open the cited page themselves instead of taking the bot's word for it.",
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html"
+      }
+    },
+    {
+      "id": "model-card",
+      "term": "Model card",
+      "definition": "Documentation you create for your own model: its intended use, performance, limitations, and training data",
+      "hint": null,
+      "tags": [
+        "group:documentation",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A bank builds a model that pre-screens small-business loan applications. In SageMaker Model Cards the team records what it's for (US small-business loans, not mortgages), how accurate it was in testing for different groups of applicants, and a known gap: few applicants under 25 in the training data. When an auditor asks how loans get approved, the bank hands over the card.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-cards.html"
+      }
+    },
+    {
+      "id": "aws-ai-service-card",
+      "term": "AWS AI Service Card",
+      "definition": "Documentation AWS publishes for one of its own AI services (such as Rekognition): intended use cases, limitations, and responsible design",
+      "hint": null,
+      "tags": [
+        "group:documentation",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "Before using Rekognition to match photo IDs to selfies, a team reads its service card: what face matching was designed for, where accuracy drops (poor lighting, for example), and which choices are left to them, such as the match threshold. AWS wrote the card; the team didn't.",
+        "checkedAgainst": "https://docs.aws.amazon.com/ai/responsible-ai/rekognition-face-matching/overview.html"
+      }
+    },
+    {
+      "id": "human-in-the-loop",
+      "term": "Human-in-the-loop",
+      "definition": "A process where people review or approve AI outputs, especially for high-stakes decisions",
+      "hint": null,
+      "tags": [
+        "group:oversight",
+        "domain:aif-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A travel company's booking assistant, built with Amazon Bedrock Agents, can cancel and rebook flights. The team turns on user confirmation for the cancel action, so before anything is cancelled the traveler sees a Confirm or Deny prompt. A mistaken or manipulated request stops there, because a person, not the model, makes the final call on the costly step.",
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents-userconfirmation.html"
+      }
+    },
+    {
+      "id": "toxicity",
+      "term": "Toxicity",
+      "definition": "Harmful, offensive, or abusive content in model outputs",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "shared-responsibility-model-ai",
+      "term": "Shared responsibility model (AI)",
+      "definition": "AWS secures the cloud infrastructure; customers secure their data, prompts, configurations, and use of AI",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "An insurer builds a claims-summary tool on Amazon Bedrock. AWS protects the global infrastructure the models run on. The insurer decides which employees get IAM permissions to call the model, encrypts the claim files it sends, and keeps customer names out of tags and name fields. When an intern turns out to have overly broad access, fixing it is the insurer's job, not AWS's.",
+        "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html"
+      }
+    },
+    {
+      "id": "amazon-macie",
+      "term": "Amazon Macie",
+      "definition": "Service that discovers and protects sensitive data such as PII in Amazon S3",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-kms",
+      "term": "AWS KMS",
+      "definition": "Key Management Service for creating and controlling encryption keys",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-iam",
+      "term": "AWS IAM",
+      "definition": "Identity and Access Management for controlling who can access which AWS resources",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-cloudtrail",
+      "term": "AWS CloudTrail",
+      "definition": "Service that logs API activity across your AWS account for auditing",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-config",
+      "term": "AWS Config",
+      "definition": "Service that tracks resource configurations and evaluates compliance against rules",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "A media company's rule is that SageMaker notebook instances must never have direct internet access. The cloud team turns on the AWS Config managed rule that checks for this. When a data scientist launches an internet-enabled notebook, Config marks it NON_COMPLIANT at the next periodic check, and the team fixes the setting the same day.",
+        "checkedAgainst": "https://docs.aws.amazon.com/config/latest/developerguide/sagemaker-notebook-no-direct-internet-access.html"
+      }
+    },
+    {
+      "id": "aws-artifact",
+      "term": "AWS Artifact",
+      "definition": "Portal for on-demand access to AWS compliance reports and agreements",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "A startup selling an AI hiring tool to a large employer gets a security questionnaire asking how its cloud provider protects its data centers. The compliance lead downloads AWS's SOC report from AWS Artifact and attaches it. That report covers AWS's controls only; the startup still writes its own answers about how it protects applicant data.",
+        "checkedAgainst": "https://docs.aws.amazon.com/artifact/latest/ug/what-is-aws-artifact.html"
+      }
+    },
+    {
+      "id": "aws-audit-manager",
+      "term": "AWS Audit Manager",
+      "definition": "Service that automates evidence collection for audits",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "Before an internal audit of its customer-service chatbot on Amazon Bedrock, a bank's risk team creates an assessment in AWS Audit Manager from the prebuilt AWS Generative AI Best Practices Framework. Over the quarter, the service gathers evidence from the bank's own account, including AWS Config results, and maps it to each control. The auditor gets an assessment report instead of a folder of screenshots.",
+        "checkedAgainst": "https://docs.aws.amazon.com/audit-manager/latest/userguide/aws-generative-ai-best-practices.html"
+      }
+    },
+    {
+      "id": "aws-trusted-advisor",
+      "term": "AWS Trusted Advisor",
+      "definition": "Service that gives recommendations on cost, performance, security, fault tolerance, and limits",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "data-lineage",
+      "term": "Data lineage",
+      "definition": "Tracking where data came from, how it changed, and where it was used",
+      "hint": null,
+      "tags": [
+        "group:documentation",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "A retailer's demand-forecast model suddenly orders far too many winter coats. With SageMaker ML Lineage Tracking, an analyst traces the live endpoint back to the model, its training job, and the exact dataset used, and finds that dataset came from a sales export that counted returns twice. The team fixes the export, retrains, and knows exactly which endpoint served the bad forecasts.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/lineage-tracking.html"
+      }
+    },
+    {
+      "id": "data-governance",
+      "term": "Data governance",
+      "definition": "Policies and controls for data quality, access, privacy, and lifecycle",
+      "hint": null,
+      "tags": [
+        "group:documentation",
+        "domain:aif-c01:5"
+      ],
+      "media": null,
+      "example": {
+        "text": "A health insurer's data policy says analysts may see claim amounts but not member names or diagnoses. In AWS Lake Formation, the data team grants column- and row-level permissions so the fraud-model team sees only the fields it needs, and CloudTrail logs show who queried what. When a new project asks for diagnoses, the request goes to the data owner first.",
+        "checkedAgainst": "https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html"
+      }
+    }
+  ]
+}

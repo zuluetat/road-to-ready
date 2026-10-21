@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-genai-foundation-models",
+  "title": "Generative AI and Foundation Models",
+  "description": "Foundation models, prompting, customization, and retrieval.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "generative-ai",
+      "term": "Generative AI",
+      "definition": "AI that creates new content such as text, images, audio, code, or video",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "foundation-model-fm",
+      "term": "Foundation model (FM)",
+      "definition": "Large model pretrained on broad data that can be adapted to many downstream tasks",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "large-language-model-llm",
+      "term": "Large language model (LLM)",
+      "definition": "Foundation model trained on massive text data to understand and generate language",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:2",
+        "kind-of:foundation-model-fm"
+      ],
+      "media": null
+    },
+    {
+      "id": "transformer",
+      "term": "Transformer",
+      "definition": "Neural network architecture using self-attention to process sequences in parallel",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "self-attention",
+      "term": "Self-attention",
+      "definition": "Mechanism that weighs how relevant each token is to every other token in the sequence",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "token",
+      "term": "Token",
+      "definition": "A unit of text (word, subword, or character) that a model processes",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "tokenization",
+      "term": "Tokenization",
+      "definition": "Splitting text into tokens before the model processes it",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "embedding",
+      "term": "Embedding",
+      "definition": "Numeric vector representing the meaning of text, images, or other data",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "vector-database",
+      "term": "Vector database",
+      "definition": "Database optimized for storing and searching embeddings by similarity",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "context-window",
+      "term": "Context window",
+      "definition": "Maximum number of tokens a model can consider at once, including the prompt and response",
+      "hint": null,
+      "tags": [
+        "group:model-architecture",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "temperature",
+      "term": "Temperature",
+      "definition": "Inference parameter controlling randomness; higher values produce more varied output",
+      "hint": null,
+      "tags": [
+        "group:inference-params",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "top-p-nucleus-sampling",
+      "term": "Top-p (nucleus sampling)",
+      "definition": "Inference parameter that samples from the smallest set of tokens whose cumulative probability reaches p",
+      "hint": null,
+      "tags": [
+        "group:inference-params",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "top-k",
+      "term": "Top-k",
+      "definition": "Inference parameter that limits sampling to the k most likely next tokens",
+      "hint": null,
+      "tags": [
+        "group:inference-params",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "max-tokens",
+      "term": "Max tokens",
+      "definition": "Inference parameter capping the length of the generated response",
+      "hint": null,
+      "tags": [
+        "group:inference-params",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "hallucination",
+      "term": "Hallucination",
+      "definition": "Model output that is fluent and confident but factually incorrect or unsupported",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "multimodal-model",
+      "term": "Multimodal model",
+      "definition": "Model that accepts or produces more than one data type, such as text and images",
+      "hint": null,
+      "tags": [
+        "group:model-types",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "diffusion-model",
+      "term": "Diffusion model",
+      "definition": "Generative model that creates images by iteratively removing noise from random input",
+      "hint": null,
+      "tags": [
+        "group:model-types",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "gan-generative-adversarial-network",
+      "term": "GAN (generative adversarial network)",
+      "definition": "Two networks, a generator and a discriminator, trained against each other to produce realistic data",
+      "hint": null,
+      "tags": [
+        "group:model-types",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "pre-training",
+      "term": "Pre-training",
+      "definition": "Initial training of a foundation model on very large, broad datasets",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "fine-tuning",
+      "term": "Fine-tuning",
+      "definition": "Further training a pretrained model on a smaller, task-specific labeled dataset",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "continued-pre-training",
+      "term": "Continued pre-training",
+      "definition": "Training a model on additional domain-specific unlabeled data",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "instruction-tuning",
+      "term": "Instruction tuning",
+      "definition": "Fine-tuning on instruction and response pairs so the model follows user directions",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "kind-of:fine-tuning"
+      ],
+      "media": null
+    },
+    {
+      "id": "rlhf-reinforcement-learning-from-human-feedback",
+      "term": "RLHF (reinforcement learning from human feedback)",
+      "definition": "Aligning a model with human preferences by training on human-ranked outputs",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "peft-parameter-efficient-fine-tuning",
+      "term": "PEFT (parameter-efficient fine-tuning)",
+      "definition": "Adapting a model by updating only a small subset of parameters",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "kind-of:fine-tuning"
+      ],
+      "media": null
+    },
+    {
+      "id": "lora-low-rank-adaptation",
+      "term": "LoRA (low-rank adaptation)",
+      "definition": "PEFT method that trains small add-on matrices instead of all model weights",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "kind-of:peft-parameter-efficient-fine-tuning"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt",
+      "term": "Prompt",
+      "definition": "The input instructions and context given to a generative model",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "zero-shot-prompting",
+      "term": "Zero-shot prompting",
+      "definition": "Asking the model to perform a task with no examples in the prompt",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "few-shot-prompting",
+      "term": "Few-shot prompting",
+      "definition": "Including a small number of examples in the prompt to guide the output",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "chain-of-thought-prompting",
+      "term": "Chain-of-thought prompting",
+      "definition": "Asking the model to reason step by step before giving a final answer",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-template",
+      "term": "Prompt template",
+      "definition": "Reusable prompt structure with placeholders filled in at runtime",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-injection",
+      "term": "Prompt injection",
+      "definition": "Malicious input that tries to override a model's instructions",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "jailbreak",
+      "term": "Jailbreak",
+      "definition": "A prompt crafted to bypass a model's safety controls",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "grounding",
+      "term": "Grounding",
+      "definition": "Connecting model responses to verifiable external data sources",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "rag-retrieval-augmented-generation",
+      "term": "RAG (retrieval-augmented generation)",
+      "definition": "Retrieving relevant documents at query time and adding them to the prompt so responses are grounded in them",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:3",
+        "kind-of:grounding"
+      ],
+      "media": null
+    },
+    {
+      "id": "knowledge-base",
+      "term": "Knowledge base",
+      "definition": "A collection of documents indexed for retrieval, used with RAG",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "ai-agent",
+      "term": "AI agent",
+      "definition": "System that uses a model to plan and take actions, such as calling APIs, to complete a goal",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "latency",
+      "term": "Latency",
+      "definition": "Time between sending a request and receiving the response",
+      "hint": null,
+      "tags": [
+        "group:performance",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "throughput",
+      "term": "Throughput",
+      "definition": "Volume of requests or tokens a system can process over a period of time",
+      "hint": null,
+      "tags": [
+        "group:performance",
+        "domain:aif-c01:2"
+      ],
+      "media": null
+    }
+  ]
+}

@@ -31,6 +31,42 @@
       "title": "Frameworks to Understand",
       "file": "decks/aws-frameworks.json",
       "cardCount": 16
+    },
+    {
+      "id": "claude-assoc-prompting",
+      "title": "Prompting and Troubleshooting",
+      "file": "decks/claude-assoc-prompting.json",
+      "cardCount": 27
+    },
+    {
+      "id": "claude-assoc-output",
+      "title": "Checking and Shaping Output",
+      "file": "decks/claude-assoc-output.json",
+      "cardCount": 22
+    },
+    {
+      "id": "claude-assoc-products",
+      "title": "Claude Products and Models",
+      "file": "decks/claude-assoc-products.json",
+      "cardCount": 24
+    },
+    {
+      "id": "claude-assoc-workflow",
+      "title": "Workflows and Solution Design",
+      "file": "decks/claude-assoc-workflow.json",
+      "cardCount": 16
+    },
+    {
+      "id": "claude-assoc-knowledge",
+      "title": "Projects, Knowledge and Connectors",
+      "file": "decks/claude-assoc-knowledge.json",
+      "cardCount": 20
+    },
+    {
+      "id": "claude-assoc-responsible",
+      "title": "Responsible Use and Privacy",
+      "file": "decks/claude-assoc-responsible.json",
+      "cardCount": 24
     }
   ],
   "exams": [
@@ -39,6 +75,12 @@
       "title": "AWS Certified AI Practitioner (AIF-C01) practice exam",
       "file": "questions/aif-c01.json",
       "questionCount": 214
+    },
+    {
+      "id": "claude-associate",
+      "title": "Claude Certified Associate practice exam",
+      "file": "questions/claude-associate.json",
+      "questionCount": 146
     }
   ],
   "collections": [
@@ -69,6 +111,35 @@
       "officialPractice": {
         "name": "the Official Practice Exam on AWS Skill Builder",
         "url": "https://skillbuilder.aws/"
+      }
+    },
+    {
+      "id": "claude-associate",
+      "title": "Claude Certified Associate (Foundations)",
+      "purpose": "Why these decks: the Associate exam is for business users of Claude, not developers. These decks follow its seven domains: prompting, checking output, products and models, workflows, Projects and connectors, responsible use, and troubleshooting.",
+      "decks": [
+        "claude-assoc-prompting",
+        "claude-assoc-output",
+        "claude-assoc-products",
+        "claude-assoc-workflow",
+        "claude-assoc-knowledge",
+        "claude-assoc-responsible"
+      ],
+      "exams": [
+        "claude-associate"
+      ],
+      "foundations": [
+        1
+      ],
+      "badges": [
+        {
+          "image": "assets/badges/claude-associate.png",
+          "name": "Claude Certified Associate – Foundations",
+          "url": "https://www.credly.com/org/anthropic/badge/claude-certified-associate-foundations"
+        }
+      ],
+      "officialPractice": {
+        "name": "the sample questions in Anthropic's Associate exam guide (no official practice exam found yet)"
       }
     }
   ]

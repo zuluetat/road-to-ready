@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-output",
+  "title": "Checking and Shaping Output",
+  "description": "Catching hallucinations and bias, checking sources and claims, and choosing inline, artifact or file output.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "hallucination",
+      "term": "Hallucination",
+      "definition": "Claude producing incorrect or misleading information that can sound confident and authoritative but has no basis, which is why factual claims need checking.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-basics",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "verify-high-stakes-output",
+      "term": "Verify high-stakes output",
+      "definition": "Prompting tricks reduce hallucinations but never remove them, so critical facts still need independent validation, especially for high-stakes decisions.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-basics",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "allow-i-don-t-know",
+      "term": "Allow I don't know",
+      "definition": "A prompt technique that explicitly lets Claude admit uncertainty or missing information, which can sharply cut made-up answers.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-defences",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "direct-quote-grounding",
+      "term": "Direct quote grounding",
+      "definition": "For long documents, have Claude first pull out word-for-word quotes, then base its analysis only on those quotes.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-defences",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "claim-by-claim-citation-check",
+      "term": "Claim-by-claim citation check",
+      "definition": "Asking Claude to find a supporting quote for each claim in a draft and remove any claim it cannot support.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-defences",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "best-of-n-comparison",
+      "term": "Best-of-N comparison",
+      "definition": "Run the same prompt several times and compare the answers; inconsistencies between runs can signal a hallucination.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-defences",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "iterative-refinement",
+      "term": "Iterative refinement",
+      "definition": "A general follow-up asking Claude to re-check or expand its earlier answer, which can surface and fix inconsistencies.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-defences",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "restrict-to-provided-documents",
+      "term": "Restrict to provided documents",
+      "definition": "Telling Claude to answer only from the material you supplied, not its general knowledge; no quotes required.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-defences",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "web-search-citations",
+      "term": "Web search citations",
+      "definition": "With web search on, answers link to the sources used; cross-check them and rely on authoritative sources for important decisions.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hallucination-basics",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "edit-with-claude",
+      "term": "Edit with Claude",
+      "definition": "In a doc or Markdown artifact, highlight a passage to have Claude revise just that section instead of the whole piece.",
+      "hint": null,
+      "tags": [
+        "group:assoc-product-features",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "specify-output-format",
+      "term": "Specify output format",
+      "definition": "Define the exact structure you want, such as JSON, XML, or a template, so Claude follows every formatting element consistently.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-structure",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "errors-look-correct",
+      "term": "Errors look correct",
+      "definition": "Claude's mistakes can read as polished and plausible while being badly wrong, so a fluent, confident tone is not evidence that content is accurate.",
+      "hint": null,
+      "tags": [
+        "group:assoc-confidence-vs-evidence",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "self-rated-confidence",
+      "term": "Self-rated confidence",
+      "definition": "Anthropic research found models judge their own answers well on familiar tasks but poorly on unfamiliar ones, so confident wording is not proof.",
+      "hint": null,
+      "tags": [
+        "group:assoc-confidence-vs-evidence",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "quote-suspicion",
+      "term": "Quote suspicion",
+      "definition": "Claude can produce quotes that look authoritative but have no basis in the source, so check any quoted wording against the original before you use it.",
+      "hint": null,
+      "tags": [
+        "group:assoc-source-checking",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "read-the-original",
+      "term": "Read the original",
+      "definition": "Claude's synthesis can leave out context that changes a source's meaning, and answers are only as good as the sources behind them, so open the cited pages.",
+      "hint": null,
+      "tags": [
+        "group:assoc-source-checking",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "time-sensitive-facts",
+      "term": "Time-sensitive facts",
+      "definition": "Each model has a knowledge cutoff and may not know later events, so verify dates, prices, and recent developments against current sources.",
+      "hint": null,
+      "tags": [
+        "group:assoc-source-checking",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "even-handedness-check",
+      "term": "Even-handedness check",
+      "definition": "Anthropic tests balance by sending the same contested request from opposing viewpoints and comparing depth, counterarguments, and refusals; you can run similar paired prompts.",
+      "hint": null,
+      "tags": [
+        "group:assoc-bias-checks",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "bias-check-limits",
+      "term": "Bias check limits",
+      "definition": "Anthropic says its political even-handedness measures are imperfect: no agreed definition of bias exists, and results can vary between runs, so review sensitive content yourself.",
+      "hint": null,
+      "tags": [
+        "group:assoc-bias-checks",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "inline-vs-artifact",
+      "term": "Inline vs artifact",
+      "definition": "Claude uses an artifact for significant, self-contained content, typically over 15 lines, that you will edit, reuse, or share; short conversational answers stay inline.",
+      "hint": null,
+      "tags": [
+        "group:assoc-output-format-choice",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "choose-a-file-format",
+      "term": "Choose a file format",
+      "definition": "Pick the output type by use: Excel for formulas and charts, Word or PDF for reports with analysis, PowerPoint for decks, instead of copying chat text by hand.",
+      "hint": null,
+      "tags": [
+        "group:assoc-output-format-choice",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "review-file-output",
+      "term": "Review file output",
+      "definition": "Generated files may need refining to meet exact requirements, so state the structure, content, and formatting you want and check the result before sharing.",
+      "hint": null,
+      "tags": [
+        "group:assoc-refine-and-compare",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "branch-a-chat",
+      "term": "Branch a chat",
+      "definition": "Editing an earlier message creates a separate branch with its own artifacts, letting you compare a different direction without losing the first version.",
+      "hint": null,
+      "tags": [
+        "group:assoc-refine-and-compare",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    }
+  ]
+}

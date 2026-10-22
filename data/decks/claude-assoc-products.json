@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-products",
+  "title": "Claude Products and Models",
+  "description": "Projects, research, artifacts, memory and files, Haiku vs Sonnet vs Opus, and context and usage limits.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "projects",
+      "term": "Projects",
+      "definition": "Workspaces that bundle their own chat history, instructions and uploaded knowledge, so related work stays focused in one place.",
+      "hint": null,
+      "tags": [
+        "group:assoc-projects-vs-chat",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-chat",
+      "term": "Project chat",
+      "definition": "A conversation held inside a project; it draws on that project's instructions and knowledge and is kept in that project's own history.",
+      "hint": null,
+      "tags": [
+        "group:assoc-projects-vs-chat",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "research",
+      "term": "Research",
+      "definition": "A paid-plan mode where Claude runs many linked searches across the web and your connected tools, suited to questions needing several sources.",
+      "hint": null,
+      "tags": [
+        "group:assoc-product-features",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "artifacts",
+      "term": "Artifacts",
+      "definition": "Standalone outputs such as documents, slides, designs or small tools that open beside the chat and are saved in an Artifacts tab.",
+      "hint": null,
+      "tags": [
+        "group:assoc-product-features",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "haiku",
+      "term": "Haiku",
+      "definition": "The fastest and cheapest model tier; suited to high-volume tasks where speed matters such as classification or extraction.",
+      "hint": null,
+      "tags": [
+        "group:assoc-model-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "sonnet",
+      "term": "Sonnet",
+      "definition": "The model tier that pairs strong intelligence with fast speed, sitting between Haiku and Opus on cost.",
+      "hint": null,
+      "tags": [
+        "group:assoc-model-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "opus",
+      "term": "Opus",
+      "definition": "A more capable tier at moderate speed and higher cost, suited to long-running knowledge work where quality matters more than speed.",
+      "hint": null,
+      "tags": [
+        "group:assoc-model-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "model-selection",
+      "term": "Model selection",
+      "definition": "Match the model to the task: a lighter, faster, cheaper one for simple high-volume work, and a more capable one only when the reasoning is demanding.",
+      "hint": null,
+      "tags": [
+        "group:assoc-model-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "context-window",
+      "term": "Context window",
+      "definition": "Claude's working memory for one conversation: how much it can hold at once, which varies by model and plan, with room kept for its reply.",
+      "hint": null,
+      "tags": [
+        "group:assoc-limits-and-context",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "length-limit",
+      "term": "Length limit",
+      "definition": "What you hit when one conversation fills the context window; it is separate from your usage limit, and the fix is a new chat.",
+      "hint": null,
+      "tags": [
+        "group:assoc-limits-and-context",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "usage-limit",
+      "term": "Usage limit",
+      "definition": "A cap on total use over time; on paid plans there is a five-hour session limit plus weekly limits, driven by chat length, tools, model and effort.",
+      "hint": null,
+      "tags": [
+        "group:assoc-limits-and-context",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "automatic-context-management",
+      "term": "Automatic context management",
+      "definition": "With code execution on, Claude summarizes earlier messages as a chat nears its limit while keeping full history, but longer chats use more of your usage.",
+      "hint": null,
+      "tags": [
+        "group:assoc-limits-and-context",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "start-a-new-chat",
+      "term": "Start a new chat",
+      "definition": "Start a fresh conversation when a chat is getting long or you are close to your usage limit, since long chats use more of both.",
+      "hint": null,
+      "tags": [
+        "group:assoc-limits-and-context",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "memory",
+      "term": "Memory",
+      "definition": "A feature where Claude saves topics from your chats and reuses them later; you can view and delete individual memories under Settings > Memory.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-controls",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "chat-search",
+      "term": "Chat search",
+      "definition": "A paid-plan feature that lets Claude look through your past conversations on request; it searches outside projects or within one project but not across projects.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-controls",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-memory",
+      "term": "Project memory",
+      "definition": "Each project has its own memory; inside it Claude uses that memory plus non-project memory, and turning off \"Use account memory\" keeps it fully separate.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-controls",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "pro-plan",
+      "term": "Pro plan",
+      "definition": "The individual paid tier that adds more usage per session than Free plus priority access in busy periods and Claude Code; it also lets you opt in to usage credits.",
+      "hint": null,
+      "tags": [
+        "group:assoc-plan-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "max-plan",
+      "term": "Max plan",
+      "definition": "An individual plan for heavy daily users that comes in 5x and 20x tiers of Pro's per-session usage; organizations are pointed to Team or Enterprise instead.",
+      "hint": null,
+      "tags": [
+        "group:assoc-plan-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "team-plan",
+      "term": "Team plan",
+      "definition": "A shared workspace for small organizations: at least two members and up to 150 seats; it adds central admin and billing controls and SSO.",
+      "hint": null,
+      "tags": [
+        "group:assoc-plan-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "enterprise-plan",
+      "term": "Enterprise plan",
+      "definition": "The tier above Team for larger organizations; it adds audit logs and SCIM provisioning plus custom data retention controls.",
+      "hint": null,
+      "tags": [
+        "group:assoc-plan-tiers",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "dictation",
+      "term": "Dictation",
+      "definition": "A mobile feature that turns your speech into typed prompt text and gets a written reply; it differs from voice mode and is available on all plans.",
+      "hint": null,
+      "tags": [
+        "group:assoc-mobile-and-voice",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "voice-mode",
+      "term": "Voice mode",
+      "definition": "A beta two-way spoken conversation where Claude talks back and can use connected tools; it counts toward normal usage limits and works on all plans.",
+      "hint": null,
+      "tags": [
+        "group:assoc-mobile-and-voice",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "claude-on-ios-apps",
+      "term": "Claude on iOS apps",
+      "definition": "Claude prepares messages, emails and calendar events from a chat but you review and send; it cannot read your messages or emails, and Team and Enterprise users lack location.",
+      "hint": null,
+      "tags": [
+        "group:assoc-mobile-and-voice",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "claude-in-chrome",
+      "term": "Claude in Chrome",
+      "definition": "A browser extension that lets Claude read, click and navigate websites for you; it is on by default for Team and Enterprise, and Owners can turn it off.",
+      "hint": null,
+      "tags": [
+        "group:assoc-claude-in-chrome",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-prompting",
+  "title": "Prompting and Troubleshooting",
+  "description": "Prompts that say what you want, strategies by task type, and fixing weak answers, limits and slow chats.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "clear-and-direct-prompt",
+      "term": "Clear and direct prompt",
+      "definition": "Say exactly what you want, including output format and constraints, and use numbered steps when order matters, instead of hoping Claude infers it.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-basics",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-context",
+      "term": "Prompt context",
+      "definition": "Explain the purpose or audience behind an instruction, so Claude can tailor the answer to your goal and not just follow a bare rule.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-basics",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "colleague-test",
+      "term": "Colleague test",
+      "definition": "A quick check: give your prompt to a coworker with no background on the task, and if they would be confused, Claude likely will be too.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-basics",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "few-shot-examples",
+      "term": "Few-shot examples",
+      "definition": "A few sample inputs and outputs, ideally 3 to 5 that are relevant and varied, steer Claude's format, tone, and structure more reliably than description alone.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-structure",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "xml-tags",
+      "term": "XML tags",
+      "definition": "Wrapping instructions, context, examples, and inputs in separate descriptive tags helps Claude tell the parts of a long, mixed prompt apart.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-structure",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "role-prompting",
+      "term": "Role prompting",
+      "definition": "Assigning Claude a role, even in one sentence, focuses its tone and behavior on your use case.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-structure",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "task-decomposition",
+      "term": "Task decomposition",
+      "definition": "Splitting one big request into smaller parts so Claude handles each part well, instead of one sprawling ask.",
+      "hint": null,
+      "tags": [
+        "group:assoc-decompose-vs-chain",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-chaining",
+      "term": "Prompt chaining",
+      "definition": "Running the parts of a task as a sequence of prompts where each output feeds the next, such as draft, review, refine, so you can check each stage.",
+      "hint": null,
+      "tags": [
+        "group:assoc-decompose-vs-chain",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "research-success-criteria",
+      "term": "Research success criteria",
+      "definition": "For research tasks, state what a good answer looks like and ask Claude to verify claims across several sources.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-basics",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "follow-up-feedback",
+      "term": "Follow-up feedback",
+      "definition": "Replying in the same chat with clarifications or a rewrite request to refine an answer, rather than starting over.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-troubleshooting",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "unhelpful-answer-fix",
+      "term": "Unhelpful answer fix",
+      "definition": "When a first answer misses: rewrite the original prompt plainly, add background as if Claude knows nothing about you, and split big tasks.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-troubleshooting",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "too-brief-response",
+      "term": "Too-brief response",
+      "definition": "When an answer is cut short, send your earlier prompt and Claude's reply back so it can pick up where it left off.",
+      "hint": null,
+      "tags": [
+        "group:assoc-prompt-troubleshooting",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "effort-setting",
+      "term": "Effort setting",
+      "definition": "Controls how much reasoning Claude applies: higher gives more thorough answers but takes longer and uses limits faster, while low or medium suits routine tasks.",
+      "hint": null,
+      "tags": [
+        "group:assoc-effort-and-thinking",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "thinking-toggle",
+      "term": "Thinking toggle",
+      "definition": "A separate control from effort that lets you view a summary of Claude's reasoning in an expandable section; availability depends on the model.",
+      "hint": null,
+      "tags": [
+        "group:assoc-effort-and-thinking",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "model-switch-for-cost",
+      "term": "Model switch for cost",
+      "definition": "Latency and cost problems can sometimes be fixed more easily by choosing a different model than by rewriting the prompt.",
+      "hint": null,
+      "tags": [
+        "group:assoc-effort-and-thinking",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "capacity-constraints-message",
+      "term": "Capacity constraints message",
+      "definition": "A notice that Claude cannot respond right now because demand is high; it is not an outage, so wait a few minutes and try again.",
+      "hint": null,
+      "tags": [
+        "group:assoc-error-messages",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "limit-reached-message",
+      "term": "Limit reached message",
+      "definition": "A notice that your five-hour or weekly limit is used up; wait for the reset time, or continue on usage credits if they are enabled.",
+      "hint": null,
+      "tags": [
+        "group:assoc-error-messages",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-caching",
+      "term": "Project caching",
+      "definition": "Documents in a Project's knowledge are cached, so reusing them counts less against limits, but the cache expires after inactivity and the first message afterward counts in full.",
+      "hint": null,
+      "tags": [
+        "group:assoc-saving-usage",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "batch-related-requests",
+      "term": "Batch related requests",
+      "definition": "Combining related questions or tasks into one well-planned message with full context saves usage and avoids extra back-and-forth.",
+      "hint": null,
+      "tags": [
+        "group:assoc-saving-usage",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "turn-off-unused-tools",
+      "term": "Turn off unused tools",
+      "definition": "Disabling extended thinking, connectors, and web search when a chat does not need them reduces token use and stretches your usage limit.",
+      "hint": null,
+      "tags": [
+        "group:assoc-saving-usage",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "positive-format-instructions",
+      "term": "Positive format instructions",
+      "definition": "Tell Claude what to do rather than what to avoid, for example asking for smoothly flowing prose paragraphs instead of saying no markdown.",
+      "hint": null,
+      "tags": [
+        "group:assoc-format-steering",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "match-prompt-style",
+      "term": "Match prompt style",
+      "definition": "Your prompt's own formatting influences the reply, so write it in the style you want back; removing markdown from the prompt reduces markdown in the output.",
+      "hint": null,
+      "tags": [
+        "group:assoc-format-steering",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "explicit-conciseness",
+      "term": "Explicit conciseness",
+      "definition": "Newer models can default to longer answers, and effort settings do not reliably shorten them, so ask outright for brevity when you want a short draft.",
+      "hint": null,
+      "tags": [
+        "group:assoc-format-steering",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "ask-for-more",
+      "term": "Ask for more",
+      "definition": "For brainstorming or ambitious drafts, say you want more than the minimum, such as asking for as many relevant options as possible and going beyond the basics.",
+      "hint": null,
+      "tags": [
+        "group:assoc-task-type-prompting",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "structured-research-prompt",
+      "term": "Structured research prompt",
+      "definition": "For complex research, ask Claude to form competing hypotheses, track its confidence, critique its own approach, and keep notes, so findings are transparent and checkable.",
+      "hint": null,
+      "tags": [
+        "group:assoc-task-type-prompting",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "documents-before-question",
+      "term": "Documents before question",
+      "definition": "For analysis of long documents, place the documents at the top of the prompt and your question and instructions at the end, which can improve answer quality.",
+      "hint": null,
+      "tags": [
+        "group:assoc-task-type-prompting",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "usage-credits",
+      "term": "Usage credits",
+      "definition": "Opt-in pay-as-you-go balance for Pro and Max users: when a session or weekly limit is reached, requests continue at API rates instead of stopping.",
+      "hint": null,
+      "tags": [
+        "group:assoc-error-messages",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    }
+  ]
+}

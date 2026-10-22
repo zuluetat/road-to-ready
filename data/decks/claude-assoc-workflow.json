@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-workflow",
+  "title": "Workflows and Solution Design",
+  "description": "Defining success first, what to hand Claude, what to escalate, and the limits stakeholders should know.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "code-execution-and-file-creation",
+      "term": "Code execution and file creation",
+      "definition": "A sandboxed capability that lets Claude build and edit Excel, Word, PowerPoint and PDF files and analyze data in a chat; it counts against usage.",
+      "hint": null,
+      "tags": [
+        "group:assoc-product-features",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "format-conversion",
+      "term": "Format conversion",
+      "definition": "Claude can turn one file type into another, for example a Word document into a presentation, when file creation is enabled.",
+      "hint": null,
+      "tags": [
+        "group:assoc-product-features",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "artifact-export",
+      "term": "Artifact export",
+      "definition": "Artifacts can be exported in standard formats, for example docs to Word, PDF, Markdown or Google Docs and slides to PowerPoint or PDF.",
+      "hint": null,
+      "tags": [
+        "group:assoc-product-features",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "success-criteria-first",
+      "term": "Success criteria first",
+      "definition": "Before building a workflow or tuning prompts, define what a good result looks like and how you will test it; otherwise you cannot tell whether changes help.",
+      "hint": null,
+      "tags": [
+        "group:assoc-workflow-fit",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "delegable-file-tasks",
+      "term": "Delegable file tasks",
+      "definition": "Hand Claude jobs like building a budget spreadsheet, turning a CSV into a report, converting a Word document to slides, or pulling PDF tables into Excel, then review the result.",
+      "hint": null,
+      "tags": [
+        "group:assoc-delegating-vs-escalating",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "file-creation-limits",
+      "term": "File creation limits",
+      "definition": "File work has caps: 30MB per file, limited task and sandbox duration, and heavier use of your usage limits than ordinary chat, so size workflows accordingly.",
+      "hint": null,
+      "tags": [
+        "group:assoc-stakeholder-limits",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "admin-controls-file-network-access",
+      "term": "Admin controls file network access",
+      "definition": "On Team and Enterprise, owners decide whether file creation and its network access are on; the safe default is access off, adding only vetted domains.",
+      "hint": null,
+      "tags": [
+        "group:assoc-delegating-vs-escalating",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "custom-connector-builds",
+      "term": "Custom connector builds",
+      "definition": "Building or hosting a remote MCP server is technical work to hand to IT; you then add the finished server under Customize > Connectors.",
+      "hint": null,
+      "tags": [
+        "group:assoc-delegating-vs-escalating",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "connector-reachability",
+      "term": "Connector reachability",
+      "definition": "A custom connector's server must accept connections from Anthropic's cloud, so one on a private network needs Anthropic allowlisted in its firewall.",
+      "hint": null,
+      "tags": [
+        "group:assoc-delegating-vs-escalating",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "skill-design-tips",
+      "term": "Skill design tips",
+      "definition": "For repeatable processes, write a specific description so Claude knows when to use the skill, keep one purpose per skill, and test it with varied prompts after uploading.",
+      "hint": null,
+      "tags": [
+        "group:assoc-workflow-fit",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "usage-dashboard",
+      "term": "Usage dashboard",
+      "definition": "On Pro, Max, Team and seat-based Enterprise plans, Settings > Usage shows your session and weekly limits, so you can judge whether a workflow fits.",
+      "hint": null,
+      "tags": [
+        "group:assoc-workflow-fit",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "archive-finished-projects",
+      "term": "Archive finished projects",
+      "definition": "Archiving a project clears the list but keeps its sharing settings and knowledge, and you must unarchive it before you can delete it.",
+      "hint": null,
+      "tags": [
+        "group:assoc-workflow-fit",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-name-invisible",
+      "term": "Project name invisible",
+      "definition": "A project's name and description are not seen by Claude, so they only help you organize; anything Claude should know belongs in instructions or knowledge.",
+      "hint": null,
+      "tags": [
+        "group:assoc-workflow-fit",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "research-limitations",
+      "term": "Research limitations",
+      "definition": "Research can use limits faster than normal chat because it pulls many sources, and it cannot use tools from local MCP servers set up in Claude Desktop.",
+      "hint": null,
+      "tags": [
+        "group:assoc-stakeholder-limits",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "research-mobile-gap",
+      "term": "Research mobile gap",
+      "definition": "In the mobile app, Research searches only the web and silently skips your connectors, so start it on the web or in Desktop when internal sources matter.",
+      "hint": null,
+      "tags": [
+        "group:assoc-stakeholder-limits",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "claude-cowork",
+      "term": "Claude Cowork",
+      "definition": "A paid-plan mode where Claude plans and carries out multi-step file and research tasks, on desktop and in the cloud, instead of answering one prompt at a time.",
+      "hint": null,
+      "tags": [
+        "group:assoc-cowork",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    }
+  ]
+}

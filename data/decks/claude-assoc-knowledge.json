@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-knowledge",
+  "title": "Projects, Knowledge and Connectors",
+  "description": "Project instructions and knowledge, sharing roles, connectors like Gmail and Drive, and skills.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "context-isolation",
+      "term": "Context isolation",
+      "definition": "Chats in one project do not share context with each other unless the information is saved in the project's knowledge base.",
+      "hint": null,
+      "tags": [
+        "group:assoc-projects-vs-chat",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-instructions",
+      "term": "Project instructions",
+      "definition": "Directions saved in a project that apply to every chat in it, such as a tone, a role or task rules, unlike account-wide instructions.",
+      "hint": null,
+      "tags": [
+        "group:assoc-instructions-scopes",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "instructions-for-claude",
+      "term": "Instructions for Claude",
+      "definition": "An account-wide setting (profile instructions) that applies to all your conversations, for general preferences rather than project-specific context.",
+      "hint": null,
+      "tags": [
+        "group:assoc-instructions-scopes",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-knowledge",
+      "term": "Project knowledge",
+      "definition": "Documents, text or code uploaded to a project that Claude uses as context in every chat in that project.",
+      "hint": null,
+      "tags": [
+        "group:assoc-project-knowledge",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "rag-mode",
+      "term": "RAG mode",
+      "definition": "On paid plans, Claude automatically retrieves only the relevant parts of project knowledge once it nears the context limit, expanding capacity by up to 10x.",
+      "hint": null,
+      "tags": [
+        "group:assoc-project-knowledge",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "descriptive-filenames",
+      "term": "Descriptive filenames",
+      "definition": "Clear, well-named project files help Claude find and retrieve the right information, especially when RAG mode is active.",
+      "hint": null,
+      "tags": [
+        "group:assoc-project-knowledge",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-visibility",
+      "term": "Project visibility",
+      "definition": "Team and Enterprise projects can be private to invited members or public to the whole organization, while individual chats stay private unless shared.",
+      "hint": null,
+      "tags": [
+        "group:assoc-project-sharing",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "can-view",
+      "term": "Can view",
+      "definition": "A sharing role that lets members read a project's instructions and knowledge and chat in it, but not change them.",
+      "hint": null,
+      "tags": [
+        "group:assoc-project-sharing",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "can-edit",
+      "term": "Can edit",
+      "definition": "A sharing role that lets members change a project's instructions and knowledge, update members and contribute, beyond what viewers can do.",
+      "hint": null,
+      "tags": [
+        "group:assoc-project-sharing",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "connectors",
+      "term": "Connectors",
+      "definition": "Links that let Claude reach apps and services to retrieve data and take actions, using only the access your own account already has.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connectors",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "gmail-connector",
+      "term": "Gmail connector",
+      "definition": "Lets Claude search and read email and draft messages; by default it asks your approval before each send, reply or forward.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connectors",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "drive-connector",
+      "term": "Drive connector",
+      "definition": "Lets Claude search and retrieve Drive files, but it extracts text only and does not process images embedded in documents.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connectors",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "connector-permissions",
+      "term": "Connector permissions",
+      "definition": "Team and Enterprise owners can set connector tools to always allow, need approval or blocked, for example allowing reads while blocking writes.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connectors",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "skills",
+      "term": "Skills",
+      "definition": "Packages of specialized knowledge and workflows that Claude picks up on its own when relevant, such as built-in ones for Excel, Word, PowerPoint and PDF.",
+      "hint": null,
+      "tags": [
+        "group:assoc-skills",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "custom-skill",
+      "term": "Custom skill",
+      "definition": "A skill you build for your own process by packaging a folder containing a skill.md file as a ZIP and uploading it, private until shared.",
+      "hint": null,
+      "tags": [
+        "group:assoc-skills",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "skill-safety",
+      "term": "Skill safety",
+      "definition": "Install skills only from trusted sources, since they can carry prompt-injection or data-exfiltration risk, and review bundled files before enabling one.",
+      "hint": null,
+      "tags": [
+        "group:assoc-skills",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "pdf-handling-limits",
+      "term": "PDF handling limits",
+      "definition": "PDFs up to 100 pages are read for text and visuals; 101 to 1000 pages are read as text only; longer PDFs cannot be uploaded to a chat.",
+      "hint": null,
+      "tags": [
+        "group:assoc-file-uploads",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "chat-vs-project-uploads",
+      "term": "Chat vs project uploads",
+      "definition": "A chat accepts up to 20 files of 500MB each, while project files are limited to 30MB each and everything must fit in the context window.",
+      "hint": null,
+      "tags": [
+        "group:assoc-file-uploads",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "enterprise-search",
+      "term": "Enterprise search",
+      "definition": "A pre-built Ask Your Org project on Team and Enterprise that searches connected tools like Slack, Microsoft 365 and Drive and returns cited answers once an Owner sets it up.",
+      "hint": null,
+      "tags": [
+        "group:assoc-enterprise-search",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    },
+    {
+      "id": "enterprise-search-access",
+      "term": "Enterprise search access",
+      "definition": "Each person signs in to the connected tools with their own account, so results follow their own permissions, except custom connectors using a shared key.",
+      "hint": null,
+      "tags": [
+        "group:assoc-enterprise-search",
+        "domain:claude-associate:5"
+      ],
+      "media": null
+    }
+  ]
+}

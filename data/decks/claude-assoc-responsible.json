@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-responsible",
+  "title": "Responsible Use and Privacy",
+  "description": "The Usage Policy, human review and disclosure, training and memory privacy, and connector and sharing risks.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "qualified-human-in-the-loop",
+      "term": "Qualified human-in-the-loop",
+      "definition": "For high-risk recommendations, a trained person must meaningfully review the output, with authority to change it, before it reaches anyone or drives a decision.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hitl-vs-disclosure",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "ai-disclosure",
+      "term": "AI disclosure",
+      "definition": "People who receive advice or are subject to a decision produced with AI must be clearly told AI was used, though naming Claude is not required.",
+      "hint": null,
+      "tags": [
+        "group:assoc-hitl-vs-disclosure",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "high-risk-areas",
+      "term": "High-risk areas",
+      "definition": "Usage Policy areas needing extra safeguards: legal, medical, finance, credit, insurance, housing, employment, education, healthcare access, public benefits and legal status.",
+      "hint": null,
+      "tags": [
+        "group:assoc-usage-policy-tiers",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "universal-usage-standards",
+      "term": "Universal usage standards",
+      "definition": "Usage Policy rules for every user and use, such as no illegal activity, compromising systems, weapons, inciting violence or hate, disinformation, fraud or privacy abuse.",
+      "hint": null,
+      "tags": [
+        "group:assoc-usage-policy-tiers",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "consumer-training-choice",
+      "term": "Consumer training choice",
+      "definition": "On Free, Pro, and Max plans you choose whether your chats and coding sessions help train future models, and you can change it anytime in Privacy Settings.",
+      "hint": null,
+      "tags": [
+        "group:assoc-training-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "commercial-plan-data",
+      "term": "Commercial plan data",
+      "definition": "Team, Enterprise, and API use fall under Commercial Terms, so the consumer training choice does not apply to them.",
+      "hint": null,
+      "tags": [
+        "group:assoc-training-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "training-retention-period",
+      "term": "Training retention period",
+      "definition": "If you allow training on consumer plans, data retention extends to five years; if you decline, the existing 30-day period continues.",
+      "hint": null,
+      "tags": [
+        "group:assoc-training-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "incognito-chat",
+      "term": "Incognito chat",
+      "definition": "A ghost-icon chat outside a project that is not saved to memory or chat history and is never searched later; on Team and Enterprise it still follows org retention and exports.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "pause-vs-reset-memory",
+      "term": "Pause vs reset memory",
+      "definition": "Pausing keeps your memories but Claude stops using them and stops adding new ones; resetting permanently deletes all memories, including project memories.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "sensitive-topics-in-memory",
+      "term": "Sensitive topics in memory",
+      "definition": "By default Claude does not store topics like health, religion, or politics, and never saves items such as government ID or financial account numbers; an opt-in setting covers some topics.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "deleting-chats-vs-memories",
+      "term": "Deleting chats vs memories",
+      "definition": "Deleting a conversation does not remove memories generated from it, so those must be deleted individually in Settings > Memory.",
+      "hint": null,
+      "tags": [
+        "group:assoc-memory-privacy",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "project-sharing-scope",
+      "term": "Project sharing scope",
+      "definition": "Sharing a project gives members its knowledge and instructions at either permission level, but chats stay unshared, so keep sensitive files out of shared projects.",
+      "hint": null,
+      "tags": [
+        "group:assoc-sharing-risk",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "published-artifact-caution",
+      "term": "Published artifact caution",
+      "definition": "Treat code in someone else's published artifact like a file from an unknown sender, and check for shared storage before typing sensitive data into it.",
+      "hint": null,
+      "tags": [
+        "group:assoc-sharing-risk",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "custom-connector-trust",
+      "term": "Custom connector trust",
+      "definition": "Custom connectors are not verified by Anthropic, so connect only trusted servers, review requested permissions, limit scopes, and revoke access when needed.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connector-risk",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-injection",
+      "term": "Prompt injection",
+      "definition": "Hidden instructions in a malicious server's output that try to make Claude take unintended actions; watch tool inputs and outputs even though Claude has protections.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connector-risk",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "research-connector-actions",
+      "term": "Research connector actions",
+      "definition": "Research can call connector tools automatically without approval, so disable any tools that can write or change data before running it.",
+      "hint": null,
+      "tags": [
+        "group:assoc-connector-risk",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "chat-share-snapshot",
+      "term": "Chat share snapshot",
+      "definition": "Sharing a chat creates a frozen copy of the messages so far; later messages and attached files stay private, and unsharing then re-sharing refreshes it.",
+      "hint": null,
+      "tags": [
+        "group:assoc-chat-sharing",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "public-link-caution",
+      "term": "Public link caution",
+      "definition": "Anyone with a public chat link can view it without an account, so treat it as posted publicly; turning it off does not remove copies or screenshots already made.",
+      "hint": null,
+      "tags": [
+        "group:assoc-chat-sharing",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "share-with-specific-people",
+      "term": "Share with specific people",
+      "definition": "Invite specific email addresses to view a chat snapshot; it is view-only, only the invited address works, and an unopened invite expires after 30 days.",
+      "hint": null,
+      "tags": [
+        "group:assoc-chat-sharing",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "org-only-chat-sharing",
+      "term": "Org-only chat sharing",
+      "definition": "On Team and Enterprise, chats can only be shared inside the organization, and admins can turn chat sharing off, review shared chats and revoke them.",
+      "hint": null,
+      "tags": [
+        "group:assoc-chat-sharing",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "web-search-org-switch",
+      "term": "Web search org switch",
+      "definition": "On Team and Enterprise, an Owner or Primary Owner must first enable web search for the organization; members can then turn it on or off in each chat.",
+      "hint": null,
+      "tags": [
+        "group:assoc-admin-capability-controls",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "artifact-external-sharing",
+      "term": "Artifact external sharing",
+      "definition": "Admins have a separate toggle for anyone-with-the-link artifact sharing; switching it off also breaks existing public links, except artifacts individually allowed.",
+      "hint": null,
+      "tags": [
+        "group:assoc-admin-capability-controls",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "cowork-approval-modes",
+      "term": "Cowork approval modes",
+      "definition": "Manual asks before actions, Auto has Claude check each action for safety and uses more usage, and Skip does no automatic checks; permanent file deletion always needs explicit permission.",
+      "hint": null,
+      "tags": [
+        "group:assoc-cowork",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "chrome-site-lists",
+      "term": "Chrome site lists",
+      "definition": "Owners can set an allowlist limiting Claude to named sites and a blocklist of sites it must never use, and Enterprise custom roles can grant the extension separately from Cowork.",
+      "hint": null,
+      "tags": [
+        "group:assoc-claude-in-chrome",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    }
+  ]
+}

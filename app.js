@@ -21,6 +21,7 @@ import { celebrationFor } from './core/celebrate.js';
 import { recordCheck, calibrationOf, weakAreas, verdictFor } from './core/check.js';
 import { migrateExam, recordAttempt, questionsByCard, recordAnswer, kinOf } from './core/exam.js';
 import { currentUser } from './adapters/identity.js';
+import { readCollapsed, setCollapsed } from './core/collapse.js';
 import { showDeckGuide } from './screens/deck-guide.js';
 import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress } from './core/account.js';
 import { modeById } from './modes/index.js';
@@ -47,6 +48,8 @@ const SYNC_NOTE = {
   unavailable: 'Progress sync is unavailable right now. It\'s saved on this device and will try again.',
 };
 let cleanup = () => {};
+// this browser's own small preferences (folded sets); null when storage is blocked
+const prefs = () => { try { return window.localStorage; } catch { return null; } };
 let siteTitle = document.title || 'Study'; // the page's own name until the index says otherwise
 let studying = null; // deck id of the session on screen, or exam:<bankId> during a practice exam
 // During a study session the top bar steps aside, so the round has the whole screen.
@@ -225,14 +228,27 @@ async function showLibrary(message) {
   const rowsFor = (list) => list.map((d) => rowById.get(d.id)).filter(Boolean);
   const mine = rowsFor(lib.otherDecks.filter((d) => d.source === 'uploaded'));
   const builtIn = rowsFor(lib.otherDecks.filter((d) => d.source !== 'uploaded'));
-  const collections = await Promise.all(lib.collections.map(async (c) => h('section', { class: 'collection' },
-    h('div', { class: 'collection-head' },
-      c.badges.length ? h('div', { class: 'collection-badges' }, c.badges.map((b) => h('a', { href: b.url, target: '_blank', rel: 'noopener', title: `${b.name} on Credly` },
-        h('img', { src: b.image, alt: `${b.name} badge`, width: 56, height: 56 })))) : null,
-      h('h2', { class: 'collection-title' }, c.title, c.purpose ? tip(c.purpose, 'Why these decks') : null)),
-    await homeCard(index.collections.find((raw) => raw.id === c.id)),
-    h('ul', { class: 'deck-list' }, rowsFor(c.decks)),
-    c.exams.length ? h('ul', { class: 'deck-list exam-list' }, await examItems(c.exams)) : null)));
+  // Each study set folds down to its badge and title; this browser remembers which are folded.
+  const folded = readCollapsed(prefs());
+  const collections = await Promise.all(lib.collections.map(async (c) => {
+    const body = h('div', { class: 'collection-body', id: `set-${c.id}`, hidden: folded.has(c.id) || null },
+      await homeCard(index.collections.find((raw) => raw.id === c.id)),
+      h('ul', { class: 'deck-list' }, rowsFor(c.decks)),
+      c.exams.length ? h('ul', { class: 'deck-list exam-list' }, await examItems(c.exams)) : null);
+    const fold = h('button', { type: 'button', class: 'collection-fold', 'aria-expanded': String(!folded.has(c.id)), 'aria-controls': body.id,
+      onclick: () => {
+        const open = body.hidden;
+        body.hidden = !open;
+        fold.setAttribute('aria-expanded', String(open));
+        setCollapsed(prefs(), c.id, !open);
+      } }, c.title, h('span', { class: 'fold-mark', 'aria-hidden': 'true' }));
+    return h('section', { class: 'collection', 'data-id': c.id },
+      h('div', { class: 'collection-head' },
+        c.badges.length ? h('div', { class: 'collection-badges' }, c.badges.map((b) => h('a', { href: b.url, target: '_blank', rel: 'noopener', title: `${b.name} on Credly` },
+          h('img', { src: b.image, alt: `${b.name} badge`, width: 56, height: 56 })))) : null,
+        h('h2', { class: 'collection-title' }, fold, c.purpose ? tip(c.purpose, 'Why these decks') : null)),
+      body);
+  }));
   const uploadsNote = {
     cached: 'Showing your uploaded decks as saved on this device. The server couldn\'t be reached, so changes made elsewhere may be missing.',
     unavailable: 'Your uploaded decks aren\'t available right now. Check your connection and reload.',
@@ -243,6 +259,11 @@ async function showLibrary(message) {
     oninput: (e) => {
       const q = e.target.value.trim().toLowerCase();
       for (const li of rows) li.hidden = Boolean(q) && !li.dataset.name.includes(q);
+      // while searching, folded sets open so matches are not hidden; clearing the search refolds them
+      const stillFolded = readCollapsed(prefs());
+      for (const sec of root.querySelectorAll('section.collection')) {
+        sec.querySelector('.collection-body').hidden = !q && stillFolded.has(sec.dataset.id);
+      }
     } });
 
   mount(root,

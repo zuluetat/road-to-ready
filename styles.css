@@ -496,3 +496,10 @@ body.in-session .topbar { display: none; }
 .guide-steps li { margin-bottom: 0.5rem; }
 .sample-csv { font-size: 0.8rem; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--bg); border: 1px solid var(--rule); padding: 0.75rem; border-radius: 8px; margin: 0 0 0.75rem; }
 .menu-guide { display: block; margin-top: 0.5rem; }
+
+/* Study sets fold on the home screen: the title is the toggle, with a chevron after it */
+.collection-fold { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border-radius: 6px; }
+.collection-fold:focus-visible { outline: 2px solid var(--accent, currentColor); outline-offset: 3px; }
+.fold-mark { display: inline-block; width: 0.5em; height: 0.5em; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); opacity: 0.6; transition: transform 0.15s; }
+.collection-fold[aria-expanded="false"] .fold-mark { transform: rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .fold-mark { transition: none; } }

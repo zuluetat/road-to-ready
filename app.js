@@ -21,6 +21,7 @@ import { celebrationFor } from './core/celebrate.js';
 import { recordCheck, calibrationOf, weakAreas, verdictFor } from './core/check.js';
 import { migrateExam, recordAttempt, questionsByCard, recordAnswer, kinOf } from './core/exam.js';
 import { currentUser } from './adapters/identity.js';
+import { showDeckGuide } from './screens/deck-guide.js';
 import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress } from './core/account.js';
 import { modeById } from './modes/index.js';
 import { createSession } from './core/session.js';
@@ -585,9 +586,14 @@ async function showUploadScreen() {
   cleanup = showUpload(root, {
     decks,
     existing: index.decks.filter((d) => d.source === 'uploaded').map(({ id, title }) => ({ id, title })),
-    onSaved: (id) => navigate('#/deck/' + id, 'Deck saved. It syncs to your other devices.'),
+    onSaved: (id) => navigate('#/deck/' + id, LOCAL ? 'Deck saved in this browser.' : 'Deck saved. It syncs to your other devices.'),
     onCancel: () => navigate('#/'),
   });
+}
+
+function showGuideScreen() {
+  setTitle('How to make a deck');
+  showDeckGuide(root, { local: LOCAL, onDownload: (name, text) => download(name, text, 'text/csv'), onBack: () => navigate('#/') });
 }
 
 async function deleteDeck(deck) {
@@ -989,6 +995,7 @@ async function route() {
     else if (plan) await showPlanScreen(plan[1]);
     else if (official) await showCheckScreen(official[1]);
     else if (location.hash === '#/upload') await showUploadScreen();
+    else if (location.hash === '#/make-a-deck') showGuideScreen();
     else await showLibrary(takeNotice());
   } catch (err) {
     mount(root, h('section', { class: 'panel' },
@@ -1082,6 +1089,7 @@ async function renderTopbar() {
           h('label', { for: 'your-name' }, 'What should we call you?'),
           h('div', { class: 'menu-row' }, input, h('button', { type: 'submit' }, 'Save'))),
         h('a', { class: 'button menu-link', href: '#/upload', onclick: (e) => { e.currentTarget.closest('details').open = false; } }, '+ Add a deck'),
+        h('a', { class: 'link menu-guide', href: '#/make-a-deck', onclick: (e) => { e.currentTarget.closest('details').open = false; } }, 'How to make a deck'),
         h('p', { class: 'muted' }, versionText(acct.version)),
         LOCAL ? h('p', { class: 'muted' }, 'Progress is saved in this browser only. To move it, download a backup from the home screen.') : null,
         status,

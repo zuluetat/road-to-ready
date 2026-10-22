@@ -13,6 +13,9 @@ const READS = [
   'Lines like **Term**: definition, Term: definition, or Term — definition',
   'A heading with a paragraph under it',
   'term|definition lines, and tab-separated lines',
+  'Q: and A: lines (or Front: and Back:)',
+  'JSON: a list of cards with term and definition fields',
+  'An AI chat reply, pasted whole: the cards in its code block are read',
 ];
 
 // showUpload(root, { decks, existing: [{ id, title }], onSaved(id), onCancel() }) -> cleanup
@@ -83,9 +86,9 @@ export function showUpload(root, { decks, existing, onSaved, onCancel }) {
     return [
       h('section', { class: 'panel' },
         h('h2', {}, 'From a file'),
-        h('p', { class: 'muted' }, 'CSV or Markdown. You review every card before anything is saved.'),
+        h('p', { class: 'muted' }, 'CSV, Markdown, text or JSON. You review every card before anything is saved. ', h('a', { class: 'link', href: '#/make-a-deck' }, 'How to make one, with a sample')),
         h('div', { class: 'actions' },
-          h('input', { type: 'file', id: 'deck-file', class: 'sr-only', accept: '.csv,.md,.markdown,.txt,text/csv,text/markdown,text/plain', onchange: onFile }),
+          h('input', { type: 'file', id: 'deck-file', class: 'sr-only', accept: '.csv,.tsv,.md,.markdown,.txt,.json,text/csv,text/tab-separated-values,text/markdown,text/plain,application/json', onchange: onFile }),
           h('label', { class: 'button primary-label', for: 'deck-file' }, 'Choose a file'))),
       h('details', { class: 'panel' },
         h('summary', {}, 'Or paste notes'),

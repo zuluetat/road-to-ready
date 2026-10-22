@@ -17,11 +17,57 @@ const LABELS = new Set(['note', 'notes', 'todo', 'to do', 'example', 'examples',
   'fyi', 'nb', 'n.b.', 'update', 'updated', 'reminder', 'remember']);
 
 // readCards(text, filename) -> { title, cards: [{ term, definition }], skipped, format }
+// JSON when the file is .json or the text is a JSON list of cards; CSV when the file is .csv or the
+// text starts with a recognised header row (pasted, or a .txt); Markdown otherwise. An AI chat reply
+// often puts the cards in a code block with a sentence around it: then only the block is read.
 export function readCards(text, filename = '') {
-  const format = /\.csv$/i.test(filename) ? 'csv' : 'markdown';
-  text = text.replace(/^﻿/, '');
-  const result = format === 'csv' ? readCsv(text) : readMarkdown(text);
+  text = text.replace(/^\uFEFF/, '');
+  let format = null;
+  const fence = firstFence(text);
+  if (fence && (fence.lang === 'json' || (!fence.lang && parsesAsJson(fence.body)))) format = 'json';
+  else if (fence && (fence.lang === 'csv' || fence.lang === 'tsv' || startsWithCsvHeader(fence.body))) format = 'csv';
+  if (format) text = fence.body;
+  else if (/\.json$/i.test(filename) || parsesAsJson(text)) format = 'json';
+  else if (/\.csv$/i.test(filename) || startsWithCsvHeader(text)) format = 'csv';
+  else format = 'markdown';
+  const result = format === 'json' ? readJson(text) : format === 'csv' ? readCsv(text) : readMarkdown(text);
   return { title: result.title || titleFromFilename(filename), cards: result.cards, skipped: result.skipped, format };
+}
+
+// The first code block: { lang, body }, or null.
+function firstFence(text) {
+  const m = text.match(/^(```|~~~)[ \t]*([\w-]*)[^\n]*\n([\s\S]*?)^\1[ \t]*$/m);
+  return m ? { lang: m[2].toLowerCase(), body: m[3] } : null;
+}
+
+function parsesAsJson(text) {
+  if (!/^\s*[[{]/.test(text)) return false;
+  try { JSON.parse(text); return true; } catch { return false; }
+}
+
+// A list of objects with a term-like and a definition-like field (the same names as CSV headers),
+// either on its own or as the first list inside an object ({ "cards": [...] }).
+function readJson(text) {
+  let data;
+  try { data = JSON.parse(text); } catch { return { cards: [], skipped: 1 }; }
+  const list = Array.isArray(data) ? data : Object.values(data || {}).find(Array.isArray) || [];
+  const cards = [];
+  let skipped = 0;
+  for (const item of list) {
+    const entries = item && typeof item === 'object' ? Object.entries(item) : [];
+    const pick = (names) => entries.find(([k, v]) => names.has(k.toLowerCase()) && (typeof v === 'string' || typeof v === 'number'))?.[1];
+    const card = pair(String(pick(TERM_HEADERS) ?? ''), String(pick(DEF_HEADERS) ?? ''));
+    if (card) cards.push(card);
+    else skipped += 1;
+  }
+  return { title: typeof data?.title === 'string' ? strip(data.title) : '', cards, skipped };
+}
+
+function startsWithCsvHeader(text) {
+  const first = text.split(/\r?\n/).find((l) => l.trim()) || '';
+  if (first.trim().startsWith('|')) return false; // a Markdown table
+  const cells = parseCsvRows(first, csvDelimiter(first))[0] || [];
+  return cells.length >= 2 && headerColumns(cells) !== null;
 }
 
 function titleFromFilename(name) {
@@ -30,6 +76,7 @@ function titleFromFilename(name) {
 
 // Which two columns hold the term and the definition, judged from a header row.
 function headerColumns(cells) {
+  if (cells.some((c) => (c || '').length > MAX_TERM)) return null; // a header is short; never clean a huge field
   const lower = cells.map((c) => strip(c).toLowerCase());
   const term = lower.findIndex((c) => TERM_HEADERS.has(c));
   const def = lower.findIndex((c) => DEF_HEADERS.has(c));
@@ -45,13 +92,20 @@ function csvDelimiter(text) {
 }
 
 function readCsv(text) {
-  const rows = parseCsvRows(text, csvDelimiter(text)).filter((r) => r.some((c) => c.trim() !== ''));
+  const delimiter = csvDelimiter(text);
+  const rows = parseCsvRows(text, delimiter).filter((r) => r.some((c) => c.trim() !== ''));
   const header = rows.length ? headerColumns(rows[0]) : null;
   const cols = header || { term: 0, def: 1 };
+  // The definition is the header's last column: a row with more cells than the header has an
+  // unquoted comma in its definition, so the rest of the row belongs to it.
+  const defIsLast = header && cols.def === rows[0].length - 1 && cols.term < cols.def;
   const cards = [];
   let skipped = 0;
   for (const row of header ? rows.slice(1) : rows) {
-    const card = pair(row[cols.term], row[cols.def]);
+    // the header again (AI tools sometimes repeat it): counted as skipped, never a card
+    if (header && headerColumns(row)) { skipped += 1; continue; }
+    const definition = defIsLast && row.length > rows[0].length ? row.slice(cols.def).join(delimiter) : row[cols.def];
+    const card = pair(row[cols.term], definition);
     if (card) cards.push(card);
     else skipped += 1;
   }
@@ -107,9 +161,14 @@ function lineCard(raw) {
   return null;
 }
 
+// Cells split on unescaped pipes; \| inside a cell is a pipe in the text.
 function tableCells(line) {
-  return line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
+  return line.trim().replace(/^\|/, '').replace(/(?<!\\)\|$/, '').split(/(?<!\\)\|/).map((c) => c.replace(/\\\|/g, '|').trim());
 }
+
+// "Q: …" then "A: …" on the next line (or Question/Answer, Front/Back): one card.
+const ASK = /^(?:q|question|front)\s*:\s*(.+)$/i;
+const ANSWER = /^(?:a|answer|back)\s*:\s*(.+)$/i;
 
 const TABLE_RULE = /^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/;
 
@@ -121,6 +180,7 @@ function readMarkdown(text) {
   let section = null; // { term, para: [], paraDone, hasCards }
 
   let lastListCard = null; // the card a following indented sub-bullet adds to
+  let inMarkdownBlock = false;
 
   const closeSection = () => {
     if (section && section.para.length) {
@@ -144,6 +204,9 @@ function readMarkdown(text) {
     const trimmed = line.trim();
 
     if (/^(```|~~~)/.test(trimmed)) {
+      // a markdown block (an AI reply's way of wrapping notes) is read like the rest; others are code
+      if (inMarkdownBlock) { inMarkdownBlock = false; continue; }
+      if (/^(markdown|md)$/i.test(trimmed.slice(3).trim())) { inMarkdownBlock = true; continue; }
       const fence = trimmed.slice(0, 3);
       let close = i + 1;
       while (close < lines.length && !lines[close].trim().startsWith(fence)) close++;
@@ -167,9 +230,13 @@ function readMarkdown(text) {
       continue;
     }
 
-    if (trimmed.startsWith('|')) {
+    const outer = trimmed.startsWith('|');
+    // a table may leave out the outer pipes; then the divider row under its header gives it away
+    const bare = !outer && trimmed.includes('|') && TABLE_RULE.test((lines[i + 1] || '').trim());
+    if (outer || bare) {
+      const inTable = (l) => (outer ? l.trim().startsWith('|') : l.trim() !== '' && l.includes('|'));
       const block = [];
-      while (i < lines.length && lines[i].trim().startsWith('|')) block.push(lines[i++].trim());
+      while (i < lines.length && inTable(lines[i])) block.push(lines[i++].trim());
       i--;
       const hasRule = block.length > 1 && TABLE_RULE.test(block[1]);
       const header = hasRule ? headerColumns(tableCells(block[0])) : null;
@@ -190,6 +257,22 @@ function readMarkdown(text) {
       const extra = line.replace(LIST_MARKER, '');
       if (extra.length <= MAX_FIELD && strip(extra)) {
         lastListCard.definition += '; ' + strip(extra);
+        continue;
+      }
+    }
+
+    const ask = trimmed.length <= MAX_FIELD ? strip(trimmed).match(ASK) : null;
+    if (ask) {
+      let j = i + 1;
+      while (j < lines.length && !lines[j].trim()) j++;
+      const next = j < lines.length && lines[j].trim().length <= MAX_FIELD ? strip(lines[j].trim()).match(ANSWER) : null;
+      if (next) {
+        cardsFollow();
+        const qa = pair(ask[1], next[1]);
+        if (qa) cards.push(qa);
+        else skipped += 1;
+        lastListCard = null;
+        i = j;
         continue;
       }
     }

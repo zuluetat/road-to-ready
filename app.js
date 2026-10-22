@@ -593,7 +593,7 @@ async function showUploadScreen() {
 
 function showGuideScreen() {
   setTitle('How to make a deck');
-  showDeckGuide(root, { local: LOCAL, onDownload: (name, text) => download(name, text, 'text/csv'), onBack: () => navigate('#/') });
+  showDeckGuide(root, { local: LOCAL, onDownload: (name, text, type) => download(name, text, type), onBack: () => navigate('#/') });
 }
 
 async function deleteDeck(deck) {

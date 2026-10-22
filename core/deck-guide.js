@@ -13,6 +13,19 @@ export const SAMPLE_CSV = [
   'Hallucination,A model states something false or made up as if it were fact',
 ].join('\n') + '\n';
 
+export const SAMPLE_MD_NAME = 'sample-deck.md';
+
+// The same four cards for people who keep notes in Markdown: a heading names the deck, then one
+// **Term**: definition per line.
+export const SAMPLE_MD = [
+  '# Sample deck',
+  '',
+  '**Amazon Bedrock**: Fully managed service that gives access to foundation models from several providers through one API',
+  '**Amazon SageMaker**: Service to build, train and deploy your own machine learning models',
+  '**Prompt engineering**: Shaping a model\'s input, such as instructions and examples, to get better output without retraining',
+  '**Hallucination**: A model states something false or made up as if it were fact',
+].join('\n') + '\n';
+
 export function whereDecksLive(local) {
   return local
     ? 'Your deck is kept in this browser only, with your progress. It is never uploaded anywhere. Clearing the browser\'s data or Reset all progress removes it, so keep the file.'

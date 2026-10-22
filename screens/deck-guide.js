@@ -1,7 +1,7 @@
 // How to make a deck: brief steps, the sample CSV to copy or download, and where the deck is kept.
 
 import { h, mount } from '../core/dom.js';
-import { SAMPLE_CSV, SAMPLE_NAME, whereDecksLive, AI_PROMPT } from '../core/deck-guide.js';
+import { SAMPLE_CSV, SAMPLE_NAME, SAMPLE_MD, SAMPLE_MD_NAME, whereDecksLive, AI_PROMPT } from '../core/deck-guide.js';
 
 // Copies text, then says so on the button for a moment; falls back to selecting the text to copy by hand.
 function copyButton(text, source) {
@@ -18,7 +18,7 @@ function copyButton(text, source) {
   return b;
 }
 
-// showDeckGuide(root, { local, onDownload(name, text), onBack() })
+// showDeckGuide(root, { local, onDownload(name, text, type), onBack() })
 export function showDeckGuide(root, { local, onDownload, onBack }) {
   const prompt = h('pre', { class: 'sample-csv' }, AI_PROMPT);
   mount(root,
@@ -41,14 +41,17 @@ export function showDeckGuide(root, { local, onDownload, onBack }) {
     h('section', { class: 'panel' },
       h('h2', {}, 'Sample'),
       h('pre', { class: 'sample-csv' }, SAMPLE_CSV),
+      h('details', { class: 'sample-md' }, h('summary', {}, 'Markdown version'), h('pre', { class: 'sample-csv' }, SAMPLE_MD)),
       h('div', { class: 'actions' },
-        h('button', { type: 'button', onclick: () => onDownload(SAMPLE_NAME, SAMPLE_CSV) }, 'Download the sample'),
+        h('button', { type: 'button', onclick: () => onDownload(SAMPLE_NAME, SAMPLE_CSV, 'text/csv') }, 'Download CSV sample'),
+        h('button', { type: 'button', onclick: () => onDownload(SAMPLE_MD_NAME, SAMPLE_MD, 'text/markdown') }, 'Download Markdown sample'),
         h('a', { class: 'button primary', href: '#/upload' }, '+ Add a deck'))),
     h('section', { class: 'panel' },
       h('h2', {}, 'Good to know'),
       h('ul', { class: 'plain' },
         h('li', {}, 'One card per row. A definition with commas is fine: the spreadsheet puts quotes around it for you.'),
         h('li', {}, 'To update a deck, fix the spreadsheet and add it again under the same name. Cards whose terms are unchanged keep their progress.'),
-        h('li', {}, 'No spreadsheet? Paste lines like Term: definition into Add a deck → Or paste notes.'))));
+        h('li', {}, 'No spreadsheet? Paste lines like Term: definition into Add a deck → Or paste notes.'),
+        h('li', {}, 'Keep notes in Markdown? Lines like **Term**: definition work too; see the Markdown version above.'))));
   return () => {};
 }

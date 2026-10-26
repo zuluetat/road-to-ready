@@ -6,7 +6,7 @@
 
 import { h, mount } from '../core/dom.js';
 import { questionFor } from '../adapters/questions.js';
-import { shuffleOptions, isCorrect } from '../core/exam.js';
+import { shuffleOptions, isCorrect, moreToLearn } from '../core/exam.js';
 import { learnStatus, LEARNED } from '../core/learn.js';
 import { topBar, endScreen, keys, optionList, checkButton, inPractice, reportLink } from './common.js';
 import { togglePick, ready } from '../core/choice.js';
@@ -252,8 +252,9 @@ export function start(deck, ctx) {
 
   function finish() {
     stopKeys();
-    const status = learnStatus(ctx.progress, deck.cards.map((c) => c.id));
     const total = tally.right + tally.wrong;
+    if (ctx.options?.only) return finishChosen(total);
+    const status = learnStatus(ctx.progress, deck.cards.map((c) => c.id));
     const allDone = status.learned === status.total;
     endScreen(ctx, {
       heading: total ? `Round done: ${tally.right} of ${total} answers right` : 'Every card is learned',
@@ -268,6 +269,23 @@ export function start(deck, ctx) {
       counted: total > 0,
     });
     showNudge();
+  }
+
+  // A round on chosen cards (the ones behind your flags) reports on those cards and goes back to
+  // where it came from, never on to a round of the whole deck.
+  // Cards in more than one deck run a deck at a time, each part ending with Continue.
+  function finishChosen(total) {
+    const ids = ctx.options.only.filter((id) => deck.cards.some((c) => c.id === id));
+    const status = learnStatus(ctx.progress, ids);
+    const more = ctx.nextPart && moreToLearn(ctx.options.queue);
+    endScreen(ctx, {
+      heading: total ? `Round done: ${tally.right} of ${total} answers right` : 'None of these cards are in this deck any more',
+      lines: total ? [`${status.learned} of these ${status.total} cards in ${deck.title} learned.`] : [],
+      missed: tally.missed,
+      again: more ? { label: more, run: ctx.nextPart, primary: true } : { label: 'Back to your exam', run: ctx.onExit, primary: true },
+      chosen: true,
+      counted: total > 0,
+    });
   }
 
   // Quiet: only shown when another deck is clearly the better use of time, or this one is stuck.

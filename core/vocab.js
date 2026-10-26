@@ -31,10 +31,12 @@ export function vocabulary(cards) {
   return out;
 }
 
-function matcher(name) {
+// exact: match the name only as written (capitals and all), for one-word names that are also
+// everyday words
+function matcher(name, exact = false) {
   // whole words only, with a plural allowed; a hyphen or letter on either side is part of a word
   return new RegExp(`(?<![\\p{L}\\p{N}_-])${escape(name)}(?:e?s)?(?![\\p{L}\\p{N}_-])`,
-    isAbbreviation(name) ? 'gu' : 'giu');
+    exact || isAbbreviation(name) ? 'gu' : 'giu');
 }
 
 // text -> [string | { text, id }]: each term underlined once, at its first appearance, the
@@ -44,7 +46,7 @@ export function linkText(text, vocab, { hidden = new Set() } = {}) {
   for (const v of vocab) {
     if (hidden.has(v.id)) continue;
     for (const name of v.names) {
-      for (const m of text.matchAll(matcher(name))) found.push({ start: m.index, end: m.index + m[0].length, id: v.id });
+      for (const m of text.matchAll(matcher(name, v.exact?.has(name)))) found.push({ start: m.index, end: m.index + m[0].length, id: v.id });
     }
   }
   found.sort((a, b) => (b.end - b.start) - (a.end - a.start) || a.start - b.start);

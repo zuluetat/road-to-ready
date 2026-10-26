@@ -15,9 +15,10 @@ const LEARN_SCENARIOS = 3; // scenario questions take longest; at most this many
 // kind: 'pass' (one full pass), 'retake' (one retake round), 'review' (due cards),
 // 'sample' (count random cards), 'learn' (one Learn round of count cards, 7 by default).
 // lastStep(cardId): a card's final Learn step (2 with a scenario question, else 1); Learn only.
+// only: Learn just these cards, learned or not (the cards behind questions you flagged or missed).
 export function createSession({
   kind, deck, progress: p, today, shuffle = defaultShuffle, count = 'all', newLimit = 20, save = () => {},
-  now = () => new Date().toISOString(), lastStep = () => STAGES.length - 1,
+  now = () => new Date().toISOString(), lastStep = () => STAGES.length - 1, only = null,
 }) {
   const ids = deck.cards.map((c) => c.id);
   const byId = new Map(deck.cards.map((c) => [c.id, c]));
@@ -34,6 +35,7 @@ export function createSession({
   else if (kind === 'retake') list = startRetakeRound(p, shuffle, ids);
   else if (kind === 'review') list = dueCards(p, ids, today, { newLimit });
   else if (kind === 'sample') list = shuffle(ids).slice(0, count === 'all' ? ids.length : count);
+  else if (kind === 'learn' && only) list = shuffle(only.filter((id) => byId.has(id)));
   else if (kind === 'learn') list = shuffle(pickLearnRound(learnRound(p, ids, { size: ids.length, shuffle: (xs) => xs }),
     count === 'all' ? LEARN_ROUND : count, (id) => learnKind(id) === 'scenario'));
   else throw new Error('Unknown session kind: ' + kind);

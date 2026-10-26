@@ -5,18 +5,23 @@
 // file only draws. Questions link to the flashcards they test through cardTerms(ref).
 
 import { h, mount } from '../core/dom.js';
-import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport } from '../core/exam.js';
+import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport, cardsBehind, byDeck, optionVocab, lastFlags, learnFlagsLabel } from '../core/exam.js';
+import { linkText } from '../core/vocab.js';
 import { keys, celebration, optionList, checkButton, reportLink } from '../modes/common.js';
 import { togglePick, ready } from '../core/choice.js';
 
 const LENGTHS = [15, 30];
 
 // showExam(root, { bank, record, loadRecord() -> Promise<record>, saveAttempt({ ids, results, flagged }) -> Promise<record>,
-//   cardTerms(refs) -> Promise<[{ deckId, term }]>, onExit, onRound() -> Promise<{ lines, celebration } | null> })
+//   cardTerms(refs) -> Promise<[{ deckId, term }]>, onExit, onRound() -> Promise<{ lines, celebration } | null>,
+//   loadTerms() -> Promise<{ vocab, cards }> (the set's cards: vocabulary with ids "deckId/cardId",
+//   and every loaded card by "deckId/cardId"),
+//   learnCards([{ deckId, cardIds }]): a Learn round on just those cards, a deck at a time })
 // The record is re-read before each draw and saved through saveAttempt, so another tab's attempts
 // are never overwritten. Returns the cleanup function.
-export function showExam(root, { bank, record: initial, loadRecord, saveAttempt, cardTerms, onExit, onAnswered, onRound, startLength = null }) {
+export function showExam(root, { bank, record: initial, loadRecord, saveAttempt, cardTerms, onExit, onAnswered, onRound, loadTerms = null, learnCards = null, startLength = null }) {
   let record = initial;
+  let known = null; // the set's terms, loaded for the score screen: { vocab, cards }
   const domainName = new Map(bank.exam.domains.map((d) => [d.id, d.name]));
   const byId = new Map(bank.questions.map((q) => [q.id, q]));
   let stopKeys = () => {};
@@ -45,6 +50,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         h('div', { class: 'actions' }, lengths.map((n, i) => h('button', {
           class: i === lengths.length - 1 ? 'primary' : null, type: 'button', onclick: () => begin(n),
         }, n === bank.exam.length ? `Full exam (${n}) · exam conditions` : `${n} questions`)))),
+      lastFlagsPanel(),
       h('section', { class: 'panel' },
         h('h2', {}, 'Domains'),
         h('ul', { class: 'missed' }, bank.exam.domains.map((d) => h('li', {}, h('strong', {}, d.name), h('span', {}, `${d.weight}% of the exam`))))),
@@ -55,6 +61,22 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
           h('tbody', {}, recent.map((a) => h('tr', {},
             h('td', {}, a.date), h('td', {}, String(a.length)), h('td', {}, `${a.right}/${a.length} (${a.percent}%)`)))))) : null);
     root.querySelector('.actions .primary')?.focus();
+  }
+
+  // Your latest full exam's flags, so the cards behind them can still be learned after the score
+  // screen is gone. Only that exam's: a newer full exam replaces them.
+  function lastFlagsPanel() {
+    const last = lastFlags(record, bank);
+    if (!last || !loadTerms || !learnCards) return null;
+    const panel = h('section', { class: 'panel' },
+      h('h2', {}, 'Your flags from the last full exam'),
+      h('p', {}, `On ${last.date} you flagged ${last.flagged.length}: ${last.right} right, ${last.wrong} wrong.`));
+    loadTerms().then((terms) => {
+      if (disposed || !panel.isConnected) return;
+      known = terms;
+      panel.append(...flagLearn(last.flagged));
+    }, () => {});
+    return panel;
   }
 
   async function begin(length) {
@@ -183,6 +205,8 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // flagged: question ids flagged for review, from a full exam; null for drills, which have no flags
   async function showResults({ ids, results, fresh, length, flagged = null }) {
     record = await saveAttempt({ ids, results, flagged: flagged || [] });
+    // links and Learn buttons need the set's decks; a slow load must not hold up the score
+    known = loadTerms ? await Promise.race([loadTerms(), new Promise((ok) => setTimeout(ok, 4000, null))]).catch(() => null) : null;
     if (disposed) return;
     const s = scoreExam(bank, results);
     const missedResults = results.filter((r) => !r.correct);
@@ -231,18 +255,83 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       h('summary', {}, h('strong', {}, m.stem)),
       r.chose && !r.correct ? h('p', {}, h('span', { class: 'pill pill-wrong' }, '✗ Your answer'), ' ',
         r.chose.length ? r.chose.join(' · ') : 'none') : null,
-      h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', m.answer.map((a) => m.options[a]).join(' · ')),
+      h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', linked(m.answer.map((a) => m.options[a]).join(' · '))),
       h('p', { class: 'muted' }, m.explanation),
-      studyLine(m.cards || []));
+      otherOptions(m),
+      studyLine(known ? cardsBehind(m, known.vocab, new Set(known.cards.keys())) : m.cards || []));
+  }
+
+  // The wrong options, each with why it's wrong and its terms linked to their decks: ruling an
+  // option out by test-taking sense isn't the same as knowing what it is.
+  function otherOptions(m) {
+    const wrong = m.options.map((text, i) => ({ text, why: m.whyWrong?.[i] })).filter((_, i) => !m.answer.includes(i));
+    return h('div', { class: 'other-options' },
+      h('p', {}, h('strong', {}, 'The other options')),
+      h('ul', {}, wrong.map((o) => h('li', {}, h('span', {}, linked(o.text)), o.why ? h('span', { class: 'muted' }, ' — ', o.why) : null))));
+  }
+
+  // text with the set's terms underlined: tapping one shows its definition under the question
+  // (the same look-up as in Learn), so the score stays in view
+  function linked(text) {
+    if (!known) return text;
+    return linkText(text, optionVocab(known.vocab)).map((x) => (typeof x === 'string' ? x : term(x.id, x.text)));
+  }
+
+  function term(id, text) {
+    const open = (e) => {
+      e.preventDefault();
+      const el = e.currentTarget;
+      const box = el.closest('details') || el.parentElement; // one definition open per question
+      const shown = box.querySelector('.lookup');
+      box.querySelectorAll('.vocab.open').forEach((x) => x.classList.remove('open'));
+      shown?.remove();
+      if (shown?.dataset.id === id) return; // a second tap closes it
+      const card = known.cards.get(id);
+      el.classList.add('open');
+      const close = () => { pill.remove(); el.classList.remove('open'); };
+      const pill = h('div', { class: 'lookup', role: 'status', 'data-id': id },
+        h('p', {}, h('strong', {}, card.term), ' ', card.definition),
+        h('button', { type: 'button', class: 'link', 'aria-label': 'Close', onclick: close }, '✕'));
+      // right under the line tapped: inside an option's list item, or after a paragraph
+      const li = el.closest('li');
+      const line = el.closest('p');
+      if (li && box.contains(li) && li !== box.closest('li')) li.append(pill);
+      else if (line) line.after(pill);
+      else box.append(pill);
+    };
+    return h('span', {
+      class: 'vocab', role: 'button', tabindex: '0', 'aria-label': `${text}: look up`, onclick: open,
+      onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') open(e); },
+    }, text);
+  }
+
+  const deckLink = (deckId, text) => h('a', { href: '#/deck/' + deckId, target: '_blank', rel: 'noopener', title: 'Opens in a new tab, so your results stay here' }, text);
+
+  // One button for the cards behind the flagged questions (and terms in their options), whatever
+  // decks they sit in: the round takes them a deck at a time, with Continue between.
+  function flagLearn(flaggedIds) {
+    const groups = byDeck([...new Set(flaggedIds.filter((id) => byId.has(id)).flatMap((id) => cardsBehind(byId.get(id), known.vocab, new Set(known.cards.keys()))))]);
+    const label = learnFlagsLabel(groups);
+    if (!label) return [];
+    const button = h('button', { type: 'button', onclick: () => learnCards(groups).catch(() => {
+      if (button.isConnected) button.after(h('p', { class: 'flash warn', role: 'status' }, 'Could not open the cards. Check your connection and try again.'));
+    }) }, label);
+    return [
+      h('p', { class: 'muted' }, 'Including terms named in the options.'),
+      h('div', { class: 'actions' }, button),
+    ];
   }
 
   // Where to study a question on the score screen: the flashcards it tests, or a note that none does yet.
   function studyLine(refs) {
     const el = h('p', { class: 'cards-line muted' }, refs.length ? '' : 'No flashcard covers this yet.');
-    if (refs.length) {
+    // with the set's cards loaded, each one looks up in place; otherwise it links to its deck
+    if (refs.length && known) {
+      el.append('Study: ', ...refs.flatMap((ref, i) => [i ? ', ' : '', term(ref, known.cards.get(ref).term)]));
+    } else if (refs.length) {
       cardTerms(refs).catch(() => []).then((found) => {
         if (!found.length || !el.isConnected) return;
-        el.append('Study: ', ...found.flatMap((c, i) => [i ? ', ' : '', h('a', { href: '#/deck/' + c.deckId }, c.term)]));
+        el.append('Study: ', ...found.flatMap((c, i) => [i ? ', ' : '', deckLink(c.deckId, c.term)]));
       });
     }
     return el;
@@ -260,6 +349,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     return [
       h('h3', {}, 'Flagged'),
       h('p', {}, line + sure),
+      known && learnCards ? flagLearn(flaggedResults.map((r) => r.id)) : null,
       f.flagged ? h('ul', { class: 'missed' }, flaggedResults.map((r) => h('li', {},
         h('span', { class: 'pill ' + (r.correct ? 'pill-correct' : 'pill-wrong') }, r.correct ? '✓ Right' : '✗ Wrong'), ' ',
         answerDetails(r)))) : null,

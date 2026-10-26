@@ -3,6 +3,7 @@
 // choose-two all-or-nothing, and keeps a per-bank history: stored under exam:<bankId>.
 
 import { shuffle } from './progress.js';
+import { linkText } from './vocab.js';
 
 export const EXAM_SCHEMA_VERSION = 1;
 const ATTEMPTS_KEPT = 50;
@@ -164,6 +165,69 @@ export function flagReport(results, flagged) {
     wrong: mine.length - right,
     unflaggedMissed: results.filter((r) => !r.correct && !marked.has(r.id)).length,
   };
+}
+
+// The cards behind a question: the ones it tests, then any whose term an option names, so a wrong
+// option you ruled out without knowing it (Kiro, say) can still be learned.
+// vocab: vocabulary() of the collection's cards, with ids written "deckId/cardId".
+// loaded: every "deckId/cardId" that loaded (some cards have no look-up name, so vocab alone misses them)
+export function cardsBehind(q, vocab, loaded = new Set(vocab.map((v) => v.id))) {
+  const named = (q.options || []).flatMap((o) => linkText(o, optionVocab(vocab)).filter((x) => typeof x !== 'string').map((x) => x.id));
+  return [...new Set([...(q.cards || []).filter((ref) => loaded.has(ref)), ...named])];
+}
+
+// Card names that are also everyday words in option text ("the model recalls", "answer from
+// memory"): an option using them names nothing, so they are never matched there.
+const OPTION_PLAIN = new Set(['recall', 'research', 'memory', 'accuracy', 'parameters']);
+// A one-word name counts only as written ("Kiro", not "precision"); longer names and short forms
+// as usual.
+export function optionVocab(vocab) {
+  return vocab
+    .map((v) => {
+      const names = v.names.filter((n) => !OPTION_PLAIN.has(n.toLowerCase()));
+      return { ...v, names, exact: new Set(names.filter((n) => !/\s/.test(n))) };
+    })
+    .filter((v) => v.names.length);
+}
+
+// The latest full exam's flags, kept with that attempt only: { date, flagged, right, wrong }, or
+// null when the latest full exam had none. A newer full exam replaces them; drills have no flags.
+export function lastFlags(record, bank) {
+  const full = [...(record.attempts || [])].reverse().find((a) => a.length >= bank.exam.length);
+  // only questions still in the bank
+  const inBank = bank.questions ? new Set(bank.questions.map((q) => q.id)) : null;
+  const flagged = (full?.flagged || []).filter((id) => !inBank || inBank.has(id));
+  if (!flagged.length) return null;
+  const missed = new Set(full.missed || []);
+  const wrong = flagged.filter((id) => missed.has(id)).length;
+  return { date: full.date, flagged, right: flagged.length - wrong, wrong };
+}
+
+// "deckId/cardId" refs -> [{ deckId, cardIds }], decks in first-seen order
+export function byDeck(refs) {
+  const out = new Map();
+  for (const ref of refs) {
+    const [deckId, cardId] = ref.split('/');
+    if (!out.has(deckId)) out.set(deckId, []);
+    if (!out.get(deckId).includes(cardId)) out.get(deckId).push(cardId);
+  }
+  return [...out].map(([deckId, cardIds]) => ({ deckId, cardIds }));
+}
+
+const cardCount = (groups) => (groups || []).reduce((n, g) => n + g.cardIds.length, 0);
+const cardsWord = (n) => `${n} card${n === 1 ? '' : 's'}`;
+
+// The one button for the cards behind your flags, however many decks they sit in -> text, or null
+export function learnFlagsLabel(groups) {
+  const n = cardCount(groups);
+  return n ? `Learn the ${cardsWord(n)} behind your flags` : null;
+}
+
+// After one deck's part of that round: Continue with the cards still to come -> text, or null when
+// none are left (the round goes back to the exam)
+export function moreToLearn(queue) {
+  const n = cardCount(queue);
+  return n ? `Continue: ${n} more ${n === 1 ? 'card' : 'cards'}` : null;
 }
 
 export const LOG_KEPT = 400;

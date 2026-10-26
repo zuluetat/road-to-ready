@@ -17,7 +17,7 @@ export function reportLink(what) {
 
 export function topBar(ctx, title, status) {
   return h('header', { class: 'study-bar' },
-    h('button', { class: 'link', type: 'button', onclick: ctx.onExit }, '← ', ctx.deck.title),
+    h('button', { class: 'link', type: 'button', onclick: ctx.onExit }, '← ', ctx.options?.returnTo ? 'Practice exam' : ctx.deck.title),
     h('div', { class: 'study-title' }, title),
     // text statuses are announced; an element (Match's ticking timer) is not, or it would flood a screen reader
     h('div', { class: 'study-status', 'aria-live': typeof status === 'string' ? 'polite' : null }, status || ''));
@@ -28,7 +28,8 @@ export function retakeCount(ctx) {
 }
 
 // The end screen every mode uses: a heading, a few result lines, the missed cards, and what to do next.
-export function endScreen(ctx, { heading, lines = [], missed = [], again = null, counted = false }) {
+// chosen: a round on chosen cards, which goes back where it came from (the deck's retakes aren't its business)
+export function endScreen(ctx, { heading, lines = [], missed = [], again = null, chosen = false, counted = false }) {
   const left = retakeCount(ctx);
   const inRetake = ctx.session && ctx.session.kind === 'retake';
   const retakeLabel = inRetake
@@ -51,9 +52,11 @@ export function endScreen(ctx, { heading, lines = [], missed = [], again = null,
       h('div', { class: 'actions' },
         // again.primary puts the round's own next step first (Learn's next round) ahead of retakes
         again?.primary ? h('button', { class: 'primary', type: 'button', onclick: again.run }, again.label) : null,
-        h('button', { class: again?.primary ? null : 'primary', type: 'button', disabled: left === 0, onclick: () => ctx.onRetake(ctx.modeId) }, retakeLabel),
+        chosen ? null : h('button', { class: again?.primary ? null : 'primary', type: 'button', disabled: left === 0, onclick: () => ctx.onRetake(ctx.modeId) }, retakeLabel),
         again && !again.primary ? h('button', { type: 'button', onclick: again.run }, again.label) : null,
-        h('button', { type: 'button', onclick: ctx.onExit }, 'Back to deck'))));
+        // a round on chosen cards offers its way back once: as again, or after Continue
+        chosen ? (again?.run === ctx.onExit ? null : h('button', { type: 'button', onclick: ctx.onExit }, 'Back to your exam'))
+          : h('button', { type: 'button', onclick: ctx.onExit }, 'Back to deck'))));
   // nothing enabled to lead with (Learn finished, retake queue empty): land on Back to deck
   // the result and any celebration sit at the top; focus the next step without scrolling past them
   (ctx.root.querySelector('button.primary:not([disabled])') || ctx.root.querySelector('.end .actions button:last-child'))?.focus({ preventScroll: true });

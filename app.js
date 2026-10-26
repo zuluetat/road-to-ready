@@ -555,6 +555,22 @@ async function showExamScreen(bankId, startLength = null) {
       }
       return found;
     },
+    // the set's terms for the score screen: option terms link to their decks and can be learned
+    loadTerms: async () => {
+      const owner = (await decks.loadCollections()).collections.find((c) => (c.exams || []).includes(bankId));
+      const loaded = (await Promise.all((owner?.decks || []).map((id) => decks.loadDeck(id).catch(() => null)))).filter(Boolean);
+      const cards = loaded.flatMap((d) => d.cards.map((c) => ({ ...c, id: `${d.id}/${c.id}` })));
+      return { vocab: vocabulary(cards), cards: new Map(cards.map((c) => [c.id, c])) };
+    },
+    // a Learn round on the cards behind your flags, a deck at a time; it ends back on the practice
+    // exam page. The address moves there first (no redraw), so a reload mid-round can't start a
+    // new full exam.
+    learnCards: async (groups) => {
+      const deck = await decks.loadDeck(groups[0].deckId);
+      const back = '#/exam/' + bankId;
+      history.replaceState(null, '', back);
+      await startStudy(deck, 'learn', 'learn', { only: groups[0].cardIds, returnTo: back, queue: groups.slice(1) });
+    },
     onExit: () => navigate('#/'),
     startLength,
   });
@@ -956,7 +972,7 @@ async function startStudy(deck, modeId, kind, options = {}) {
   const banksLoaded = !scenarios.failed;
   const session = kind
     ? createSession({
-      kind, deck, progress: p, today: localToday(), count: options.count, save,
+      kind, deck, progress: p, today: localToday(), count: options.count, only: options.only ?? null, save,
       lastStep: (cardId) => (!banksLoaded || scenariosFor(cardId).length ? 2 : 1),
     })
     : null;
@@ -1000,8 +1016,15 @@ async function startStudy(deck, modeId, kind, options = {}) {
     },
     saveProgress: save,
     onRetake: (m) => startStudy(deck, m === 'match' || m === 'learn' ? 'flashcards' : m, 'retake', options),
-    onExit: () => { cleanup(); cleanup = () => {}; setStudying(null); navigate('#/deck/' + deck.id); },
+    onExit: () => { cleanup(); cleanup = () => {}; setStudying(null); navigate(options.returnTo || '#/deck/' + deck.id); },
     restart: () => startStudy(deck, modeId, kind, options),
+    // the next deck's part of a round on chosen cards (the ones behind your flags)
+    nextPart: options.queue?.length ? () => {
+      const [part, ...rest] = options.queue;
+      decks.loadDeck(part.deckId).then(
+        (d) => startStudy(d, 'learn', 'learn', { ...options, only: part.cardIds, queue: rest }),
+        () => ctx.onExit());
+    } : null,
   };
   window.scrollTo(0, 0);
   notice = null;

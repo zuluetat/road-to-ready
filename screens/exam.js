@@ -5,13 +5,13 @@
 // file only draws. Questions link to the flashcards they test through cardTerms(ref).
 
 import { h, mount } from '../core/dom.js';
-import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf } from '../core/exam.js';
+import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport } from '../core/exam.js';
 import { keys, celebration, optionList, checkButton, reportLink } from '../modes/common.js';
 import { togglePick, ready } from '../core/choice.js';
 
 const LENGTHS = [15, 30];
 
-// showExam(root, { bank, record, loadRecord() -> Promise<record>, saveAttempt({ ids, results }) -> Promise<record>,
+// showExam(root, { bank, record, loadRecord() -> Promise<record>, saveAttempt({ ids, results, flagged }) -> Promise<record>,
 //   cardTerms(refs) -> Promise<[{ deckId, term }]>, onExit, onRound() -> Promise<{ lines, celebration } | null> })
 // The record is re-read before each draw and saved through saveAttempt, so another tab's attempts
 // are never overwritten. Returns the cleanup function.
@@ -180,12 +180,14 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   }
 
   // The score screen, for drills and the full exam alike.
-  async function showResults({ ids, results, fresh, length }) {
-    record = await saveAttempt({ ids, results });
+  // flagged: question ids flagged for review, from a full exam; null for drills, which have no flags
+  async function showResults({ ids, results, fresh, length, flagged = null }) {
+    record = await saveAttempt({ ids, results, flagged: flagged || [] });
     if (disposed) return;
     const s = scoreExam(bank, results);
     const missedResults = results.filter((r) => !r.correct);
     const missed = missedResults.map((r) => byId.get(r.id));
+    const flaggedResults = flagged ? results.filter((r) => flagged.includes(r.id)) : [];
     mount(root,
       h('header', { class: 'study-bar' },
         h('button', { class: 'link', type: 'button', onclick: startPage }, '← Practice exam'),
@@ -201,15 +203,10 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
             h('td', {}, `${d.right}/${d.total} (${d.percent}%)`),
             h('td', { class: 'bar-cell' }, h('span', { class: 'meter', role: 'img', 'aria-label': `${d.percent} percent` },
               h('span', { class: 'meter-fill', style: { width: `${d.percent}%` } }))))))),
+        flagged ? flagSection(flaggedResults, flagReport(results, flagged)) : null,
         missed.length ? [
           h('h3', {}, 'Missed'),
-          h('ul', { class: 'missed' }, missed.map((m, i) => h('li', {},
-            h('details', {},
-              h('summary', {}, h('strong', {}, m.stem)),
-              missedResults[i].chose ? h('p', {}, h('span', { class: 'pill pill-wrong' }, '✗ Your answer'), ' ',
-                missedResults[i].chose.length ? missedResults[i].chose.join(' · ') : 'none') : null,
-              h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', m.answer.map((a) => m.options[a]).join(' · ')),
-              h('p', { class: 'muted' }, m.explanation))))),
+          h('ul', { class: 'missed' }, missedResults.map((r) => h('li', {}, answerDetails(r)))),
         ] : null,
         h('div', { class: 'actions' },
           missed.length ? h('button', { class: 'primary', type: 'button', onclick: () => run(missed.length, missed.map((m) => m.id)) },
@@ -225,6 +222,48 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       end.querySelector('h2').after(h('div', { class: 'today-line', role: 'status' }, got.lines.map((l) => h('p', {}, l))));
       if (got.celebration) end.prepend(celebration(got.celebration));
     }, () => {});
+  }
+
+  // One answered question, folded: its stem, your answer when wrong, the right one, the explanation.
+  function answerDetails(r) {
+    const m = byId.get(r.id);
+    return h('details', {},
+      h('summary', {}, h('strong', {}, m.stem)),
+      r.chose && !r.correct ? h('p', {}, h('span', { class: 'pill pill-wrong' }, '✗ Your answer'), ' ',
+        r.chose.length ? r.chose.join(' · ') : 'none') : null,
+      h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', m.answer.map((a) => m.options[a]).join(' · ')),
+      h('p', { class: 'muted' }, m.explanation),
+      studyLine(m.cards || []));
+  }
+
+  // Where to study a question on the score screen: the flashcards it tests, or a note that none does yet.
+  function studyLine(refs) {
+    const el = h('p', { class: 'cards-line muted' }, refs.length ? '' : 'No flashcard covers this yet.');
+    if (refs.length) {
+      cardTerms(refs).catch(() => []).then((found) => {
+        if (!found.length || !el.isConnected) return;
+        el.append('Study: ', ...found.flatMap((c, i) => [i ? ', ' : '', h('a', { href: '#/deck/' + c.deckId }, c.term)]));
+      });
+    }
+    return el;
+  }
+
+  // The flags readout of a full exam: how the flagged questions went, and the misses you felt sure of.
+  // A flag means you weren't sure, so a flagged question is worth studying even when it came out right.
+  function flagSection(flaggedResults, f) {
+    const line = f.flagged
+      ? `You flagged ${f.flagged}: ${f.right} right, ${f.wrong} wrong. Study them all; a lucky guess still counts as right.`
+      : 'You flagged none.';
+    const sure = f.unflaggedMissed
+      ? ` ${f.unflaggedMissed} miss${f.unflaggedMissed === 1 ? ' was' : 'es were'} on questions you didn't flag.`
+      : '';
+    return [
+      h('h3', {}, 'Flagged'),
+      h('p', {}, line + sure),
+      f.flagged ? h('ul', { class: 'missed' }, flaggedResults.map((r) => h('li', {},
+        h('span', { class: 'pill ' + (r.correct ? 'pill-correct' : 'pill-wrong') }, r.correct ? '✓ Right' : '✗ Wrong'), ' ',
+        answerDetails(r)))) : null,
+    ];
   }
 
   // The full-length exam under exam conditions: select and move on, nothing marked until you
@@ -342,7 +381,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       const results = gradeAll(qs, picks);
       // the answers given count as readiness evidence now, all at once
       results.forEach((r, i) => { if (picks[i].length) onAnswered?.(r.id, r.correct); });
-      await showResults({ ids, results, fresh, length });
+      await showResults({ ids, results, fresh, length, flagged: [...flagged].sort((x, y) => x - y).map((i) => qs[i].id) });
     }
 
     stopKeys();

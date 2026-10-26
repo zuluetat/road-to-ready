@@ -1,0 +1,696 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-2026-guide",
+  "title": "New in the 2026 Exam Guide",
+  "description": "What AWS added to the exam guide in April 2026, plus topics the other decks never taught. You learn each card here; the deck its topic belongs to lists it too, with your progress.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "amazon-bedrock-agentcore",
+      "term": "Amazon Bedrock AgentCore",
+      "definition": "Agentic platform to build, deploy, and operate AI agents securely at scale with any framework or model, using modular services such as Runtime, Memory, Gateway, Identity, and Policy.",
+      "hint": null,
+      "tags": [
+        "group:agent-builders",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-bedrock-agentcore-identity",
+      "term": "Amazon Bedrock AgentCore Identity",
+      "definition": "Identity and credential management service for AI agents that lets them securely access AWS resources and third-party services on behalf of users, working with existing identity providers.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "policy-in-agentcore",
+      "term": "Policy in AgentCore",
+      "definition": "Deterministic rules, written in Cedar or natural language, that AgentCore Gateway checks before each agent tool call to control which tools and actions an agent may use.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "kiro",
+      "term": "Kiro",
+      "definition": "AWS agentic AI-powered IDE that uses spec-driven development: it turns a request into requirements, a design, and a task list, then carries out the tasks to move from prototype to production.",
+      "hint": null,
+      "tags": [
+        "group:assistants-search",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "strands-agents",
+      "term": "Strands Agents",
+      "definition": "Open-source SDK, first released by AWS, for building autonomous AI agents with a model-first approach; supports many FMs, MCP, and multi-agent patterns like Swarm, Graph, and Workflow.",
+      "hint": null,
+      "tags": [
+        "group:agent-builders",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-quick",
+      "term": "Amazon Quick",
+      "definition": "AI-powered service where you chat with AI agents to automate tasks, analyze data (Quick Sight), build apps, and research; Amazon Q Business now directs new customers to it.",
+      "hint": null,
+      "tags": [
+        "group:assistants-search",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-transform",
+      "term": "AWS Transform",
+      "definition": "AWS service that uses agentic AI to speed up migration and modernization of workloads such as mainframe, VMware, and .NET, handing discovery, planning, and execution tasks to AI agents.",
+      "hint": null,
+      "tags": [
+        "group:assistants-search",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-nova",
+      "term": "Amazon Nova",
+      "definition": "Amazon's own family of foundation models, accessed through Amazon Bedrock, for text and multimodal understanding, image and video generation, and speech.",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "agentic-ai",
+      "term": "Agentic AI",
+      "definition": "Autonomous AI that acts independently to reach pre-set goals, proactively doing complex tasks without constant human oversight or step-by-step prompting.",
+      "hint": null,
+      "tags": [
+        "group:ai-fields",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "model-context-protocol",
+      "term": "Model Context Protocol (MCP)",
+      "definition": "Open-source standard for connecting AI applications and agents to external systems such as data sources, tools, and workflows; often described as a USB-C port for AI.",
+      "hint": null,
+      "tags": [
+        "group:agentic-concepts",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "context-engineering",
+      "term": "Context engineering",
+      "definition": "Designing systems that dynamically assemble the best set of information (instructions, memory, tool definitions, retrieved knowledge) in the context window for an LLM to do a task.",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "multi-agent-collaboration",
+      "term": "Multi-agent collaboration (supervisor pattern)",
+      "definition": "Amazon Bedrock Agents (now Agents Classic) pattern where a supervisor agent plans, splits a task, and routes parts to specialist collaborator agents that work in parallel.",
+      "hint": null,
+      "tags": [
+        "group:agentic-concepts",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "agent-memory",
+      "term": "Agent memory (short-term vs long-term)",
+      "definition": "Agent capability that keeps turn-by-turn context within one session and also extracts user preferences, facts, and summaries that persist across sessions.",
+      "hint": null,
+      "tags": [
+        "group:agentic-concepts",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "tool-use",
+      "term": "Tool use (function calling)",
+      "definition": "You give a model tool definitions; the model decides when a tool is needed and requests it, then your app (or Amazon Bedrock) runs the tool and returns the result to the model.",
+      "hint": null,
+      "tags": [
+        "group:agentic-concepts",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-bedrock-flows",
+      "term": "Amazon Bedrock Flows",
+      "definition": "Amazon Bedrock feature to build end-to-end generative AI workflows by linking prompts, FMs, knowledge bases, and AWS services like Lambda in a visual builder.",
+      "hint": null,
+      "tags": [
+        "group:agent-builders",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-bedrock-prompt-management",
+      "term": "Amazon Bedrock Prompt Management",
+      "definition": "Amazon Bedrock feature to create, test, save, and reuse prompts with variables, compare prompt variants, and save prompt versions to deploy into applications.",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-bedrock-model-distillation",
+      "term": "Amazon Bedrock Model Distillation",
+      "definition": "Customization that transfers knowledge from a larger teacher model to a smaller, faster, cheaper student model by fine-tuning the student on the teacher's responses.",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-caching",
+      "term": "Prompt caching",
+      "definition": "Optional Amazon Bedrock feature that caches long, repeated prompt prefixes (like a shared document) so later requests skip reprocessing them, cutting latency and input token costs.",
+      "hint": null,
+      "tags": [
+        "group:pricing",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "token-based-pricing",
+      "term": "Token-based pricing",
+      "definition": "On-demand Amazon Bedrock inference is billed per token, with separate rates for input tokens and output tokens; in AWS's example, output tokens cost more.",
+      "hint": null,
+      "tags": [
+        "group:pricing",
+        "domain:aif-c01:2",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "llm-as-a-judge",
+      "term": "LLM-as-a-judge",
+      "definition": "Evaluation method where an evaluator LLM scores another (generator) model's responses on metrics like correctness, completeness, and harmfulness, and explains each score.",
+      "hint": null,
+      "tags": [
+        "group:evaluation",
+        "domain:aif-c01:3",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "bertscore",
+      "term": "BERTScore",
+      "definition": "Automatic metric that compares generated text with a reference using BERT contextual embeddings and cosine similarity; Amazon Bedrock uses it to score summarization accuracy.",
+      "hint": null,
+      "tags": [
+        "group:evaluation",
+        "domain:aif-c01:3",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "benchmark-datasets",
+      "term": "Benchmark datasets",
+      "definition": "Ready-made prompt datasets used to evaluate models; Amazon Bedrock automatic evaluation offers built-in ones based on open-source sets like BOLD, TREX, and Gigaword, or you bring your own.",
+      "hint": null,
+      "tags": [
+        "group:evaluation",
+        "domain:aif-c01:3",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "in-context-learning",
+      "term": "In-context learning",
+      "definition": "Providing a few example input-output pairs in the prompt so an LLM calibrates its output to your expectations; AWS uses it as another name for few-shot prompting.",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models",
+        "same:few-shot"
+      ],
+      "media": null
+    },
+    {
+      "id": "negative-prompts",
+      "term": "Negative prompts",
+      "definition": "Image-generation input in Amazon Nova Canvas listing objects or style traits to exclude from the output, such as \"waves, clouds\".",
+      "hint": null,
+      "tags": [
+        "group:prompting",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "nondeterminism",
+      "term": "Nondeterminism",
+      "definition": "GenAI drawback where the same prompt can produce different outputs, so model outputs must be logged and inspected to validate correctness over time.",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "business-value-metrics",
+      "term": "Business value metrics (GenAI)",
+      "definition": "Measures of a GenAI application's business impact, such as ROI, efficiency, conversion rate, average revenue per user, and customer lifetime value.",
+      "hint": null,
+      "tags": [
+        "group:business-metrics",
+        "domain:aif-c01:2",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "agent-metrics",
+      "term": "Agent metrics (task completion rate and cost per interaction)",
+      "definition": "Agent KPIs with measurable targets across latency, throughput, quality (share of tasks finished successfully), and efficiency (tokens per task, cost per completion).",
+      "hint": null,
+      "tags": [
+        "group:business-metrics",
+        "domain:aif-c01:3",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "real-time-inference",
+      "term": "Real-time inference",
+      "definition": "SageMaker AI option for low-latency or high-throughput online predictions from a persistent, fully managed endpoint that handles sustained traffic (payloads up to 25 MB).",
+      "hint": null,
+      "tags": [
+        "group:inference-options",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "asynchronous-inference",
+      "term": "Asynchronous inference",
+      "definition": "SageMaker AI option that queues requests with large payloads (up to 1 GB) and long processing times (up to 1 hour), and can scale the endpoint to zero when idle.",
+      "hint": null,
+      "tags": [
+        "group:inference-options",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "serverless-inference",
+      "term": "Serverless inference",
+      "definition": "SageMaker AI option for intermittent or unpredictable traffic: AWS manages and scales the compute, you pay only for use, and idle endpoints can have cold starts.",
+      "hint": null,
+      "tags": [
+        "group:inference-options",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-inspector",
+      "term": "Amazon Inspector",
+      "definition": "Vulnerability management service that continually scans EC2 instances, ECR container images, and Lambda functions for software vulnerabilities and unintended network exposure.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-privatelink",
+      "term": "AWS PrivateLink",
+      "definition": "Creates a private connection (interface VPC endpoint) between your VPC and Amazon Bedrock, so traffic needs no internet gateway, NAT device, or public IP addresses.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-secrets-manager",
+      "term": "AWS Secrets Manager",
+      "definition": "Stores, retrieves, and rotates secrets such as database credentials and API keys, so applications fetch them at runtime instead of hard-coding them.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-vpc",
+      "term": "Amazon VPC",
+      "definition": "Lets you launch AWS resources in a logically isolated virtual network that you define, with subnets, route tables, gateways, and endpoints controlling connectivity.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "encryption-at-rest-and-in-transit",
+      "term": "Encryption at rest and in transit",
+      "definition": "Protecting stored data (for example with AWS KMS keys) and data moving over the network (TLS). Amazon Bedrock uses encryption to protect both.",
+      "hint": null,
+      "tags": [
+        "group:security-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-cloudwatch",
+      "term": "Amazon CloudWatch",
+      "definition": "Service where Bedrock publishes AWS/Bedrock metrics such as Invocations, InvocationLatency, InputTokenCount, and OutputTokenCount to monitor volume, latency, and tokens.",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "bedrock-model-invocation-logging",
+      "term": "Bedrock model invocation logging",
+      "definition": "Bedrock setting, off by default, that records request data, response data, and metadata for model invocations and delivers them to CloudWatch Logs and/or Amazon S3.",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "generative-ai-security-scoping-matrix",
+      "term": "Generative AI Security Scoping Matrix",
+      "definition": "AWS framework that sorts GenAI use cases into five scopes (Consumer app, Enterprise app, Pre-trained, Fine-tuned, and Self-trained models) to guide security controls.",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-glue-data-catalog",
+      "term": "AWS Glue Data Catalog",
+      "definition": "Central repository of metadata (location, schema, runtime metrics) about your data sets. Crawlers populate it, and it helps users discover data and track lineage.",
+      "hint": null,
+      "tags": [
+        "group:governance-services",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "data-residency",
+      "term": "Data residency",
+      "definition": "The requirement to keep data in a certain region or country to comply with local laws and regulations. It is one key aspect of data sovereignty.",
+      "hint": null,
+      "tags": [
+        "group:data-governance",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "s3-lifecycle",
+      "term": "S3 Lifecycle",
+      "definition": "Rules that automatically move S3 objects to lower-cost storage classes or expire (delete) them, for example after a regulatory compliance retention period.",
+      "hint": null,
+      "tags": [
+        "group:data-governance",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-s3-glacier",
+      "term": "Amazon S3 Glacier",
+      "definition": "Amazon S3 storage classes purpose-built for secure, durable, long-term data archiving at the lowest cost, for data you need to retain but rarely access.",
+      "hint": null,
+      "tags": [
+        "group:data-governance",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "privacy-enhancing-technologies",
+      "term": "Privacy-enhancing technologies",
+      "definition": "Privacy-preserving ML techniques such as differential privacy, federated learning, and secure multi-party computation that train models while minimizing sensitive-data exposure.",
+      "hint": null,
+      "tags": [
+        "group:data-governance",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "prompt-leakage",
+      "term": "Prompt leakage (exposure)",
+      "definition": "Prompt attack that tries to extract the system prompt, developer instructions, or confidential configuration; Bedrock Guardrails detects it on the Standard tier only.",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "goal-hijacking",
+      "term": "Goal hijacking (prompt hijacking)",
+      "definition": "Prompt-attack aim of taking over the model's task, for example via persona takeover instructions; Bedrock Guardrails classifies these under prompt injection.",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "data-poisoning",
+      "term": "Data poisoning",
+      "definition": "Exploit during model training or customization in which data not meant for training is used, causing undesirable model behavior that is hard to detect and remediate.",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "intellectual-property-infringement-risk",
+      "term": "Intellectual property infringement risk",
+      "definition": "Legal risk that GenAI output infringes others' IP. AWS offers an uncapped IP indemnity for copyright claims on output of specified Amazon GenAI services that are used responsibly.",
+      "hint": null,
+      "tags": [
+        "group:genai-risks",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "contextual-grounding-check",
+      "term": "Contextual grounding check",
+      "definition": "Bedrock Guardrails check that scores responses against a reference source and the user query, blocking those below your threshold as hallucinations.",
+      "hint": null,
+      "tags": [
+        "group:hallucination-checks",
+        "domain:aif-c01:5",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "automated-reasoning-checks",
+      "term": "Automated Reasoning checks",
+      "definition": "Bedrock Guardrails feature that uses formal logic to validate model responses against policy rules you define, detecting factually incorrect statements and explaining why.",
+      "hint": null,
+      "tags": [
+        "group:hallucination-checks",
+        "domain:aif-c01:5",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "sustainability",
+      "term": "Sustainability (responsible AI)",
+      "definition": "ML Lens pillar focused on environmental impact, especially energy consumption and efficiency, to reduce resource usage across the ML lifecycle.",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "subgroup-analysis",
+      "term": "Subgroup analysis",
+      "definition": "Measuring disparity within subgroups (e.g., by department), as SageMaker Clarify's CDD metric does, to rule out Simpson's paradox hiding or reversing bias.",
+      "hint": null,
+      "tags": [
+        "group:responsible-ai",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "open-source-model-licensing",
+      "term": "Open-source model licensing",
+      "definition": "Foundation models come under licenses set by their source (for example Apache 2.0). You must review and comply with the license, and some models require accepting a EULA.",
+      "hint": null,
+      "tags": [
+        "group:documentation",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-opensearch-service",
+      "term": "Amazon OpenSearch Service (vector search)",
+      "definition": "Search service whose k-NN search finds nearest-neighbor vectors by Euclidean distance or cosine similarity; OpenSearch Serverless and managed clusters can be a Bedrock knowledge base's vector store.",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:3",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "pgvector",
+      "term": "pgvector on Aurora PostgreSQL",
+      "definition": "PostgreSQL extension (v0.5.0+, HNSW indexing) enabled on Aurora PostgreSQL so it can store vector embeddings as a Bedrock Knowledge Base vector store.",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:3",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "amazon-neptune-graphrag",
+      "term": "Amazon Neptune GraphRAG",
+      "definition": "Bedrock Knowledge Bases feature that uses Amazon Neptune Analytics graphs to combine vector search with entity relationships, connecting facts across documents for RAG.",
+      "hint": null,
+      "tags": [
+        "group:retrieval",
+        "domain:aif-c01:3",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-budgets",
+      "term": "AWS Budgets",
+      "definition": "Tracks AWS costs and usage against budgets you set and alerts you by email or SNS when actual or forecasted amounts exceed a threshold. It can also trigger actions.",
+      "hint": null,
+      "tags": [
+        "group:pricing",
+        "domain:aif-c01:2",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    },
+    {
+      "id": "aws-cost-explorer",
+      "term": "AWS Cost Explorer",
+      "definition": "Tool to view and analyze AWS costs and usage, with up to 13 months of history and an 18-month spending forecast, to find cost trends and drivers.",
+      "hint": null,
+      "tags": [
+        "group:pricing",
+        "domain:aif-c01:2",
+        "home:aws-frameworks"
+      ],
+      "media": null
+    }
+  ]
+}

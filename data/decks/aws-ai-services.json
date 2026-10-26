@@ -75,7 +75,7 @@
     },
     {
       "id": "amazon-sagemaker",
-      "term": "Amazon SageMaker",
+      "term": "Amazon SageMaker AI",
       "definition": "Fully managed service to build, train, tune, and deploy ML models",
       "hint": null,
       "tags": [

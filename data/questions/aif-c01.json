@@ -61,7 +61,8 @@
         "Computer vision interprets images and video; nothing here involves images."
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/agentic-ai"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/what-is/ai-agents/"
@@ -88,7 +89,9 @@
         "AWS Glue is a data integration service for preparing and moving data.",
         null
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/amazon-quick"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/quick/latest/userguide/what-is.html"
     },
@@ -115,7 +118,8 @@
         "Real-time endpoints are for interactive, low-latency requests, not long-running jobs on large files."
       ],
       "cards": [
-        "aws-ai-fundamentals/inference"
+        "aws-ai-fundamentals/inference",
+        "aws-2026-guide/asynchronous-inference"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html"
@@ -175,7 +179,8 @@
         "Recall measures how many true positives a model catches; it is a model performance metric."
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/business-value-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/ml-lifecycle-phase-business-goal-identification.html"
@@ -346,7 +351,9 @@
         "SageMaker Canvas builds ML models without code; it does not write application code from specs.",
         "Amazon Quick serves business users with dashboards, research, and automation, not software development."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/kiro"
+      ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/documentation-overview/kiro/"
     },
@@ -748,7 +755,8 @@
         null
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/agent-memory"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html"
@@ -806,7 +814,9 @@
         null,
         "Knowledge Bases provide managed RAG; they do not host agent code."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/amazon-bedrock-agentcore"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agents-tools-runtime.html"
     },
@@ -832,7 +842,9 @@
         "AgentCore is a developer platform for building and running agents in code.",
         "SageMaker AI is for building, training, and deploying ML models, which requires ML work."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/amazon-quick"
+      ],
       "source": "generated",
       "variantOf": "d1-amazon-quick-business-users",
       "checkedAgainst": "https://docs.aws.amazon.com/quick/latest/userguide/what-is.html"
@@ -948,7 +960,8 @@
         "Context window size describes the model, not the value it creates."
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/business-value-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/what-is/generative-ai/"
@@ -1005,7 +1018,8 @@
         "Pre-training is costly and slow and does not fix overloaded requests at inference time."
       ],
       "cards": [
-        "aws-genai-foundation-models/context-window"
+        "aws-genai-foundation-models/context-window",
+        "aws-2026-guide/context-engineering"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-lifecycle-operational-excellence/dev-experimenting-context.html"
@@ -1207,7 +1221,9 @@
         "Strands Agents is an open-source SDK for building agents, not a spec-driven coding environment.",
         "JumpStart is a hub of pretrained models and solutions for ML teams."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/kiro"
+      ],
       "source": "generated",
       "variantOf": "d1-kiro-spec-driven-development",
       "checkedAgainst": "https://aws.amazon.com/documentation-overview/kiro/"
@@ -1295,7 +1311,8 @@
         "RAG is a technique for adding retrieved text to prompts, not a standard protocol for connecting agents to tools."
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/model-context-protocol"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway.html"
@@ -1323,7 +1340,8 @@
         "Throughput measures speed, not whether requests were resolved."
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/agent-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentperf01-bp01.html"
@@ -1380,7 +1398,8 @@
         "Batch inference is a cost option for offline jobs, not an agent coordination pattern."
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/multi-agent-collaboration"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentperf05-bp02.html"
@@ -1437,7 +1456,8 @@
         "Data drift is a change in input data over time after deployment, not variation between two calls."
       ],
       "cards": [
-        "aws-genai-foundation-models/temperature"
+        "aws-genai-foundation-models/temperature",
+        "aws-2026-guide/nondeterminism"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/inference-parameters.html"
@@ -1522,7 +1542,9 @@
         "Amazon Quick is a no-code service for business users.",
         null
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/strands-agents"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-frameworks/strands-agents.html"
     },
@@ -1554,7 +1576,8 @@
       "cards": [
         "aws-genai-foundation-models/token",
         "aws-genai-foundation-models/max-tokens",
-        "aws-frameworks/bedrock-pricing-models"
+        "aws-frameworks/bedrock-pricing-models",
+        "aws-2026-guide/token-based-pricing"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/bedrock/pricing/"
@@ -1643,7 +1666,8 @@
       ],
       "cards": [
         "aws-genai-foundation-models/embedding",
-        "aws-frameworks/evaluation-metrics-for-generative-text"
+        "aws-frameworks/evaluation-metrics-for-generative-text",
+        "aws-2026-guide/bertscore"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-evaluation-tasks.html"
@@ -1702,7 +1726,8 @@
         "Training loss is a model-building signal and says nothing about business outcomes."
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/business-value-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentperf01-bp01.html"
@@ -1819,7 +1844,8 @@
         null
       ],
       "cards": [
-        "aws-frameworks/cost-performance-tradeoff"
+        "aws-frameworks/cost-performance-tradeoff",
+        "aws-2026-guide/amazon-bedrock-model-distillation"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-distillation.html"
@@ -1996,7 +2022,8 @@
       ],
       "cards": [
         "aws-ai-services/bedrock-model-evaluation",
-        "aws-frameworks/human-evaluation-vs-automatic-evaluation"
+        "aws-frameworks/human-evaluation-vs-automatic-evaluation",
+        "aws-2026-guide/llm-as-a-judge"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation-judge.html"
@@ -2085,7 +2112,8 @@
         null
       ],
       "cards": [
-        "aws-genai-foundation-models/prompt"
+        "aws-genai-foundation-models/prompt",
+        "aws-2026-guide/negative-prompts"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/nova/latest/userguide/prompting-image-negative.html"
@@ -2114,7 +2142,8 @@
       ],
       "cards": [
         "aws-genai-foundation-models/vector-database",
-        "aws-genai-foundation-models/knowledge-base"
+        "aws-genai-foundation-models/knowledge-base",
+        "aws-2026-guide/amazon-neptune-graphrag"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-setup.html"
@@ -2142,7 +2171,8 @@
         "Hijacking is a run-time prompt that overrides the application's instructions, not tampering with training data."
       ],
       "cards": [
-        "aws-responsible-ai/veracity-and-robustness"
+        "aws-responsible-ai/veracity-and-robustness",
+        "aws-2026-guide/data-poisoning"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec06.html"
@@ -2199,7 +2229,8 @@
       ],
       "cards": [
         "aws-genai-foundation-models/token",
-        "aws-genai-foundation-models/latency"
+        "aws-genai-foundation-models/latency",
+        "aws-2026-guide/prompt-caching"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html"
@@ -2227,7 +2258,8 @@
         null
       ],
       "cards": [
-        "aws-genai-foundation-models/prompt-injection"
+        "aws-genai-foundation-models/prompt-injection",
+        "aws-2026-guide/goal-hijacking"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/llm-prompt-engineering-best-practices/common-attacks.html"
@@ -2258,7 +2290,8 @@
         null
       ],
       "cards": [
-        "aws-genai-foundation-models/prompt-template"
+        "aws-genai-foundation-models/prompt-template",
+        "aws-2026-guide/amazon-bedrock-prompt-management"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html"
@@ -2286,7 +2319,8 @@
         "Retraining a model for each prompt edit is slow and costly and does not version the prompt itself."
       ],
       "cards": [
-        "aws-genai-foundation-models/prompt-template"
+        "aws-genai-foundation-models/prompt-template",
+        "aws-2026-guide/amazon-bedrock-prompt-management"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html"
@@ -2520,8 +2554,8 @@
     },
     {
       "id": "d4-bedrock-human-eval-brand-tone",
-      "domain": 4,
-      "objective": "4.2.2",
+      "domain": 3,
+      "objective": "3.4.1",
       "type": "single",
       "stem": "A company must choose between two foundation models in Amazon Bedrock for drafting customer emails. What matters most is whether the drafts match the brand's warm, friendly tone, a subjective judgment that the company's marketing staff want to make themselves. Which approach fits best?",
       "options": [
@@ -2605,7 +2639,8 @@
       "cards": [
         "aws-ai-services/bedrock-guardrails",
         "aws-genai-foundation-models/hallucination",
-        "aws-genai-foundation-models/grounding"
+        "aws-genai-foundation-models/grounding",
+        "aws-2026-guide/contextual-grounding-check"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-components.html"
@@ -2723,7 +2758,9 @@
         "Hallucination is false information stated as fact; the issue here is copying, not accuracy.",
         null
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/intellectual-property-infringement-risk"
+      ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/ai/responsible-ai/"
     },
@@ -2779,7 +2816,8 @@
         "A hosted API hides the weights, so the architecture cannot be inspected or modified."
       ],
       "cards": [
-        "aws-responsible-ai/transparency"
+        "aws-responsible-ai/transparency",
+        "aws-2026-guide/open-source-model-licensing"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/ai/responsible-ai/"
@@ -2894,7 +2932,8 @@
       ],
       "cards": [
         "aws-responsible-ai/fairness",
-        "aws-responsible-ai/bias-in-ai"
+        "aws-responsible-ai/bias-in-ai",
+        "aws-2026-guide/subgroup-analysis"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/rairc03-bp02.html"
@@ -2922,7 +2961,8 @@
         "Pre-training from scratch uses enormous compute when existing models already meet the need."
       ],
       "cards": [
-        "aws-frameworks/cost-performance-tradeoff"
+        "aws-frameworks/cost-performance-tradeoff",
+        "aws-2026-guide/sustainability"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/sustainability-pillar/sustainability-pillar.html"
@@ -3034,7 +3074,9 @@
         "Guardrails filter model inputs and outputs; they do not handle authentication.",
         "KMS manages encryption keys; it does not run OAuth flows or act for users."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/amazon-bedrock-agentcore-identity"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/identity.html"
     },
@@ -3060,7 +3102,9 @@
         "Prompt instructions can be ignored or manipulated; they are not deterministic enforcement.",
         null
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/policy-in-agentcore"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy.html"
     },
@@ -3146,7 +3190,8 @@
       "cards": [
         "aws-genai-foundation-models/hallucination",
         "aws-genai-foundation-models/grounding",
-        "aws-ai-services/bedrock-guardrails"
+        "aws-ai-services/bedrock-guardrails",
+        "aws-2026-guide/contextual-grounding-check"
       ],
       "source": "generated",
       "variantOf": "d4-guardrails-contextual-grounding",
@@ -3230,7 +3275,9 @@
         "CloudTrail records API calls; it does not find vulnerabilities.",
         "Artifact provides compliance reports, not workload scanning."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/amazon-inspector"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/inspector/latest/user/what-is-inspector.html"
     },
@@ -3256,7 +3303,9 @@
         "Trusted Advisor gives best-practice recommendations and stores no request content.",
         "Config records resource configuration changes, not prompts and responses."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/bedrock-model-invocation-logging"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-invocation-logging.html"
     },
@@ -3310,7 +3359,9 @@
         "Guardrails filter content; they do not change the network path.",
         "CloudTrail records API activity; it does not keep traffic off the internet."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/aws-privatelink"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/usingVPC.html"
     },
@@ -3370,7 +3421,8 @@
         "Trusted Advisor makes recommendations; it does not delete objects."
       ],
       "cards": [
-        "aws-responsible-ai/data-governance"
+        "aws-responsible-ai/data-governance",
+        "aws-2026-guide/s3-lifecycle"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html"
@@ -3459,7 +3511,8 @@
         null
       ],
       "cards": [
-        "aws-responsible-ai/governance-responsible-ai"
+        "aws-responsible-ai/governance-responsible-ai",
+        "aws-2026-guide/generative-ai-security-scoping-matrix"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/ai/security/generative-ai-scoping-matrix/"
@@ -3520,7 +3573,8 @@
         "A classifier assigns labels; it does not plan steps or act on other systems."
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/agentic-ai"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/what-is/ai-agents/",
@@ -3553,7 +3607,8 @@
         null
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/business-value-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlperf01-bp01.html",
@@ -4017,7 +4072,8 @@
         "Short-term memory covers one session, so the preferences would be gone months later."
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/agent-memory"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html",
@@ -4079,7 +4135,9 @@
         null,
         "A SageMaker AI endpoint requires choosing and paying for instances, and it is not a per-session agent runtime."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/amazon-bedrock-agentcore"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agents-tools-runtime.html",
       "examOnly": true
@@ -4171,7 +4229,8 @@
         null
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/business-value-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html",
@@ -4323,7 +4382,9 @@
         "Q Developer suggests code in the IDE, but it does not start each feature from a spec with steering files.",
         "CodeDeploy automates deploying builds; it does not write or plan code."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/kiro"
+      ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/documentation-overview/kiro/",
       "examOnly": true
@@ -4416,7 +4477,8 @@
         null
       ],
       "cards": [
-        "aws-genai-foundation-models/ai-agent"
+        "aws-genai-foundation-models/ai-agent",
+        "aws-2026-guide/model-context-protocol"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway.html",
@@ -4446,7 +4508,8 @@
         null
       ],
       "cards": [
-        "aws-frameworks/business-value-of-ai"
+        "aws-frameworks/business-value-of-ai",
+        "aws-2026-guide/agent-metrics"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentperf01-bp01.html",
@@ -4507,7 +4570,8 @@
         "No vector index is involved in a plain prompt-and-response call."
       ],
       "cards": [
-        "aws-genai-foundation-models/temperature"
+        "aws-genai-foundation-models/temperature",
+        "aws-2026-guide/nondeterminism"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/inference-parameters.html",
@@ -4567,7 +4631,9 @@
         null,
         "SageMaker Pipelines orchestrates fixed ML workflow steps and is not an agent framework."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/strands-agents"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-frameworks/strands-agents.html",
       "examOnly": true
@@ -4612,7 +4678,7 @@
       "options": [
         "Amazon Athena",
         "Amazon OpenSearch Serverless",
-        "Amazon QuickSight",
+        "Amazon Quick Sight",
         "Amazon Neptune Analytics",
         "Amazon Simple Queue Service (Amazon SQS)"
       ],
@@ -4624,7 +4690,7 @@
       "whyWrong": [
         "Athena runs SQL over data in S3; it is not a vector store.",
         null,
-        "QuickSight builds dashboards and does not store embeddings.",
+        "Quick Sight builds dashboards and does not store embeddings.",
         null,
         "SQS passes messages between components and cannot run similarity searches."
       ],
@@ -4661,7 +4727,8 @@
       ],
       "cards": [
         "aws-genai-foundation-models/embedding",
-        "aws-frameworks/evaluation-metrics-for-generative-text"
+        "aws-frameworks/evaluation-metrics-for-generative-text",
+        "aws-2026-guide/bertscore"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-evaluation-tasks.html",
@@ -4721,7 +4788,8 @@
         null
       ],
       "cards": [
-        "aws-frameworks/cost-performance-tradeoff"
+        "aws-frameworks/cost-performance-tradeoff",
+        "aws-2026-guide/amazon-bedrock-model-distillation"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-distillation.html",
@@ -4814,7 +4882,8 @@
       ],
       "cards": [
         "aws-genai-foundation-models/vector-database",
-        "aws-genai-foundation-models/knowledge-base"
+        "aws-genai-foundation-models/knowledge-base",
+        "aws-2026-guide/amazon-neptune-graphrag"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-setup.html",
@@ -4844,7 +4913,8 @@
         "That is exposure of training data, not tampering with it."
       ],
       "cards": [
-        "aws-responsible-ai/veracity-and-robustness"
+        "aws-responsible-ai/veracity-and-robustness",
+        "aws-2026-guide/data-poisoning"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html",
@@ -4904,7 +4974,8 @@
         "Hallucination is the model making things up without any attacker."
       ],
       "cards": [
-        "aws-genai-foundation-models/prompt-injection"
+        "aws-genai-foundation-models/prompt-injection",
+        "aws-2026-guide/goal-hijacking"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-prompt-attack.html",
@@ -4934,7 +5005,8 @@
         null
       ],
       "cards": [
-        "aws-genai-foundation-models/prompt-template"
+        "aws-genai-foundation-models/prompt-template",
+        "aws-2026-guide/amazon-bedrock-prompt-management"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html",
@@ -5237,7 +5309,8 @@
       ],
       "cards": [
         "aws-responsible-ai/fairness",
-        "aws-responsible-ai/bias-in-ai"
+        "aws-responsible-ai/bias-in-ai",
+        "aws-2026-guide/subgroup-analysis"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain4.html",
@@ -5296,7 +5369,9 @@
         "Memory stores session and long-term context for the agent and does not control access to tools.",
         "Observability shows what the agent did after the fact and cannot prevent a tool call."
       ],
-      "cards": [],
+      "cards": [
+        "aws-2026-guide/policy-in-agentcore"
+      ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy.html",
       "examOnly": true
@@ -5357,7 +5432,8 @@
       "cards": [
         "aws-genai-foundation-models/hallucination",
         "aws-genai-foundation-models/grounding",
-        "aws-ai-services/bedrock-guardrails"
+        "aws-ai-services/bedrock-guardrails",
+        "aws-2026-guide/contextual-grounding-check"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-contextual-grounding-check.html",
@@ -5417,7 +5493,8 @@
         null
       ],
       "cards": [
-        "aws-responsible-ai/data-governance"
+        "aws-responsible-ai/data-governance",
+        "aws-2026-guide/s3-lifecycle"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html",
@@ -5447,7 +5524,8 @@
         "That describes Scope 5, self-trained models."
       ],
       "cards": [
-        "aws-responsible-ai/governance-responsible-ai"
+        "aws-responsible-ai/governance-responsible-ai",
+        "aws-2026-guide/generative-ai-security-scoping-matrix"
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/ai/generative-ai/security/scoping-matrix/",
@@ -5516,35 +5594,6 @@
       "examOnly": true
     },
     {
-      "id": "n-d1-q-developer-ide-assistant",
-      "domain": 1,
-      "objective": "1.3.4",
-      "type": "single",
-      "stem": "A software team wants an AI assistant inside its IDE that suggests code, explains unfamiliar functions, and scans code for security vulnerabilities. Which AWS service is built for this?",
-      "options": [
-        "Amazon Comprehend",
-        "Amazon Q Business",
-        "Amazon Lex",
-        "Amazon Q Developer"
-      ],
-      "answer": [
-        3
-      ],
-      "explanation": "Amazon Q Developer is a generative AI assistant for software development, with IDE support for code suggestions, explanations, and security scanning. The IDE plugins are scheduled to end on April 30, 2027.",
-      "whyWrong": [
-        "Amazon Comprehend analyzes text for sentiment and entities; it does not write or scan code.",
-        "Amazon Q Business answers questions over company data for business users; it is not a coding assistant.",
-        "Amazon Lex builds conversational chatbots with intents and slots; it does not assist developers in an IDE.",
-        null
-      ],
-      "cards": [
-        "aws-ai-services/amazon-q-developer"
-      ],
-      "source": "generated",
-      "checkedAgainst": "https://aws.amazon.com/q/developer/",
-      "examOnly": true
-    },
-    {
       "id": "n-d1-textract-invoice-fields",
       "domain": 1,
       "objective": "1.2.5",
@@ -5571,35 +5620,6 @@
       ],
       "source": "generated",
       "checkedAgainst": "https://aws.amazon.com/textract/",
-      "examOnly": true
-    },
-    {
-      "id": "n-d1-kendra-enterprise-search",
-      "domain": 1,
-      "objective": "1.2.5",
-      "type": "single",
-      "stem": "Employees cannot find answers spread across wikis, file shares, and ticketing systems. The company wants a managed search service that accepts natural-language questions and returns relevant results from those sources. Which AWS service fits?",
-      "options": [
-        "Amazon Personalize",
-        "Amazon Comprehend",
-        "Amazon OpenSearch Service",
-        "Amazon Kendra"
-      ],
-      "answer": [
-        3
-      ],
-      "explanation": "Amazon Kendra is an intelligent enterprise search service that uses machine learning to answer natural-language questions across connected data sources. Amazon Kendra is no longer open to new customers, but the AIF-C01 exam guide still covers it.",
-      "whyWrong": [
-        "Personalize generates product or content recommendations for users, not search over internal documents.",
-        "Comprehend analyzes text for sentiment and entities; it does not search across data sources.",
-        "OpenSearch Service runs search clusters that you build and tune yourself; it is not a managed natural-language question service out of the box.",
-        null
-      ],
-      "cards": [
-        "aws-ai-services/amazon-kendra"
-      ],
-      "source": "generated",
-      "checkedAgainst": "https://aws.amazon.com/kendra/",
       "examOnly": true
     },
     {
@@ -5724,35 +5744,6 @@
       "examOnly": true
     },
     {
-      "id": "n-d2-partyrock-no-code",
-      "domain": 2,
-      "objective": "2.3.1",
-      "type": "single",
-      "stem": "A marketing manager with no programming experience wants to experiment by building and sharing a small generative AI app, such as a social post writer, using a simple browser-based builder. Which AWS offering is intended for this?",
-      "options": [
-        "Amazon SageMaker JumpStart",
-        "Amazon SageMaker Canvas",
-        "Amazon Bedrock Guardrails",
-        "PartyRock"
-      ],
-      "answer": [
-        3
-      ],
-      "explanation": "PartyRock is a generative AI app-building playground powered by Amazon Bedrock that lets people build and share apps without writing code.",
-      "whyWrong": [
-        "JumpStart provides pretrained models and solution templates that practitioners deploy to endpoints; it is not a no-code app builder.",
-        "Canvas builds machine learning models for analysts through a visual interface; it is not for building and sharing generative AI apps.",
-        "Guardrails adds safeguards to model inputs and outputs; it does not build apps.",
-        null
-      ],
-      "cards": [
-        "aws-ai-services/amazon-bedrock"
-      ],
-      "source": "generated",
-      "checkedAgainst": "https://aws.amazon.com/blogs/aws/build-ai-apps-with-partyrock-and-amazon-bedrock/",
-      "examOnly": true
-    },
-    {
       "id": "n-d2-cross-region-geography",
       "domain": 2,
       "objective": "2.3.4",
@@ -5775,7 +5766,8 @@
         "Batch inference runs jobs asynchronously for non-urgent work; it is not a routing option."
       ],
       "cards": [
-        "aws-frameworks/bedrock-pricing-models"
+        "aws-frameworks/bedrock-pricing-models",
+        "aws-2026-guide/data-residency"
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html",
@@ -6114,36 +6106,6 @@
       ],
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-detect-data-bias.html",
-      "examOnly": true
-    },
-    {
-      "id": "n-d4-a2i-low-confidence-review",
-      "domain": 4,
-      "objective": "4.1.7",
-      "type": "single",
-      "stem": "A lender uses a model to approve small loans. It wants applications the model is unsure about to go to a human reviewer, and wants the review step built as a managed workflow. Which AWS service supports this?",
-      "options": [
-        "Amazon SageMaker Ground Truth",
-        "Amazon Comprehend",
-        "Amazon Augmented AI (A2I)",
-        "AWS Trusted Advisor"
-      ],
-      "answer": [
-        2
-      ],
-      "explanation": "Amazon A2I provides managed human review workflows, for example sending low-confidence predictions to people for review. Amazon A2I is no longer open to new customers, but the AIF-C01 exam guide still covers it.",
-      "whyWrong": [
-        "Ground Truth organizes people to label training data before training; it does not route low-confidence live predictions to reviewers.",
-        "Comprehend analyzes text for sentiment and entities; it does not route work to reviewers.",
-        null,
-        "Trusted Advisor gives account best-practice checks, not human review of predictions."
-      ],
-      "cards": [
-        "aws-ai-services/amazon-a2i-augmented-ai",
-        "aws-responsible-ai/human-in-the-loop"
-      ],
-      "source": "generated",
-      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/a2i-use-augmented-ai-a2i-human-review-loops.html",
       "examOnly": true
     },
     {

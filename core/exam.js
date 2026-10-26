@@ -108,6 +108,13 @@ const isPlainObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArr
 const isAttempt = (a) => isPlainObject(a)
   && ['length', 'right', 'percent'].every((k) => Number.isFinite(a[k]));
 
+// flagged: the questions flagged for review in a full exam; anything else is dropped
+function repairFlags(a) {
+  if (!('flagged' in a)) return a;
+  const { flagged, ...rest } = a;
+  return Array.isArray(flagged) ? { ...rest, flagged: flagged.filter((id) => typeof id === 'string') } : rest;
+}
+
 // Anything damaged (a bad sync, a hand edit) is dropped or repaired so one record can't break a screen.
 export function migrateExam(stored, bankId) {
   const fresh = newExamRecord(bankId);
@@ -115,7 +122,7 @@ export function migrateExam(stored, bankId) {
   return {
     ...fresh,
     ...(typeof stored.updatedAt === 'string' ? { updatedAt: stored.updatedAt } : {}),
-    attempts: (Array.isArray(stored.attempts) ? stored.attempts : []).filter(isAttempt),
+    attempts: (Array.isArray(stored.attempts) ? stored.attempts : []).filter(isAttempt).map(repairFlags),
     seen: Object.fromEntries(Object.entries(isPlainObject(stored.seen) ? stored.seen : {})
       .map(([id, n]) => [id, Number(n) || 0])),
     firstTry: Object.fromEntries(Object.entries(isPlainObject(stored.firstTry) ? stored.firstTry : {})
@@ -127,7 +134,8 @@ export function migrateExam(stored, bankId) {
 }
 
 // at: the moment it finished (ISO time); it tells attempts apart when two devices' histories merge
-export function recordAttempt(record, { date, at = null, ids, results, bank }) {
+// flagged: question ids flagged for review (full exams only); kept with that attempt, never carried over
+export function recordAttempt(record, { date, at = null, ids, results, flagged = [], bank }) {
   const score = scoreExam(bank, results);
   record.attempts.push({
     ...(at ? { at } : {}),
@@ -137,11 +145,25 @@ export function recordAttempt(record, { date, at = null, ids, results, bank }) {
     percent: score.percent,
     byDomain: score.byDomain.map(({ id, right, total }) => ({ id, right, total })),
     missed: results.filter((r) => !r.correct).map((r) => r.id),
+    ...(flagged.length ? { flagged: [...flagged] } : {}),
   });
   record.attempts = record.attempts.slice(-ATTEMPTS_KEPT);
   for (const id of ids) record.seen[id] = (record.seen[id] || 0) + 1;
   for (const r of results) recordFirstTry(record, r.id, r.correct); // answers were logged as given
   return record;
+}
+
+// How the flagged questions went, and the misses you didn't flag: the ones you felt sure of.
+export function flagReport(results, flagged) {
+  const marked = new Set(flagged);
+  const mine = results.filter((r) => marked.has(r.id));
+  const right = mine.filter((r) => r.correct).length;
+  return {
+    flagged: mine.length,
+    right,
+    wrong: mine.length - right,
+    unflaggedMissed: results.filter((r) => !r.correct && !marked.has(r.id)).length,
+  };
 }
 
 export const LOG_KEPT = 400;

@@ -22,6 +22,7 @@ import { recordCheck, calibrationOf, weakAreas, verdictFor } from './core/check.
 import { migrateExam, recordAttempt, questionsByCard, recordAnswer, kinOf } from './core/exam.js';
 import { currentUser } from './adapters/identity.js';
 import { readCollapsed, setCollapsed } from './core/collapse.js';
+import { borrowedCards, cardState } from './core/also.js';
 import { showDeckGuide } from './screens/deck-guide.js';
 import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress } from './core/account.js';
 import { modeById } from './modes/index.js';
@@ -526,12 +527,12 @@ async function showExamScreen(bankId, startLength = null) {
     bank,
     record: await loadExamRecord(bankId),
     loadRecord: () => loadExamRecord(bankId),
-    async saveAttempt({ ids, results }) {
+    async saveAttempt({ ids, results, flagged = [] }) {
       const at = new Date().toISOString();
       // re-read inside the update: another tab or a sync may have changed the history meanwhile
       const fresh = await sync.update(examKey(bankId), (stored) => {
         const rec = migrateExam(stored, bankId);
-        recordAttempt(rec, { date: localToday(), at, ids, results, bank });
+        recordAttempt(rec, { date: localToday(), at, ids, results, flagged, bank });
         rec.updatedAt = at;
         return rec;
       });
@@ -712,6 +713,7 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
   const examId = got?.bankId ?? null;
   const ls = learnStatus(p, ids);
   const phaseNow = got ? got.journey.current : (ls.learned < ls.total ? 'learn' : 'fresh');
+  const also = rawCollection ? await alsoPanel(deck.id, rawCollection.decks) : null;
 
   mount(root,
     h('header', { class: 'page-head' },
@@ -776,6 +778,7 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
           h('button', { type: 'button', onclick: () => go('quiz', 'pass', { direction: quizDir.value }) }, p.currentPass ? 'Continue pass: quiz' : 'Start pass: quiz'))),
       historyPanel(p),
     ]),
+    also,
     settingsPanel(deck, p, settingsOpen),
 
     h('section', { class: 'panel' },
@@ -785,6 +788,25 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
         h('button', { type: 'button', onclick: () => download(`${deck.id}-quizlet.txt`, toQuizletText(deck)) }, 'Quizlet text (term|definition)'))),
 
     deck.id.startsWith('u-') ? uploadedPanel(deck) : null);
+}
+
+// Cards on this deck's topic that are learned in another deck of the set, with how far each has
+// got there. They are studied only in that deck, so nothing is learned twice.
+const STATE_TEXT = { new: 'Not started', learning: 'Learning', learned: 'Learned', mastered: 'Mastered' };
+async function alsoPanel(deckId, deckIds) {
+  const others = await Promise.all(deckIds.filter((id) => id !== deckId).map((id) => decks.loadDeck(id).catch(() => null)));
+  const found = borrowedCards(deckId, others.filter(Boolean));
+  if (!found.length) return null;
+  const progress = new Map();
+  for (const id of new Set(found.map((x) => x.deckId))) progress.set(id, await loadProgress(id));
+  const from = [...new Map(found.map((x) => [x.deckId, x.deckTitle])).entries()];
+  return h('section', { class: 'panel' },
+    h('h2', {}, 'Also on this topic', tip('These cards are learned in another deck, so your progress there counts here too.')),
+    from.map(([id, title]) => [
+      h('p', { class: 'muted' }, 'Learned in ', h('a', { href: '#/deck/' + id }, title), ':'),
+      h('ul', { class: 'missed' }, found.filter((x) => x.deckId === id).map((x) => h('li', {},
+        h('strong', {}, x.card.term), h('span', {}, STATE_TEXT[cardState(progress.get(id), x.card.id)])))),
+    ]));
 }
 
 function learnPanel(deck, p, ids) {

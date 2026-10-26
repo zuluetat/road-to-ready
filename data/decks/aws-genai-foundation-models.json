@@ -315,7 +315,8 @@
       "hint": null,
       "tags": [
         "group:prompting",
-        "domain:aif-c01:3"
+        "domain:aif-c01:3",
+        "same:few-shot"
       ],
       "media": null
     },

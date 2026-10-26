@@ -33,6 +33,12 @@
       "cardCount": 16
     },
     {
+      "id": "aws-2026-guide",
+      "title": "New in the 2026 Exam Guide",
+      "file": "decks/aws-2026-guide.json",
+      "cardCount": 57
+    },
+    {
       "id": "claude-assoc-prompting",
       "title": "Prompting and Troubleshooting",
       "file": "decks/claude-assoc-prompting.json",
@@ -74,7 +80,7 @@
       "id": "aif-c01",
       "title": "AWS Certified AI Practitioner (AIF-C01) practice exam",
       "file": "questions/aif-c01.json",
-      "questionCount": 214
+      "questionCount": 210
     },
     {
       "id": "claude-associate",
@@ -93,7 +99,8 @@
         "aws-genai-foundation-models",
         "aws-ai-services",
         "aws-responsible-ai",
-        "aws-frameworks"
+        "aws-frameworks",
+        "aws-2026-guide"
       ],
       "exams": [
         "aif-c01"

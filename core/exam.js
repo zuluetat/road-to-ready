@@ -34,15 +34,23 @@ export function kinOf(bank, id) {
 
 // Never met first, then a rewording of an idea you have met, then exact repeats (least seen
 // first); equal ranks in random order, so which rewording you get is random too.
-function leastSeen(questions, seen, random, metFamilies) {
+// preferExamOnly: within a rank, exam-style questions first
+function leastSeen(questions, seen, random, metFamilies, preferExamOnly = false) {
   const rank = (q) => ((seen[q.id] || 0) > 0 ? 2 : metFamilies.has(familyOf(q)) ? 1 : 0);
-  return shuffle(questions, random).sort((a, b) => rank(a) - rank(b) || (seen[a.id] || 0) - (seen[b.id] || 0));
+  const style = (q) => (preferExamOnly && !q.examOnly ? 1 : 0);
+  return shuffle(questions, random).sort((a, b) => rank(a) - rank(b) || style(a) - style(b) || (seen[a.id] || 0) - (seen[b.id] || 0));
 }
 
 // Question ids for one practice exam, in random order.
-// examOnly: draw only exam-difficulty questions (the ones Learn never shows), as the half exam does
-export function drawExam(bank, { length = bank.exam.length, seen = {}, random = Math.random, examOnly = false } = {}) {
-  const pool = examOnly ? bank.questions.filter((q) => q.examOnly) : bank.questions;
+// Exam-style questions (examOnly: never shown in Learn) are kept for the mocks:
+//   examOnly: draw only those, as the half exam does
+//   practice: a drill; leave them out unless the rest of the bank runs short
+//   preferExamOnly: the full exam; unseen ones first
+// domain: a weak-spot drill on that domain only
+export function drawExam(bank, { length = bank.exam.length, seen = {}, random = Math.random, examOnly = false, practice = false, preferExamOnly = false, domain = null } = {}) {
+  const all = domain ? bank.questions.filter((q) => q.domain === domain) : bank.questions;
+  const pool = examOnly ? all.filter((q) => q.examOnly)
+    : practice ? all.filter((q) => !q.examOnly) : all;
   // One question per family: two wordings of one idea never appear in the same exam.
   const metFamilies = new Set(bank.questions.filter((q) => (seen[q.id] || 0) > 0).map(familyOf));
   const usedFamilies = new Set();
@@ -53,21 +61,47 @@ export function drawExam(bank, { length = bank.exam.length, seen = {}, random = 
     usedFamilies.add(familyOf(q));
     return true;
   };
-  const n = Math.min(length, pool.length);
-  const quota = domainQuota(bank.exam.domains, n);
-  bank.exam.domains.forEach((d, i) => {
+  // a mixed drill short of practice questions tops up with exam-style ones; a one-domain drill stops at
+  // its practice questions (it only uses exam-style ones when that domain has none)
+  const n = Math.min(length, practice && !(domain && pool.length) ? all.length : pool.length);
+  const quota = domain ? [] : domainQuota(bank.exam.domains, n);
+  if (!domain) bank.exam.domains.forEach((d, i) => {
     let left = quota[i];
-    for (const q of leastSeen(pool.filter((x) => x.domain === d.id), seen, random, metFamilies)) {
+    for (const q of leastSeen(pool.filter((x) => x.domain === d.id), seen, random, metFamilies, preferExamOnly)) {
       if (left <= 0) break;
       if (take(q)) left -= 1;
     }
   });
   // a domain short of questions is made up from the rest of the bank
-  for (const q of leastSeen(pool, seen, random, metFamilies)) {
+  for (const q of leastSeen(pool, seen, random, metFamilies, preferExamOnly)) {
     if (picked.size >= n) break;
     take(q);
   }
+  // a mixed drill longer than the practice questions left takes exam-style ones after all
+  if (practice && !(domain && pool.length)) {
+    for (const q of leastSeen(all, seen, random, metFamilies)) {
+      if (picked.size >= n) break;
+      take(q);
+    }
+  }
   return shuffle([...picked], random);
+}
+
+// How many mocks are left on exam-style questions whose idea you have never met, in any wording:
+// each domain needs its share, so the domain that runs out first decides.
+// -> { half, full, questions } (half is 0 when the bank has no half exam)
+export function freshMocks(bank, seen = {}) {
+  const met = new Set(bank.questions.filter((q) => (seen[q.id] || 0) > 0).map(familyOf));
+  // one per idea: an exam takes one wording of each, and the others are then met
+  const fresh = [...new Map(bank.questions.filter((q) => q.examOnly && !met.has(familyOf(q)))
+    .map((q) => [familyOf(q), q])).values()];
+  const count = (length) => {
+    if (!length || !fresh.length) return 0;
+    const quota = domainQuota(bank.exam.domains, length);
+    return Math.min(...bank.exam.domains.map((d, i) => (quota[i]
+      ? Math.floor(fresh.filter((q) => q.domain === d.id).length / quota[i]) : Infinity)));
+  };
+  return { half: count(bank.exam.half), full: count(bank.exam.length), questions: fresh.length };
 }
 
 // The same question with its options in a new order; answers and reasons move with them.

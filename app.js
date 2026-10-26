@@ -16,7 +16,7 @@ import { studyPlan, nudgeAfter } from './core/readiness.js';
 import { journeyFor, PHASES } from './core/journey.js';
 import { examFit } from './core/exam-fit.js';
 import { migrateGame, recordRound, todayStatus, describeToday, afterRound, setSettings, recordPoints, latestPoints, planSentence, markStepBase, GOALS, MARGINS } from './core/game.js';
-import { roadToReady, pointsChange, weekView, pointsBadge, MARGIN_NAMES } from './core/road.js';
+import { roadToReady, pointsChange, weekView, pointsBadge, MARGIN_NAMES, readyTarget } from './core/road.js';
 import { celebrationFor } from './core/celebrate.js';
 import { recordCheck, calibrationOf, weakAreas, verdictFor } from './core/check.js';
 import { migrateExam, recordAttempt, questionsByCard, recordAnswer, kinOf } from './core/exam.js';
@@ -405,8 +405,10 @@ async function planFor(collection) {
     const record = await loadExamRecord(bankId);
     const game = await loadGame(collection.id);
     const plan = studyPlan({ bank, decks: present, progress, record, foundations: collection.foundations || [], weak: weakAreas(game), stepBase: game.stepBase?.cards ?? null });
-    const journey = journeyFor({ bank, decks: present, progress, record, plan });
-    return { plan, journey, bankId, bank, record, decks: present, progress, titles: Object.fromEntries(present.map((d) => [d.id, d.title])) };
+    // the full mock must reach your 1,000-point target (pass plus margin), not just the pass mark
+    const target = readyTarget(bank.exam.passShare ?? 0.7, game.settings.margin);
+    const journey = journeyFor({ bank, decks: present, progress, record, plan, target });
+    return { plan, journey, target, bankId, bank, record, decks: present, progress, titles: Object.fromEntries(present.map((d) => [d.id, d.title])) };
   } catch {
     return null;
   }
@@ -417,7 +419,7 @@ const pct = (x) => `${Math.round(x * 100)}%`;
 // ---------- the path to exam day (pizza tracker) ----------
 
 const OPTION_NAMES = {
-  learn: 'Learn rounds', flashcards: 'Flashcards', match: 'Match', 'exam-short': 'Short practice exams (15 or 30)',
+  learn: 'Learn rounds', flashcards: 'Flashcards', match: 'Match', drill: 'Weak-spot drills (7 questions)', 'exam-short': 'Short practice exams (15 or 30)',
   quiz: 'Quiz', retake: 'Retake missed cards', 'study-next': '"Study next" advice', 'exam-full': 'Full practice exam',
   review: 'Spaced review', pass: 'Full passes through a deck',
 };
@@ -427,6 +429,7 @@ async function continueJourney(got) {
   if (got.plan.domains.some((d) => d.weak) && got.plan.next?.deckId) return studyDeck(got.plan.next.deckId, 'learn', 'learn');
   const next = got.journey.next;
   if (next.kind === 'learn' && next.deckId) return studyDeck(next.deckId, 'learn', 'learn');
+  if (next.kind === 'drill') return navigate(`#/exam/${got.bankId}/${next.length}/d${next.domainId}`);
   if (next.kind === 'exam') return navigate(`#/exam/${got.bankId}/${next.length}`);
   // keep it fresh: spaced review on the deck with the most cards due
   const today = localToday();
@@ -442,6 +445,7 @@ function continueLabel(got) {
   if (got.plan.domains.some((d) => d.weak) && got.plan.next?.deckId) return `Continue: Learn ${titles[got.plan.next.deckId]}`;
   return {
     learn: () => `Continue: Learn ${titles[journey.next.deckId] || ''}`.trim(),
+    drill: () => `Continue: ${journey.next.length} questions on ${got.plan.domains.find((d) => d.id === journey.next.domainId)?.name || 'your weakest area'}`,
     exam: () => `Continue: ${journey.next.length}-question practice exam`,
     review: () => 'Continue: spaced review',
   }[journey.next.kind]();
@@ -520,7 +524,8 @@ function examItems(exams) {
 
 // ---------- practice exam ----------
 
-async function showExamScreen(bankId, startLength = null, notice = null) {
+// startDomain: a weak-spot drill on that exam domain (Continue in the Practice phase)
+async function showExamScreen(bankId, startLength = null, notice = null, startDomain = null) {
   const bank = await decks.loadExam(bankId);
   setTitle('Practice exam');
   setStudying('exam:' + bankId); // another tab's deck saves must not reset an exam in progress
@@ -575,6 +580,7 @@ async function showExamScreen(bankId, startLength = null, notice = null) {
     // a new exam or the start page drawn: a flag round still loading must not take over
     onMove: () => { studyStarts++; },
     startLength,
+    startDomain,
     notice,
   });
 }
@@ -732,6 +738,7 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
   const examId = got?.bankId ?? null;
   const ls = learnStatus(p, ids);
   const phaseNow = got ? got.journey.current : (ls.learned < ls.total ? 'learn' : 'fresh');
+  const mockBar = got?.target ? Math.round(got.target * 100) : 75;
   const also = rawCollection ? await alsoPanel(deck.id, rawCollection.decks) : null;
 
   mount(root,
@@ -754,7 +761,8 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
     ]),
     phaseGroup('practice', phaseNow, [
       examId ? h('section', { class: 'panel' },
-        h('h2', {}, 'Practice exam', tip('Exam-style questions across every deck in this collection.')),
+        h('h2', {}, 'Practice exam', tip('Practice questions across every deck in this collection.'
+          + (got.bank.questions.some((q) => q.examOnly) ? ` Exam-style questions are kept for the full${got.bank.exam.half ? ' and half exams' : ' exam'}.` : ''))),
         h('div', { class: 'actions' },
           h('a', { class: 'button', href: `#/exam/${examId}/15` }, '15 questions'),
           h('a', { class: 'button', href: `#/exam/${examId}/30` }, '30 questions'))) : null,
@@ -776,8 +784,8 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
     ]),
     examId ? phaseGroup('mock', phaseNow, [
       h('section', { class: 'panel' },
-        h('h2', {}, 'Full practice exam', tip('The real exam\'s length and mix. 75% or better completes this phase.')),
-        h('div', { class: 'actions' }, h('a', { class: 'button', href: `#/exam/${examId}/65` }, 'Start the full exam'))),
+        h('h2', {}, 'Full practice exam', tip(`The real exam's length and mix. ${mockBar}% or better completes this phase: the pass mark plus your margin.`)),
+        h('div', { class: 'actions' }, h('a', { class: 'button', href: `#/exam/${examId}/${got.bank.exam.length}` }, 'Start the full exam'))),
     ]) : null,
     phaseGroup('fresh', phaseNow, [
       h('section', { class: 'panel' },
@@ -1091,13 +1099,13 @@ async function route() {
   setStudying(null);
   const match = location.hash.match(/^#\/deck\/([a-z0-9-]+)$/);
   const flip = location.hash.match(/^#\/flip\/([a-z0-9-]+)$/);
-  const exam = location.hash.match(/^#\/exam\/([a-z0-9-]+)(?:\/(\d+))?$/);
+  const exam = location.hash.match(/^#\/exam\/([a-z0-9-]+)(?:\/(\d+))?(?:\/d(\d+))?$/);
   const plan = location.hash.match(/^#\/plan\/([a-z0-9-]+)$/);
   const official = location.hash.match(/^#\/check\/([a-z0-9-]+)$/);
   try {
     if (match) await showDeck(match[1], takeNotice());
     else if (flip) await studyDeck(flip[1], 'flashcards', null);
-    else if (exam) await showExamScreen(exam[1], exam[2] ? Number(exam[2]) : null, takeNotice());
+    else if (exam) await showExamScreen(exam[1], exam[2] ? Number(exam[2]) : null, takeNotice(), exam[3] ? Number(exam[3]) : null);
     else if (plan) await showPlanScreen(plan[1]);
     else if (official) await showCheckScreen(official[1]);
     else if (location.hash === '#/upload') await showUploadScreen();

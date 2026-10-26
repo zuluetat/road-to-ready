@@ -38,6 +38,8 @@ export const AI_PROMPT = `Make flashcards for my study app as a CSV file.
 
 Topic: [describe the topic, or paste your notes here]
 
+If this is for a certification exam: first find the most recent official exam guide (check its version and date), cover what it lists, and leave out anything it marks out of scope or no longer offered.
+
 Rules:
 - First row exactly: Term,Definition
 - Then one card per row: the term, a comma, the definition.

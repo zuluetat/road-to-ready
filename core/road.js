@@ -14,6 +14,12 @@ const FULL = 1000;
 // half the share of its cards learned, with Learn steps climbed as thirds (the study plan's own estimate).
 const estimate = (d) => d.readiness ?? (d.cards ? ((d.learned + (d.climbed || 0)) / d.cards) * 0.5 : 0);
 
+// The share right that 1,000 points stands for: the pass mark plus your margin. The study plan's
+// full-mock step uses the same bar.
+export function readyTarget(passShare, margin = 'some') {
+  return Math.min(MAX_TARGET, Math.round((passShare + (MARGIN_SHARE[margin] ?? MARGIN_SHARE.some)) * 100) / 100);
+}
+
 // -> { points, target, projected, byDomain: [{ id, name, points }] }
 // calibration: how far the official check found the projection ran high (a share, e.g. 0.05).
 export function roadToReady({ plan, passShare, margin = 'some', calibration = 0 }) {
@@ -21,7 +27,7 @@ export function roadToReady({ plan, passShare, margin = 'some', calibration = 0 
   const total = domains.reduce((s, d) => s + d.weight, 0) || 1;
   const raw = domains.reduce((s, d) => s + (d.weight / total) * estimate(d), 0);
   const projected = Math.max(0, raw - calibration);
-  const target = Math.min(MAX_TARGET, Math.round((passShare + (MARGIN_SHARE[margin] ?? MARGIN_SHARE.some)) * 100) / 100);
+  const target = readyTarget(passShare, margin);
   const uncapped = (FULL * projected) / target;
   const points = Math.min(FULL, Math.round(uncapped));
   // each area's share of the points, scaled with any calibration and the cap so they add up

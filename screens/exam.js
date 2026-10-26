@@ -6,7 +6,7 @@
 // file only draws. Questions link to the flashcards they test through cardTerms(ref).
 
 import { h, mount } from '../core/dom.js';
-import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport, cardsBehind, byDeck, optionVocab, lastFlags, learnFlagsLabel } from '../core/exam.js';
+import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport, cardsBehind, byDeck, optionVocab, lastFlags, learnFlagsLabel, freshMocks } from '../core/exam.js';
 import { linkText } from '../core/vocab.js';
 import { keys, celebration, optionList, checkButton, reportLink } from '../modes/common.js';
 import { togglePick, ready } from '../core/choice.js';
@@ -21,7 +21,7 @@ const LENGTHS = [15, 30];
 // The record is re-read before each draw and saved through saveAttempt, so another tab's attempts
 // are never overwritten. Returns the cleanup function.
 // notice: a message for the start page (a Learn round that couldn't go on), shown once
-export function showExam(root, { bank, record: initial, loadRecord, saveAttempt, cardTerms, onExit, onAnswered, onRound, loadTerms = null, learnCards = null, startLength = null, notice = null, onMove = null }) {
+export function showExam(root, { bank, record: initial, loadRecord, saveAttempt, cardTerms, onExit, onAnswered, onRound, loadTerms = null, learnCards = null, startLength = null, startDomain = null, notice = null, onMove = null }) {
   let record = initial;
   let known = null; // the set's terms, loaded for the score screen: { vocab, cards }
   const domainName = new Map(bank.exam.domains.map((d) => [d.id, d.name]));
@@ -58,13 +58,15 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         h('p', { class: 'muted' }, `${bank.questions.length} questions in the bank. Each exam draws by domain weight, `
           + 'questions you have seen least first, with the answers in a new order. Shorter exams show the explanation after each answer; '
           + 'the full exam runs like the real one, with no feedback until you submit. '
+          + (bank.questions.some((q) => q.examOnly) ? 'The 15 and 30 draw only practice questions; exam-style ones are kept for the full exam. ' : '')
           + (halfLength() ? `The half exam is ${halfLength()} exam-difficulty questions, none worded as in Learn, under the same conditions. ` : '')
           + 'Questions you met as Learn scenarios count as seen, and your score on familiar questions runs high, so the score screen also shows how you did on questions new to you.'),
         h('div', { class: 'actions' },
           lengths.slice(0, -1).map((n) => h('button', { type: 'button', onclick: () => begin(n) }, `${n} questions`)),
           halfLength() ? h('button', { type: 'button', onclick: () => begin(halfLength(), { half: true }) }, `Half exam (${halfLength()}) · exam conditions`) : null,
           lengths.slice(-1).map((n) => h('button', { class: 'primary', type: 'button', onclick: () => begin(n) },
-            n === bank.exam.length ? `Full exam (${n}) · exam conditions` : `${n} questions`)))),
+            n === bank.exam.length ? `Full exam (${n}) · exam conditions` : `${n} questions`))),
+        freshLeft()),
       lastFlagsPanel(),
       h('section', { class: 'panel' },
         h('h2', {}, 'Domains'),
@@ -94,6 +96,16 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     return panel;
   }
 
+  // Exam-style questions you've never met, as mocks: when to stop taking half exams and keep the
+  // rest for a last full one. Only for a bank with a half exam.
+  function freshLeft() {
+    if (!halfLength()) return null;
+    const f = freshMocks(bank, record.seen);
+    const exams = (n, what) => `${n} ${what} exam${n === 1 ? '' : 's'}`;
+    return h('p', { class: 'muted' }, `Never-seen exam-style questions left: ${f.questions}, enough for `
+      + `${exams(f.full, 'full')} or ${exams(f.half, 'half')}. Drills and Learn never show them; meeting the same idea in other words counts as seen.`);
+  }
+
   // the half exam's length, when the bank has one and enough exam-difficulty questions for it
   function halfLength() {
     const n = bank.exam.half;
@@ -101,19 +113,21 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   }
 
   // half: the half exam, which runs under exam conditions on exam-difficulty questions
-  async function begin(length, { half = false } = {}) {
+  // domain: a weak-spot drill on one exam domain
+  async function begin(length, { half = false, domain = null } = {}) {
     if (disposed) return;
+    if (domain !== null && !domainName.has(domain)) return startPage(); // a stale link to a domain the bank doesn't have
     onMove?.();
     record = await loadRecord();
     if (disposed) return;
-    if (examConditions(bank, length, { half })) runConditions(length, half); else run(length);
+    if (!domain && examConditions(bank, length, { half })) runConditions(length, half); else run(length, null, domain);
   }
 
   // fixedIds: retake exactly these questions (the ones just missed) instead of a new draw
-  function run(length, fixedIds = null) {
+  function run(length, fixedIds = null, domain = null) {
     if (disposed) return;
     onMove?.(); // Retry the ones I missed starts here, not through begin
-    const ids = fixedIds ? [...fixedIds] : drawExam(bank, { length, seen: record.seen });
+    const ids = fixedIds ? [...fixedIds] : drawExam(bank, { length, seen: record.seen, practice: true, domain });
     // questions never shown before (not in Learn, not in an exam): the honest readiness measure
     const fresh = newToYou(ids);
     const results = [];
@@ -207,7 +221,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
 
     async function finish() {
       stopKeys();
-      await showResults({ ids, results, fresh, length });
+      await showResults({ ids, results, fresh, length, domain });
     }
 
     stopKeys();
@@ -229,7 +243,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
 
   // The score screen, for drills and the full and half exams alike.
   // flagged: question ids flagged for review, from a full or half exam; null for drills, which have no flags
-  async function showResults({ ids, results, fresh, length, flagged = null, half = false }) {
+  async function showResults({ ids, results, fresh, length, flagged = null, half = false, domain = null }) {
     record = await saveAttempt({ ids, results, flagged: flagged || [], half });
     // links and Learn buttons need the set's decks; a slow load must not hold up the score
     known = loadTerms ? await Promise.race([loadTerms(), new Promise((ok) => setTimeout(ok, 4000, null))]).catch(() => null) : null;
@@ -259,9 +273,10 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
           h('ul', { class: 'missed' }, missedResults.map((r) => h('li', {}, answerDetails(r)))),
         ] : null,
         h('div', { class: 'actions' },
-          missed.length ? h('button', { class: 'primary', type: 'button', onclick: () => run(missed.length, missed.map((m) => m.id)) },
+          missed.length ? h('button', { class: 'primary', type: 'button', onclick: () => run(missed.length, missed.map((m) => m.id), domain) },
             `Retry the ${missed.length} I missed`) : null,
-          h('button', { class: missed.length ? null : 'primary', type: 'button', onclick: () => begin(length, { half }) }, half ? 'Another half exam' : `Another ${length}-question exam`),
+          h('button', { class: missed.length ? null : 'primary', type: 'button', onclick: () => begin(length, { half, domain }) },
+            half ? 'Another half exam' : domain ? `${length} more on ${domainName.get(domain)}` : `Another ${length}-question exam`),
           h('button', { type: 'button', onclick: startPage }, 'Back'))));
     root.querySelector('.end .primary').focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -393,7 +408,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // submit. Previous and flags as on the real exam; a review list before submitting. Answers count
   // toward readiness only when submitted; quitting saves nothing.
   function runConditions(length, half = false) {
-    const ids = drawExam(bank, { length, seen: record.seen, examOnly: half });
+    const ids = drawExam(bank, { length, seen: record.seen, examOnly: half, preferExamOnly: !half });
     const fresh = newToYou(ids);
     const qs = ids.map((id) => shuffleOptions(byId.get(id))); // one order per question, kept when you go back
     const picks = qs.map(() => []);
@@ -521,7 +536,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     go(0);
   }
 
-  if (startLength) begin(Math.min(startLength, bank.questions.length)); else startPage();
+  if (startLength) begin(Math.min(startLength, bank.questions.length), { domain: startDomain }); else startPage();
   return () => { disposed = true; stopKeys(); };
 }
 

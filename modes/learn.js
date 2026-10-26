@@ -275,6 +275,11 @@ export function start(deck, ctx) {
   // where it came from, never on to a round of the whole deck.
   // Cards in more than one deck run a deck at a time, each part ending with Continue.
   function finishChosen(total) {
+    // a part whose cards have all left its deck is skipped
+    if (!total && ctx.nextPart) {
+      mount(ctx.root, topBar(ctx, ctx.label), h('p', { class: 'muted', role: 'status' }, 'Opening the next deck…'));
+      return ctx.nextPart();
+    }
     const ids = ctx.options.only.filter((id) => deck.cards.some((c) => c.id === id));
     const status = learnStatus(ctx.progress, ids);
     const more = ctx.nextPart && moreToLearn(ctx.options.queue);

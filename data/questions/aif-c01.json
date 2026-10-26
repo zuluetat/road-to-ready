@@ -5,6 +5,7 @@
   "note": "Original practice questions written for this site and fact-checked against AWS documentation. Not official AWS exam material.",
   "exam": {
     "length": 65,
+    "half": 25,
     "passShare": 0.7,
     "guide": "https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html",
     "guideVersion": "1.1",

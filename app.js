@@ -95,6 +95,7 @@ window.addEventListener('storage', (e) => {
   const deckId = e.key.slice('study:v1:progress:'.length);
   if (studying && studying !== deckId) return;
   if (studying === deckId) {
+    studyStarts++; // a next part or deck still loading must not start over the page you're sent back to
     cleanup();
     cleanup = () => {};
     setStudying(null);
@@ -102,7 +103,7 @@ window.addEventListener('storage', (e) => {
   }
   clearTimeout(refreshTimer);
   // A session started meanwhile already loaded the newer progress; don't tear it down.
-  refreshTimer = setTimeout(() => { if (!studying) route(); }, 150);
+  refreshTimer = setTimeout(() => { if (!busy()) route(); }, 150);
 });
 
 // The notice survives refreshes caused by the other tab's later saves; it clears when you move on.
@@ -423,9 +424,9 @@ const OPTION_NAMES = {
 
 // What Continue does: the obvious next step for the phase you're in.
 async function continueJourney(got) {
-  if (got.plan.domains.some((d) => d.weak) && got.plan.next?.deckId) return startStudy(await decks.loadDeck(got.plan.next.deckId), 'learn', 'learn');
+  if (got.plan.domains.some((d) => d.weak) && got.plan.next?.deckId) return studyDeck(got.plan.next.deckId, 'learn', 'learn');
   const next = got.journey.next;
-  if (next.kind === 'learn' && next.deckId) return startStudy(await decks.loadDeck(next.deckId), 'learn', 'learn');
+  if (next.kind === 'learn' && next.deckId) return studyDeck(next.deckId, 'learn', 'learn');
   if (next.kind === 'exam') return navigate(`#/exam/${got.bankId}/${next.length}`);
   // keep it fresh: spaced review on the deck with the most cards due
   const today = localToday();
@@ -513,13 +514,13 @@ function examItems(exams) {
     return h('li', {}, h('div', { class: 'deck-row' }, h('a', { class: 'deck-tile', href: '#/exam/' + e.id },
       h('span', { class: 'deck-name' }, e.title),
       h('span', { class: 'deck-meta' }, `${e.questionCount} questions`
-        + (last ? ` · last score ${last.right}/${last.length} (${last.percent}%)` : ' · not tried yet')))));
+        + (last ? ` · last score ${last.right}/${last.length} (${last.percent}%)${last.half ? ', half exam' : ''}` : ' · not tried yet')))));
   }));
 }
 
 // ---------- practice exam ----------
 
-async function showExamScreen(bankId, startLength = null) {
+async function showExamScreen(bankId, startLength = null, notice = null) {
   const bank = await decks.loadExam(bankId);
   setTitle('Practice exam');
   setStudying('exam:' + bankId); // another tab's deck saves must not reset an exam in progress
@@ -527,12 +528,12 @@ async function showExamScreen(bankId, startLength = null) {
     bank,
     record: await loadExamRecord(bankId),
     loadRecord: () => loadExamRecord(bankId),
-    async saveAttempt({ ids, results, flagged = [] }) {
+    async saveAttempt({ ids, results, flagged = [], half = false }) {
       const at = new Date().toISOString();
       // re-read inside the update: another tab or a sync may have changed the history meanwhile
       const fresh = await sync.update(examKey(bankId), (stored) => {
         const rec = migrateExam(stored, bankId);
-        recordAttempt(rec, { date: localToday(), at, ids, results, flagged, bank });
+        recordAttempt(rec, { date: localToday(), at, ids, results, flagged, half, bank });
         rec.updatedAt = at;
         return rec;
       });
@@ -566,13 +567,15 @@ async function showExamScreen(bankId, startLength = null) {
     // exam page. The address moves there first (no redraw), so a reload mid-round can't start a
     // new full exam.
     learnCards: async (groups) => {
-      const deck = await decks.loadDeck(groups[0].deckId);
       const back = '#/exam/' + bankId;
-      history.replaceState(null, '', back);
-      await startStudy(deck, 'learn', 'learn', { only: groups[0].cardIds, returnTo: back, queue: groups.slice(1) });
+      await studyDeck(groups[0].deckId, 'learn', 'learn', { only: groups[0].cardIds, returnTo: back, queue: groups.slice(1) },
+        () => history.replaceState(null, '', back));
     },
     onExit: () => navigate('#/'),
+    // a new exam or the start page drawn: a flag round still loading must not take over
+    onMove: () => { studyStarts++; },
     startLength,
+    notice,
   });
 }
 
@@ -933,6 +936,10 @@ function settingsPanel(deck, p, open) {
 // ---------- study ----------
 
 let studyStarts = 0;
+// study starts still loading: background redraws (another tab's save, a sync) wait rather than draw
+// over a session about to open
+let starting = 0;
+const busy = () => studying || starting > 0;
 
 // Learn's "apply it" step uses the practice-exam questions that test a card. Loaded once; if the
 // banks can't load, Learn simply has no scenario step.
@@ -954,7 +961,30 @@ async function vocabFor(deck, collection) {
   return vocabulary([deck, ...loaded.filter(Boolean)].flatMap((d) => d.cards || []));
 }
 
+// Load a deck, then study it, unless you moved elsewhere while it loaded. before: runs just before the start.
+async function studyDeck(deckId, modeId, kind, options = {}, before = null) {
+  const mine = ++studyStarts; // only the latest start goes ahead
+  starting += 1;
+  try {
+    const deck = await decks.loadDeck(deckId);
+    if (mine !== studyStarts) return;
+    before?.();
+    await startStudy(deck, modeId, kind, options);
+  } finally {
+    starting -= 1;
+  }
+}
+
 async function startStudy(deck, modeId, kind, options = {}) {
+  starting += 1;
+  try {
+    await openStudy(deck, modeId, kind, options);
+  } finally {
+    starting -= 1;
+  }
+}
+
+async function openStudy(deck, modeId, kind, options) {
   cleanup();
   const mine = ++studyStarts;
   await firstSyncSettled(); // study from your latest progress, not this device's older copy
@@ -1016,16 +1046,26 @@ async function startStudy(deck, modeId, kind, options = {}) {
     },
     saveProgress: save,
     onRetake: (m) => startStudy(deck, m === 'match' || m === 'learn' ? 'flashcards' : m, 'retake', options),
-    onExit: () => { cleanup(); cleanup = () => {}; setStudying(null); navigate(options.returnTo || '#/deck/' + deck.id); },
+    onExit: () => leave(),
     restart: () => startStudy(deck, modeId, kind, options),
     // the next deck's part of a round on chosen cards (the ones behind your flags)
     nextPart: options.queue?.length ? () => {
       const [part, ...rest] = options.queue;
+      const mine = studyStarts;
+      // a load that ends after you moved on does nothing, success or failure
       decks.loadDeck(part.deckId).then(
-        (d) => startStudy(d, 'learn', 'learn', { ...options, only: part.cardIds, queue: rest }),
-        () => ctx.onExit());
+        (d) => { if (mine === studyStarts) startStudy(d, 'learn', 'learn', { ...options, only: part.cardIds, queue: rest }); },
+        () => { if (mine === studyStarts) leave('Could not open the next deck. Check your connection and try again.'); });
     } : null,
   };
+  // message: shown on the screen we go back to
+  function leave(message = null) {
+    studyStarts++; // a next part still loading (Continue, then Back) must not start after this
+    cleanup();
+    cleanup = () => {};
+    setStudying(null);
+    navigate(options.returnTo || '#/deck/' + deck.id, message);
+  }
   window.scrollTo(0, 0);
   notice = null;
   setStudying(deck.id);
@@ -1056,8 +1096,8 @@ async function route() {
   const official = location.hash.match(/^#\/check\/([a-z0-9-]+)$/);
   try {
     if (match) await showDeck(match[1], takeNotice());
-    else if (flip) await startStudy(await decks.loadDeck(flip[1]), 'flashcards', null);
-    else if (exam) await showExamScreen(exam[1], exam[2] ? Number(exam[2]) : null);
+    else if (flip) await studyDeck(flip[1], 'flashcards', null);
+    else if (exam) await showExamScreen(exam[1], exam[2] ? Number(exam[2]) : null, takeNotice());
     else if (plan) await showPlanScreen(plan[1]);
     else if (official) await showCheckScreen(official[1]);
     else if (location.hash === '#/upload') await showUploadScreen();
@@ -1073,7 +1113,8 @@ async function route() {
   window.scrollTo(0, 0);
 }
 
-window.addEventListener('hashchange', () => { notice = carried; carried = null; route(); });
+// a study start still loading must not draw over the screen you moved to
+window.addEventListener('hashchange', () => { studyStarts++; notice = carried; carried = null; route(); });
 // ---------- who is signed in ----------
 // Before anything syncs: who is this? If someone else signed in on this browser, its copy of the
 // last person's progress is cleared first (then the page reloads clean). Offline, the last answer
@@ -1176,7 +1217,7 @@ function showNotListed(acct) {
 async function syncNow({ redraw = true } = {}) {
   const { changed } = await sync.pull();
   await sync.flush();
-  if (redraw && changed.length && !studying) route();
+  if (redraw && changed.length && !busy()) route();
   return changed;
 }
 // Show the first screen with fresh progress, but never wait more than a moment for the network;
@@ -1186,7 +1227,7 @@ const firstSync = account.then((a) => (a.status === 'not-listed' ? [] : syncNow(
 function firstSyncSettled() { return Promise.race([firstSync, new Promise((r) => setTimeout(r, 5000))]); }
 Promise.race([firstSync.then(() => 'in time'), new Promise((r) => setTimeout(() => r('late'), 2500))]).then((when) => {
   route();
-  if (when === 'late') firstSync.then((changed) => { if (changed.length && !studying) route(); });
+  if (when === 'late') firstSync.then((changed) => { if (changed.length && !busy()) route(); });
 });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !studying) syncNow().catch(() => {}); });
 window.addEventListener('online', () => { if (!studying) syncNow().catch(() => {}); });

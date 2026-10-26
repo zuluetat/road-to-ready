@@ -1,7 +1,8 @@
 // Practice exam screen: a start page (length, past scores), then questions one at a time, then a
 // score by exam domain. Shorter exams are drills, with the explanation after each answer; the
 // full-length exam runs under exam conditions: no feedback until you submit, with Previous, flags
-// and a review list, like the real thing. The rules live in core/exam.js; this
+// and a review list, like the real thing. A bank with exam.half also offers a half exam: that many
+// exam-difficulty questions (the ones Learn never shows), under the same conditions. The rules live in core/exam.js; this
 // file only draws. Questions link to the flashcards they test through cardTerms(ref).
 
 import { h, mount } from '../core/dom.js';
@@ -12,14 +13,15 @@ import { togglePick, ready } from '../core/choice.js';
 
 const LENGTHS = [15, 30];
 
-// showExam(root, { bank, record, loadRecord() -> Promise<record>, saveAttempt({ ids, results, flagged }) -> Promise<record>,
+// showExam(root, { bank, record, loadRecord() -> Promise<record>, saveAttempt({ ids, results, flagged, half }) -> Promise<record>,
 //   cardTerms(refs) -> Promise<[{ deckId, term }]>, onExit, onRound() -> Promise<{ lines, celebration } | null>,
 //   loadTerms() -> Promise<{ vocab, cards }> (the set's cards: vocabulary with ids "deckId/cardId",
 //   and every loaded card by "deckId/cardId"),
 //   learnCards([{ deckId, cardIds }]): a Learn round on just those cards, a deck at a time })
 // The record is re-read before each draw and saved through saveAttempt, so another tab's attempts
 // are never overwritten. Returns the cleanup function.
-export function showExam(root, { bank, record: initial, loadRecord, saveAttempt, cardTerms, onExit, onAnswered, onRound, loadTerms = null, learnCards = null, startLength = null }) {
+// notice: a message for the start page (a Learn round that couldn't go on), shown once
+export function showExam(root, { bank, record: initial, loadRecord, saveAttempt, cardTerms, onExit, onAnswered, onRound, loadTerms = null, learnCards = null, startLength = null, notice = null, onMove = null }) {
   let record = initial;
   let known = null; // the set's terms, loaded for the score screen: { vocab, cards }
   const domainName = new Map(bank.exam.domains.map((d) => [d.id, d.name]));
@@ -30,7 +32,16 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // questions whose idea you have never met: not this question, nor any rewording of it
   const newToYou = (ids) => new Set(ids.filter((id) => ![id, ...kinOf(bank, id)].some((k) => record.seen[k] > 0)));
 
+  function takeNotice() {
+    const text = notice;
+    notice = null;
+    return text ? h('p', { class: 'flash warn', role: 'status' }, text) : null;
+  }
+
+  // a screen a study start has already taken over ignores taps; they must not cancel that start
   function startPage() {
+    if (disposed) return;
+    onMove?.();
     stopKeys();
     const lengths = [...LENGTHS.filter((n) => n < bank.exam.length), bank.exam.length]
       .filter((n) => n <= bank.questions.length);
@@ -41,15 +52,19 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         h('h1', {}, bank.title),
         bank.note ? h('p', { class: 'muted' }, bank.note) : null,
         bank.exam.differences ? h('p', { class: 'muted' }, bank.exam.differences) : null),
+      takeNotice(),
       h('section', { class: 'panel' },
         h('h2', {}, 'Start a practice exam'),
         h('p', { class: 'muted' }, `${bank.questions.length} questions in the bank. Each exam draws by domain weight, `
           + 'questions you have seen least first, with the answers in a new order. Shorter exams show the explanation after each answer; '
           + 'the full exam runs like the real one, with no feedback until you submit. '
+          + (halfLength() ? `The half exam is ${halfLength()} exam-difficulty questions, none worded as in Learn, under the same conditions. ` : '')
           + 'Questions you met as Learn scenarios count as seen, and your score on familiar questions runs high, so the score screen also shows how you did on questions new to you.'),
-        h('div', { class: 'actions' }, lengths.map((n, i) => h('button', {
-          class: i === lengths.length - 1 ? 'primary' : null, type: 'button', onclick: () => begin(n),
-        }, n === bank.exam.length ? `Full exam (${n}) · exam conditions` : `${n} questions`)))),
+        h('div', { class: 'actions' },
+          lengths.slice(0, -1).map((n) => h('button', { type: 'button', onclick: () => begin(n) }, `${n} questions`)),
+          halfLength() ? h('button', { type: 'button', onclick: () => begin(halfLength(), { half: true }) }, `Half exam (${halfLength()}) · exam conditions`) : null,
+          lengths.slice(-1).map((n) => h('button', { class: 'primary', type: 'button', onclick: () => begin(n) },
+            n === bank.exam.length ? `Full exam (${n}) · exam conditions` : `${n} questions`)))),
       lastFlagsPanel(),
       h('section', { class: 'panel' },
         h('h2', {}, 'Domains'),
@@ -59,17 +74,17 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         h('table', { class: 'history' },
           h('thead', {}, h('tr', {}, h('th', {}, 'Date'), h('th', {}, 'Questions'), h('th', {}, 'Score'))),
           h('tbody', {}, recent.map((a) => h('tr', {},
-            h('td', {}, a.date), h('td', {}, String(a.length)), h('td', {}, `${a.right}/${a.length} (${a.percent}%)`)))))) : null);
+            h('td', {}, a.date), h('td', {}, a.half ? `${a.length} · half exam` : String(a.length)), h('td', {}, `${a.right}/${a.length} (${a.percent}%)`)))))) : null);
     root.querySelector('.actions .primary')?.focus();
   }
 
-  // Your latest full exam's flags, so the cards behind them can still be learned after the score
-  // screen is gone. Only that exam's: a newer full exam replaces them.
+  // Your latest full or half exam's flags, so the cards behind them can still be learned after the
+  // score screen is gone. Only that exam's: a newer one replaces them.
   function lastFlagsPanel() {
     const last = lastFlags(record, bank);
     if (!last || !loadTerms || !learnCards) return null;
     const panel = h('section', { class: 'panel' },
-      h('h2', {}, 'Your flags from the last full exam'),
+      h('h2', {}, `Your flags from the last ${last.half ? 'half' : 'full'} exam`),
       h('p', {}, `On ${last.date} you flagged ${last.flagged.length}: ${last.right} right, ${last.wrong} wrong.`));
     loadTerms().then((terms) => {
       if (disposed || !panel.isConnected) return;
@@ -79,14 +94,25 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     return panel;
   }
 
-  async function begin(length) {
+  // the half exam's length, when the bank has one and enough exam-difficulty questions for it
+  function halfLength() {
+    const n = bank.exam.half;
+    return n && bank.questions.filter((q) => q.examOnly).length >= n ? n : null;
+  }
+
+  // half: the half exam, which runs under exam conditions on exam-difficulty questions
+  async function begin(length, { half = false } = {}) {
+    if (disposed) return;
+    onMove?.();
     record = await loadRecord();
     if (disposed) return;
-    if (examConditions(bank, length)) runConditions(length); else run(length);
+    if (examConditions(bank, length, { half })) runConditions(length, half); else run(length);
   }
 
   // fixedIds: retake exactly these questions (the ones just missed) instead of a new draw
   function run(length, fixedIds = null) {
+    if (disposed) return;
+    onMove?.(); // Retry the ones I missed starts here, not through begin
     const ids = fixedIds ? [...fixedIds] : drawExam(bank, { length, seen: record.seen });
     // questions never shown before (not in Learn, not in an exam): the honest readiness measure
     const fresh = newToYou(ids);
@@ -201,10 +227,10 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     root.querySelector('.question').focus({ preventScroll: true });
   }
 
-  // The score screen, for drills and the full exam alike.
-  // flagged: question ids flagged for review, from a full exam; null for drills, which have no flags
-  async function showResults({ ids, results, fresh, length, flagged = null }) {
-    record = await saveAttempt({ ids, results, flagged: flagged || [] });
+  // The score screen, for drills and the full and half exams alike.
+  // flagged: question ids flagged for review, from a full or half exam; null for drills, which have no flags
+  async function showResults({ ids, results, fresh, length, flagged = null, half = false }) {
+    record = await saveAttempt({ ids, results, flagged: flagged || [], half });
     // links and Learn buttons need the set's decks; a slow load must not hold up the score
     known = loadTerms ? await Promise.race([loadTerms(), new Promise((ok) => setTimeout(ok, 4000, null))]).catch(() => null) : null;
     if (disposed) return;
@@ -235,7 +261,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         h('div', { class: 'actions' },
           missed.length ? h('button', { class: 'primary', type: 'button', onclick: () => run(missed.length, missed.map((m) => m.id)) },
             `Retry the ${missed.length} I missed`) : null,
-          h('button', { class: missed.length ? null : 'primary', type: 'button', onclick: () => begin(length) }, `Another ${length}-question exam`),
+          h('button', { class: missed.length ? null : 'primary', type: 'button', onclick: () => begin(length, { half }) }, half ? 'Another half exam' : `Another ${length}-question exam`),
           h('button', { type: 'button', onclick: startPage }, 'Back'))));
     root.querySelector('.end .primary').focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -258,7 +284,8 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', linked(m.answer.map((a) => m.options[a]).join(' · '))),
       h('p', { class: 'muted' }, m.explanation),
       otherOptions(m),
-      studyLine(known ? cardsBehind(m, known.vocab, new Set(known.cards.keys())) : m.cards || []));
+      // the cards it tests and terms in its options; a tested card in a deck that didn't load still shows
+      studyLine(known ? [...new Set([...cardsBehind(m, known.vocab, new Set(known.cards.keys())), ...(m.cards || [])])] : m.cards || []));
   }
 
   // The wrong options, each with why it's wrong and its terms linked to their decks: ruling an
@@ -283,15 +310,17 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       const el = e.currentTarget;
       const box = el.closest('details') || el.parentElement; // one definition open per question
       const shown = box.querySelector('.lookup');
-      box.querySelectorAll('.vocab.open').forEach((x) => x.classList.remove('open'));
+      box.querySelectorAll('.vocab.open').forEach((x) => { x.classList.remove('open'); x.setAttribute('aria-expanded', 'false'); });
       shown?.remove();
-      if (shown?.dataset.id === id) return; // a second tap closes it
+      if (shown?.opener === el) return; // a second tap on the same term closes it
       const card = known.cards.get(id);
       el.classList.add('open');
-      const close = () => { pill.remove(); el.classList.remove('open'); };
+      el.setAttribute('aria-expanded', 'true');
+      const close = () => { pill.remove(); el.classList.remove('open'); el.setAttribute('aria-expanded', 'false'); el.focus(); };
       const pill = h('div', { class: 'lookup', role: 'status', 'data-id': id },
         h('p', {}, h('strong', {}, card.term), ' ', card.definition),
         h('button', { type: 'button', class: 'link', 'aria-label': 'Close', onclick: close }, '✕'));
+      pill.opener = el;
       // right under the line tapped: inside an option's list item, or after a paragraph
       const li = el.closest('li');
       const line = el.closest('p');
@@ -300,7 +329,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       else box.append(pill);
     };
     return h('span', {
-      class: 'vocab', role: 'button', tabindex: '0', 'aria-label': `${text}: look up`, onclick: open,
+      class: 'vocab', role: 'button', tabindex: '0', 'aria-label': `${text}: look up`, 'aria-expanded': 'false', onclick: open,
       onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') open(e); },
     }, text);
   }
@@ -325,14 +354,18 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // Where to study a question on the score screen: the flashcards it tests, or a note that none does yet.
   function studyLine(refs) {
     const el = h('p', { class: 'cards-line muted' }, refs.length ? '' : 'No flashcard covers this yet.');
-    // with the set's cards loaded, each one looks up in place; otherwise it links to its deck
-    if (refs.length && known) {
-      el.append('Study: ', ...refs.flatMap((ref, i) => [i ? ', ' : '', term(ref, known.cards.get(ref).term)]));
-    } else if (refs.length) {
-      cardTerms(refs).catch(() => []).then((found) => {
-        if (!found.length || !el.isConnected) return;
-        el.append('Study: ', ...found.flatMap((c, i) => [i ? ', ' : '', deckLink(c.deckId, c.term)]));
-      });
+    // a card whose deck loaded looks up in place; any other (a deck that didn't load) links to its deck
+    const here = known ? refs.filter((ref) => known.cards.has(ref)) : [];
+    const away = refs.filter((ref) => !here.includes(ref));
+    const parts = here.map((ref) => term(ref, known.cards.get(ref).term));
+    const show = (more) => { // after the screen mounts, once the other decks' terms arrive
+      const all = [...parts, ...more];
+      if (!more.length || !el.isConnected) return;
+      el.replaceChildren('Study: ', ...all.flatMap((x, i) => [i ? ', ' : '', x]));
+    };
+    if (parts.length) el.replaceChildren('Study: ', ...parts.flatMap((x, i) => [i ? ', ' : '', x])); // drawn before the screen mounts
+    if (away.length) {
+      cardTerms(away).catch(() => []).then((found) => show(found.map((c) => deckLink(c.deckId, c.term))));
     }
     return el;
   }
@@ -359,8 +392,8 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // The full-length exam under exam conditions: select and move on, nothing marked until you
   // submit. Previous and flags as on the real exam; a review list before submitting. Answers count
   // toward readiness only when submitted; quitting saves nothing.
-  function runConditions(length) {
-    const ids = drawExam(bank, { length, seen: record.seen });
+  function runConditions(length, half = false) {
+    const ids = drawExam(bank, { length, seen: record.seen, examOnly: half });
     const fresh = newToYou(ids);
     const qs = ids.map((id) => shuffleOptions(byId.get(id))); // one order per question, kept when you go back
     const picks = qs.map(() => []);
@@ -471,7 +504,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       const results = gradeAll(qs, picks);
       // the answers given count as readiness evidence now, all at once
       results.forEach((r, i) => { if (picks[i].length) onAnswered?.(r.id, r.correct); });
-      await showResults({ ids, results, fresh, length, flagged: [...flagged].sort((x, y) => x - y).map((i) => qs[i].id) });
+      await showResults({ ids, results, fresh, length, half, flagged: [...flagged].sort((x, y) => x - y).map((i) => qs[i].id) });
     }
 
     stopKeys();

@@ -40,7 +40,9 @@ function leastSeen(questions, seen, random, metFamilies) {
 }
 
 // Question ids for one practice exam, in random order.
-export function drawExam(bank, { length = bank.exam.length, seen = {}, random = Math.random } = {}) {
+// examOnly: draw only exam-difficulty questions (the ones Learn never shows), as the half exam does
+export function drawExam(bank, { length = bank.exam.length, seen = {}, random = Math.random, examOnly = false } = {}) {
+  const pool = examOnly ? bank.questions.filter((q) => q.examOnly) : bank.questions;
   // One question per family: two wordings of one idea never appear in the same exam.
   const metFamilies = new Set(bank.questions.filter((q) => (seen[q.id] || 0) > 0).map(familyOf));
   const usedFamilies = new Set();
@@ -51,17 +53,17 @@ export function drawExam(bank, { length = bank.exam.length, seen = {}, random = 
     usedFamilies.add(familyOf(q));
     return true;
   };
-  const n = Math.min(length, bank.questions.length);
+  const n = Math.min(length, pool.length);
   const quota = domainQuota(bank.exam.domains, n);
   bank.exam.domains.forEach((d, i) => {
     let left = quota[i];
-    for (const q of leastSeen(bank.questions.filter((x) => x.domain === d.id), seen, random, metFamilies)) {
+    for (const q of leastSeen(pool.filter((x) => x.domain === d.id), seen, random, metFamilies)) {
       if (left <= 0) break;
       if (take(q)) left -= 1;
     }
   });
   // a domain short of questions is made up from the rest of the bank
-  for (const q of leastSeen(bank.questions, seen, random, metFamilies)) {
+  for (const q of leastSeen(pool, seen, random, metFamilies)) {
     if (picked.size >= n) break;
     take(q);
   }
@@ -116,6 +118,13 @@ function repairFlags(a) {
   return Array.isArray(flagged) ? { ...rest, flagged: flagged.filter((id) => typeof id === 'string') } : rest;
 }
 
+// half: a half exam; anything but true is dropped
+function repairHalf(a) {
+  if (!('half' in a) || a.half === true) return a;
+  const { half, ...rest } = a;
+  return rest;
+}
+
 // Anything damaged (a bad sync, a hand edit) is dropped or repaired so one record can't break a screen.
 export function migrateExam(stored, bankId) {
   const fresh = newExamRecord(bankId);
@@ -123,7 +132,7 @@ export function migrateExam(stored, bankId) {
   return {
     ...fresh,
     ...(typeof stored.updatedAt === 'string' ? { updatedAt: stored.updatedAt } : {}),
-    attempts: (Array.isArray(stored.attempts) ? stored.attempts : []).filter(isAttempt).map(repairFlags),
+    attempts: (Array.isArray(stored.attempts) ? stored.attempts : []).filter(isAttempt).map(repairFlags).map(repairHalf),
     seen: Object.fromEntries(Object.entries(isPlainObject(stored.seen) ? stored.seen : {})
       .map(([id, n]) => [id, Number(n) || 0])),
     firstTry: Object.fromEntries(Object.entries(isPlainObject(stored.firstTry) ? stored.firstTry : {})
@@ -136,7 +145,8 @@ export function migrateExam(stored, bankId) {
 
 // at: the moment it finished (ISO time); it tells attempts apart when two devices' histories merge
 // flagged: question ids flagged for review (full exams only); kept with that attempt, never carried over
-export function recordAttempt(record, { date, at = null, ids, results, flagged = [], bank }) {
+// half: a half exam (exam conditions, exam-difficulty questions), kept as such
+export function recordAttempt(record, { date, at = null, ids, results, flagged = [], half = false, bank }) {
   const score = scoreExam(bank, results);
   record.attempts.push({
     ...(at ? { at } : {}),
@@ -147,6 +157,7 @@ export function recordAttempt(record, { date, at = null, ids, results, flagged =
     byDomain: score.byDomain.map(({ id, right, total }) => ({ id, right, total })),
     missed: results.filter((r) => !r.correct).map((r) => r.id),
     ...(flagged.length ? { flagged: [...flagged] } : {}),
+    ...(half ? { half: true } : {}),
   });
   record.attempts = record.attempts.slice(-ATTEMPTS_KEPT);
   for (const id of ids) record.seen[id] = (record.seen[id] || 0) + 1;
@@ -190,17 +201,17 @@ export function optionVocab(vocab) {
     .filter((v) => v.names.length);
 }
 
-// The latest full exam's flags, kept with that attempt only: { date, flagged, right, wrong }, or
-// null when the latest full exam had none. A newer full exam replaces them; drills have no flags.
+// The latest full or half exam's flags, kept with that attempt only: { date, flagged, right, wrong,
+// half? }, or null when it had none. A newer exam under exam conditions replaces them; drills have no flags.
 export function lastFlags(record, bank) {
-  const full = [...(record.attempts || [])].reverse().find((a) => a.length >= bank.exam.length);
+  const full = [...(record.attempts || [])].reverse().find((a) => a.half === true || a.length >= bank.exam.length);
   // only questions still in the bank
   const inBank = bank.questions ? new Set(bank.questions.map((q) => q.id)) : null;
   const flagged = (full?.flagged || []).filter((id) => !inBank || inBank.has(id));
   if (!flagged.length) return null;
   const missed = new Set(full.missed || []);
   const wrong = flagged.filter((id) => missed.has(id)).length;
-  return { date: full.date, flagged, right: flagged.length - wrong, wrong };
+  return { date: full.date, flagged, right: flagged.length - wrong, wrong, ...(full.half === true ? { half: true } : {}) };
 }
 
 // "deckId/cardId" refs -> [{ deckId, cardIds }], decks in first-seen order
@@ -272,7 +283,7 @@ export function questionsByCard(banks) {
 
 // The full-length exam is the dress rehearsal; shorter exams (and retrying missed questions) are
 // learning drills with feedback after each answer.
-export const examConditions = (bank, length, { retry = false } = {}) => !retry && length >= bank.exam.length;
+export const examConditions = (bank, length, { retry = false, half = false } = {}) => !retry && (half || length >= bank.exam.length);
 
 // qs: the exam's questions in order; picks[i]: option indices chosen for question i; flagged: Set of i.
 // A question counts as answered once it has as many picks as it needs.

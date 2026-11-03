@@ -28,3 +28,13 @@ export function groupLibrary({ decks = [], exams = [], collections = [] }) {
 export function collectionOf({ collections = [] }, deckId) {
   return collections.find((c) => (c.decks || []).includes(deckId)) || null;
 }
+
+// A badge's tooltip names the site its link opens: Credly for AWS and Anthropic badges, PeopleCert's
+// own page for ITIL.
+export function badgeTitle(badge) {
+  let host = '';
+  try { host = new URL(badge.url).hostname; } catch { return badge.name; }
+  if (host.endsWith('credly.com')) return `${badge.name} on Credly`;
+  if (host.endsWith('peoplecert.org')) return `${badge.name} on PeopleCert`;
+  return badge.name;
+}

@@ -47,8 +47,10 @@ function leastSeen(questions, seen, random, metFamilies, preferExamOnly = false)
 //   practice: a drill; leave them out unless the rest of the bank runs short
 //   preferExamOnly: the full exam; unseen ones first
 // domain: a weak-spot drill on that domain only
+// On a scenario bank, questions written for a scenario are left out: they need it shown above them.
 export function drawExam(bank, { length = bank.exam.length, seen = {}, random = Math.random, examOnly = false, practice = false, preferExamOnly = false, domain = null } = {}) {
-  const all = domain ? bank.questions.filter((q) => q.domain === domain) : bank.questions;
+  const usable = isScenarioBank(bank) ? bank.questions.filter((q) => !q.scenario) : bank.questions;
+  const all = domain ? usable.filter((q) => q.domain === domain) : usable;
   const pool = examOnly ? all.filter((q) => q.examOnly)
     : practice ? all.filter((q) => !q.examOnly) : all;
   // One question per family: two wordings of one idea never appear in the same exam.
@@ -90,13 +92,16 @@ export function drawExam(bank, { length = bank.exam.length, seen = {}, random = 
 // How many mocks are left on exam-style questions whose idea you have never met, in any wording:
 // each domain needs its share, so the domain that runs out first decides.
 // -> { half, full, questions } (half is 0 when the bank has no half exam)
+// On a scenario bank, a mock is blocks from different scenarios, so it counts fresh blocks instead.
 export function freshMocks(bank, seen = {}) {
   const met = new Set(bank.questions.filter((q) => (seen[q.id] || 0) > 0).map(familyOf));
   // one per idea: an exam takes one wording of each, and the others are then met
   const fresh = [...new Map(bank.questions.filter((q) => q.examOnly && !met.has(familyOf(q)))
     .map((q) => [familyOf(q), q])).values()];
+  const scenarios = isScenarioBank(bank);
   const count = (length) => {
     if (!length || !fresh.length) return 0;
+    if (scenarios) return freshScenarioMocks(bank, fresh.filter((q) => q.scenario), length);
     const quota = domainQuota(bank.exam.domains, length);
     return Math.min(...bank.exam.domains.map((d, i) => (quota[i]
       ? Math.floor(fresh.filter((q) => q.domain === d.id).length / quota[i]) : Infinity)));
@@ -132,7 +137,7 @@ export function scoreExam(bank, results) {
     const r = mine.filter((x) => x.correct).length;
     return { id: d.id, name: d.name, right: r, total: mine.length, percent: pct(r, mine.length) };
   }).filter((d) => d.total > 0);
-  return { right, total: results.length, percent: pct(right, results.length), byDomain };
+  return { right, total: results.length, percent: pct(right, results.length), byDomain, ...scoreScenarios(bank, results) };
 }
 
 export function newExamRecord(bankId) {
@@ -338,4 +343,182 @@ export function gradeAll(qs, picks) {
     const p = picks[i] || [];
     return { id: q.id, correct: p.length === q.answer.length && isCorrect(q, p), chose: p.map((x) => q.options[x]) };
   });
+}
+
+// ---------- scenario exams: the bank publishes scenarios and the exam asks a block on each ----------
+
+// The Architect exam draws 4 of 6 published scenarios and asks about 15 questions on each, with the
+// scenario shown above them. A bank says so with exam.scenarios ([{ id, title, summary, domains }])
+// and exam.scenarioCount (how many a full exam draws). A question written for a scenario names it
+// (scenario: id) and is exam-style (examOnly), kept for mocks; questions without one are the
+// practice side, for Learn and drills.
+export const isScenarioBank = (bank) => Array.isArray(bank?.exam?.scenarios) && bank.exam.scenarios.length > 0;
+
+// How many scenarios an exam of `length` draws: scenarioCount for the full exam, in proportion for
+// a shorter one (a half exam takes half as many), at least one.
+function blocksFor(bank, length) {
+  const full = bank.exam.scenarioCount || bank.exam.scenarios.length;
+  return Math.max(1, Math.round((full * length) / bank.exam.length));
+}
+
+// One scenario exam -> [{ scenario, ids }], blocks in exam order, each block's questions in random order.
+// Scenarios are drawn at random, preferring those with the most questions whose idea you have never
+// met; within a block, questions seen least come first. One question per family.
+// A block short of questions is made up from the other drawn scenarios, so each block stays one scenario;
+// the exam is as long as the drawn scenarios can supply, which is `length` on any bank that passes
+// scenarioShortfalls (every scenario fills a block).
+export function drawScenarioExam(bank, { length = bank.exam.length, seen = {}, random = Math.random } = {}) {
+  const pool = bank.questions.filter((q) => q.scenario);
+  const metFamilies = new Set(bank.questions.filter((q) => (seen[q.id] || 0) > 0).map(familyOf));
+  const inScenario = (s) => pool.filter((q) => q.scenario === s.id);
+  const candidates = bank.exam.scenarios.filter((s) => inScenario(s).length);
+  const count = Math.min(blocksFor(bank, length), candidates.length);
+  if (!count) return [];
+  const n = Math.min(length, pool.length);
+  const quota = domainQuota(Array.from({ length: count }, () => ({ weight: 1 })), n);
+  const fill = Math.ceil(n / count);
+  // never-met ideas in a scenario, counted in whole blocks: a scenario with two fresh blocks goes
+  // before one with one (so the next mock still finds enough), any two with as many blocks are
+  // equal and chance picks between them; below one block, the one with more unseen goes first
+  // A scenario too small to fill a block at all goes after any that can, or the exam comes out short.
+  const fresh = (s) => {
+    const unseen = new Set(inScenario(s).filter((q) => !metFamilies.has(familyOf(q))).map(familyOf)).size;
+    return unseen >= fill ? Math.floor(unseen / fill) : unseen / fill;
+  };
+  const fits = (s) => (new Set(inScenario(s).map(familyOf)).size >= fill ? 1 : 0);
+  const rank = (s) => (fresh(s) >= 1 ? 2 + fresh(s) : fits(s) + fresh(s) / 2);
+  const drawn = shuffle(candidates, random).sort((a, b) => rank(b) - rank(a)).slice(0, count);
+  const usedFamilies = new Set();
+  const take = (block, q) => {
+    if (usedFamilies.has(familyOf(q))) return false;
+    usedFamilies.add(familyOf(q));
+    block.ids.push(q.id);
+    return true;
+  };
+  const blocks = drawn.map((scenario) => ({ scenario, ids: [] }));
+  blocks.forEach((block, i) => {
+    let left = quota[i];
+    for (const q of leastSeen(inScenario(block.scenario), seen, random, metFamilies)) {
+      if (left <= 0) break;
+      if (take(block, q)) left -= 1;
+    }
+  });
+  let total = blocks.reduce((a, b) => a + b.ids.length, 0);
+  for (const block of blocks) {
+    for (const q of leastSeen(inScenario(block.scenario), seen, random, metFamilies)) {
+      if (total >= n) break;
+      if (take(block, q)) total += 1;
+    }
+  }
+  return blocks.map((b) => ({ scenario: b.scenario, ids: shuffle(b.ids, random) }));
+}
+
+// Fresh mocks on a scenario bank: each mock needs `blocks` different scenarios with a block of
+// never-met questions each. The most mocks k for which the scenarios can supply k × blocks blocks
+// with no scenario used twice in one mock (a scenario gives at most one block per mock).
+function freshScenarioMocks(bank, fresh, length) {
+  const blocks = blocksFor(bank, length);
+  const fill = Math.ceil(length / blocks);
+  const per = bank.exam.scenarios.map((s) => Math.floor(fresh.filter((q) => q.scenario === s.id).length / fill));
+  let k = 0;
+  while (per.reduce((a, c) => a + Math.min(c, k + 1), 0) >= blocks * (k + 1)) k += 1;
+  return k;
+}
+
+// results -> { byScenario: [{ id, title, right, total, percent }] } in the order the exam asked
+// them, for a scenario bank; {} for any other
+function scoreScenarios(bank, results) {
+  if (!isScenarioBank(bank)) return {};
+  const scenarioOf = new Map(bank.questions.map((q) => [q.id, q.scenario]));
+  const titles = new Map(bank.exam.scenarios.map((s) => [s.id, s.title]));
+  const order = [...new Set(results.map((r) => scenarioOf.get(r.id)).filter((id) => titles.has(id)))];
+  return {
+    byScenario: order.map((id) => {
+      const mine = results.filter((r) => scenarioOf.get(r.id) === id);
+      const right = mine.filter((r) => r.correct).length;
+      return { id, title: titles.get(id), right, total: mine.length, percent: pct(right, mine.length) };
+    }),
+  };
+}
+
+// Scenarios that can't fill a block in an exam that draws blocks (the full exam, and the half when
+// the bank has one: a half that rounds to fewer, bigger blocks needs more per scenario) -> [text].
+// A question and its rewordings or near-duplicates are one idea: an exam takes only one of them.
+export function scenarioShortfalls(bank) {
+  if (!isScenarioBank(bank)) return [];
+  const out = [];
+  const exams = [['full-exam', bank.exam.length], ['half-exam', bank.exam.half]].filter(([, n]) => n);
+  for (const s of bank.exam.scenarios) {
+    const ideas = new Set(bank.questions.filter((q) => q.scenario === s.id).map(familyOf)).size;
+    for (const [what, length] of exams) {
+      const fill = Math.ceil(length / blocksFor(bank, length));
+      if (ideas < fill) out.push(`scenario ${s.id} has ${ideas} ideas, under a ${what} block of ${fill}`);
+    }
+  }
+  return out;
+}
+
+// The real exam's scoring, for the score screen: the bank's own words (exam.scoreNote), or a scaled
+// 100-1,000 score passing at its pass share (AWS 700, Anthropic 720).
+export function scoreNote(bank) {
+  if (bank.exam.scoreNote) return bank.exam.scoreNote;
+  return `The real exam reports a scaled score from 100 to 1,000 and passes at ${Math.round((bank.exam.passShare ?? 0.7) * 1000)}. `
+    + 'There is no exact percent conversion, so use this to find weak domains, not to predict a pass.';
+}
+
+// The share of choose-two questions a bank should hold, [min, max]: none where the exam has none
+// (exam.chooseTwo false), the bank's own range where its exam has fewer (exam.multiShare), else 15-20%.
+export function chooseTwoRange(exam) {
+  if (exam.chooseTwo === false) return [0, 0];
+  return exam.multiShare ?? [0.15, 0.2];
+}
+
+// How to name a question's checkedAgainst link: by whose documentation it is.
+export function sourceName(url) {
+  let host = '';
+  try { host = new URL(url).hostname; } catch { return 'this page'; }
+  if (host === 'aws.amazon.com' || host.endsWith('.aws.amazon.com')) return 'this AWS page';
+  if (host === 'modelcontextprotocol.io') return 'this MCP page';
+  if (host === 'www.anthropic.com' || host === 'claude.com' || host.endsWith('.claude.com')) return 'this Anthropic page';
+  if (host === 'community.peoplecert.org') return 'this PeopleCert community post';
+  if (host === 'itil.com' || host.endsWith('.itil.com') || host === 'peoplecert.org' || host.endsWith('.peoplecert.org')) return 'this ITIL page';
+  return 'this page';
+}
+
+// How many questions a one-domain drill will really ask: it stops at the domain's practice ideas (a
+// question and its rewordings count once), or uses its exam-style ones when it has no practice ones.
+export function drillLength(bank, domain, length) {
+  const mine = bank.questions.filter((q) => q.domain === domain);
+  const practice = mine.filter((q) => !q.examOnly);
+  return Math.min(length, new Set((practice.length ? practice : mine).map(familyOf)).size);
+}
+
+// What is wrong with a bank's scenarios -> [text], empty when nothing is (or the bank has none)
+export function scenarioProblems(bank) {
+  const out = [];
+  const list = bank.exam?.scenarios ?? [];
+  if (!Array.isArray(list)) return ['exam.scenarios is not a list'];
+  const domainIds = new Set((bank.exam?.domains || []).map((d) => d.id));
+  const c = bank.exam?.scenarioCount;
+  if (c !== undefined && !(Number.isInteger(c) && c >= 1 && c <= list.length)) out.push(`exam.scenarioCount must be 1 to ${list.length}, not ${c}`);
+  const ids = new Set();
+  for (const s of list) {
+    const id = s?.id;
+    if (typeof id !== 'string' || !/^[a-z0-9-]+$/.test(id)) out.push(`scenario id "${id}" must be lower-case letters, digits and hyphens`);
+    if (ids.has(id)) out.push(`duplicate scenario ${id}`);
+    ids.add(id);
+    if (!s?.title?.trim?.()) out.push(`scenario ${id}: no title`);
+    if (!s?.summary?.trim?.()) out.push(`scenario ${id}: no summary`);
+    if (!Array.isArray(s?.domains) || !s.domains.length) out.push(`scenario ${id}: no domains`);
+    else for (const d of s.domains) if (!domainIds.has(d)) out.push(`scenario ${id}: unknown domain ${d}`);
+  }
+  for (const q of bank.questions || []) {
+    if (q.scenario === undefined) {
+      if (list.length && q.examOnly) out.push(`${q.id}: an exam-style question on a scenario bank needs a scenario`);
+      continue;
+    }
+    if (!ids.has(q.scenario)) out.push(`${q.id}: unknown scenario ${q.scenario}`);
+    if (q.examOnly !== true) out.push(`${q.id}: a scenario question must be examOnly`);
+  }
+  return out;
 }

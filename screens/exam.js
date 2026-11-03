@@ -4,9 +4,11 @@
 // and a review list, like the real thing. A bank with exam.half also offers a half exam: that many
 // exam-difficulty questions (the ones Learn never shows), under the same conditions. The rules live in core/exam.js; this
 // file only draws. Questions link to the flashcards they test through cardTerms(ref).
+// A scenario bank (exam.scenarios, the Architect format) runs its full and half exams in blocks:
+// each block's scenario is shown above every question in it.
 
 import { h, mount } from '../core/dom.js';
-import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport, cardsBehind, byDeck, optionVocab, lastFlags, learnFlagsLabel, freshMocks } from '../core/exam.js';
+import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport, cardsBehind, byDeck, optionVocab, lastFlags, learnFlagsLabel, freshMocks, drawScenarioExam, isScenarioBank, scoreNote, sourceName, drillLength } from '../core/exam.js';
 import { linkText } from '../core/vocab.js';
 import { keys, celebration, optionList, checkButton, reportLink } from '../modes/common.js';
 import { togglePick, ready } from '../core/choice.js';
@@ -26,6 +28,8 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   let known = null; // the set's terms, loaded for the score screen: { vocab, cards }
   const domainName = new Map(bank.exam.domains.map((d) => [d.id, d.name]));
   const byId = new Map(bank.questions.map((q) => [q.id, q]));
+  const scenarios = isScenarioBank(bank);
+  const scenarioById = new Map((bank.exam.scenarios || []).map((s) => [s.id, s]));
   let stopKeys = () => {};
   let disposed = false; // set when the route changes; async work must not draw after that
 
@@ -55,10 +59,11 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       takeNotice(),
       h('section', { class: 'panel' },
         h('h2', {}, 'Start a practice exam'),
-        h('p', { class: 'muted' }, `${bank.questions.length} questions in the bank. Each exam draws by domain weight, `
+        h('p', { class: 'muted' }, `${bank.questions.length} questions in the bank. ${scenarios ? 'Drills draw' : 'Each exam draws'} by domain weight, `
           + 'questions you have seen least first, with the answers in a new order. Shorter exams show the explanation after each answer; '
           + 'the full exam runs like the real one, with no feedback until you submit. '
           + (bank.questions.some((q) => q.examOnly) ? 'The 15 and 30 draw only practice questions; exam-style ones are kept for the full exam. ' : '')
+          + (scenarios ? `Like the real one, the full exam draws ${bank.exam.scenarioCount || bank.exam.scenarios.length} of the ${bank.exam.scenarios.length} published scenarios and asks a block of questions on each, with the scenario shown above every question. ` : '')
           + (halfLength() ? `The half exam is ${halfLength()} exam-difficulty questions, none worded as in Learn, under the same conditions. ` : '')
           + 'Questions you met as Learn scenarios count as seen, and your score on familiar questions runs high, so the score screen also shows how you did on questions new to you.'),
         h('div', { class: 'actions' },
@@ -97,13 +102,24 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   }
 
   // Exam-style questions you've never met, as mocks: when to stop taking half exams and keep the
-  // rest for a last full one. Only for a bank with a half exam.
+  // rest for a last full one. Only for a bank with a half exam, or scenarios (whose mocks need a
+  // fresh block from each of several scenarios).
   function freshLeft() {
-    if (!halfLength()) return null;
+    if (!halfLength() && !scenarios) return null;
     const f = freshMocks(bank, record.seen);
     const exams = (n, what) => `${n} ${what} exam${n === 1 ? '' : 's'}`;
     return h('p', { class: 'muted' }, `Never-seen exam-style questions left: ${f.questions}, enough for `
-      + `${exams(f.full, 'full')} or ${exams(f.half, 'half')}. Drills and Learn never show them; meeting the same idea in other words counts as seen.`);
+      + `${exams(f.full, 'full')}${halfLength() ? ` or ${exams(f.half, 'half')}` : ''}. Drills and Learn never show them; meeting the same idea in other words counts as seen.`);
+  }
+
+  // The scenario a question belongs to, shown above it. label: "Scenario 2 of 4" in an exam's
+  // block; a retried question shows just the scenario.
+  function scenarioPanel(q, label = 'Scenario') {
+    const s = scenarioById.get(q?.scenario);
+    if (!s) return null;
+    return h('section', { class: 'panel scenario' },
+      h('p', { class: 'face-label' }, `${label}: ${s.title}`),
+      h('p', {}, s.summary));
   }
 
   // the half exam's length, when the bank has one and enough exam-difficulty questions for it
@@ -149,6 +165,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
           h('button', { class: 'link', type: 'button', onclick: () => confirmQuit() }, '← Quit'),
           h('div', { class: 'study-title' }, `Question ${at + 1} of ${ids.length}`),
           h('div', { class: 'study-status', 'aria-live': 'polite' }, `${results.filter((r) => r.correct).length} right so far`)),
+        scenarioPanel(q), // a retried scenario question still needs its scenario
         h('section', { class: 'panel question', tabindex: '-1' },
           h('p', { class: 'face-label' }, domainName.get(q.domain)),
           h('p', { class: 'stem' }, q.stem)),
@@ -159,7 +176,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         answered ? h('section', { class: 'panel explain', role: 'status' },
           h('p', {}, h('strong', {}, right ? 'Correct. ' : 'Not quite. '), q.explanation),
           h('p', { class: 'cards-line muted' }),
-          h('p', { class: 'muted small' }, 'Generated practice question, checked against ', h('a', { href: q.checkedAgainst, target: '_blank', rel: 'noopener noreferrer' }, 'this AWS page'), '.'),
+          h('p', { class: 'muted small' }, 'Generated practice question, checked against ', h('a', { href: q.checkedAgainst, target: '_blank', rel: 'noopener noreferrer' }, sourceName(q.checkedAgainst)), '.'),
           reportLink({ deck: bank.title, question: { id: q.id, bankId: bank.id } }),
           h('div', { class: 'actions' }, h('button', { class: 'primary', type: 'button', onclick: next }, at + 1 < ids.length ? 'Next question' : 'See my score'))) : null,
         h('p', { class: 'hint keys' }, answered ? 'Enter goes on.' : `Keys 1 to ${q.options.length} select; Enter checks.`));
@@ -259,7 +276,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       h('section', { class: 'panel end' },
         h('h2', {}, `${s.right} of ${s.total} right (${s.percent}%)`),
         freshLine(results, fresh),
-        h('p', { class: 'muted' }, 'The real exam reports a scaled score from 100 to 1,000 and passes at 700. There is no exact percent conversion, so use this to find weak domains, not to predict a pass.'),
+        h('p', { class: 'muted' }, scoreNote(bank)),
         h('table', { class: 'history' },
           h('thead', {}, h('tr', {}, h('th', {}, 'Domain'), h('th', {}, 'Right'), h('th', {}, ''))),
           h('tbody', {}, s.byDomain.map((d) => h('tr', {},
@@ -267,6 +284,9 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
             h('td', {}, `${d.right}/${d.total} (${d.percent}%)`),
             h('td', { class: 'bar-cell' }, h('span', { class: 'meter', role: 'img', 'aria-label': `${d.percent} percent` },
               h('span', { class: 'meter-fill', style: { width: `${d.percent}%` } }))))))),
+        s.byScenario?.length ? h('table', { class: 'history' },
+          h('thead', {}, h('tr', {}, h('th', {}, 'Scenario'), h('th', {}, 'Right'))),
+          h('tbody', {}, s.byScenario.map((x) => h('tr', {}, h('td', {}, x.title), h('td', {}, `${x.right}/${x.total} (${x.percent}%)`))))) : null,
         flagged ? flagSection(flaggedResults, flagReport(results, flagged)) : null,
         missed.length ? [
           h('h3', {}, 'Missed'),
@@ -276,7 +296,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
           missed.length ? h('button', { class: 'primary', type: 'button', onclick: () => run(missed.length, missed.map((m) => m.id), domain) },
             `Retry the ${missed.length} I missed`) : null,
           h('button', { class: missed.length ? null : 'primary', type: 'button', onclick: () => begin(length, { half, domain }) },
-            half ? 'Another half exam' : domain ? `${length} more on ${domainName.get(domain)}` : `Another ${length}-question exam`),
+            half ? 'Another half exam' : domain ? `${drillLength(bank, domain, length)} more on ${domainName.get(domain)}` : `Another ${length}-question exam`),
           h('button', { type: 'button', onclick: startPage }, 'Back'))));
     root.querySelector('.end .primary').focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -292,8 +312,10 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // One answered question, folded: its stem, your answer when wrong, the right one, the explanation.
   function answerDetails(r) {
     const m = byId.get(r.id);
+    const s = scenarioById.get(m.scenario);
     return h('details', {},
-      h('summary', {}, h('strong', {}, m.stem)),
+      h('summary', {}, h('strong', { class: 'stem-text' }, m.stem)),
+      s ? h('p', { class: 'muted' }, `Scenario: ${s.title}. ${s.summary}`) : null,
       r.chose && !r.correct ? h('p', {}, h('span', { class: 'pill pill-wrong' }, '✗ Your answer'), ' ',
         r.chose.length ? r.chose.join(' · ') : 'none') : null,
       h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', linked(m.answer.map((a) => m.options[a]).join(' · '))),
@@ -407,8 +429,16 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // The full-length exam under exam conditions: select and move on, nothing marked until you
   // submit. Previous and flags as on the real exam; a review list before submitting. Answers count
   // toward readiness only when submitted; quitting saves nothing.
+  // On a scenario bank the exam comes in blocks, one scenario each, shown above its questions.
   function runConditions(length, half = false) {
-    const ids = drawExam(bank, { length, seen: record.seen, examOnly: half, preferExamOnly: !half });
+    const blocks = scenarios ? drawScenarioExam(bank, { length, seen: record.seen }) : null;
+    const ids = blocks ? blocks.flatMap((b) => b.ids) : drawExam(bank, { length, seen: record.seen, examOnly: half, preferExamOnly: !half });
+    if (!ids.length) { // a scenario bank with no scenario questions yet
+      notice = 'This set has no scenario questions yet, so there is no full exam to take. The shorter drills work.';
+      return startPage();
+    }
+    // question index -> "Scenario 2 of 4", for the panel above it
+    const blockLabel = blocks ? blocks.flatMap((b, k) => b.ids.map(() => `Scenario ${k + 1} of ${blocks.length}`)) : [];
     const fresh = newToYou(ids);
     const qs = ids.map((id) => shuffleOptions(byId.get(id))); // one order per question, kept when you go back
     const picks = qs.map(() => []);
@@ -428,6 +458,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       const last = at + 1 === qs.length;
       mount(root,
         bar(`Question ${at + 1} of ${qs.length}`, `${done} answered`),
+        blocks ? scenarioPanel(q, blockLabel[at]) : null,
         h('section', { class: 'panel question', tabindex: '-1' },
           h('p', { class: 'face-label' }, domainName.get(q.domain) + (q.answer.length > 1 ? ` · choose ${q.answer.length}` : '')),
           h('p', { class: 'stem' }, q.stem)),

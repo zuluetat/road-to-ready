@@ -10,12 +10,12 @@ import { showUpload } from './screens/upload.js';
 import { showExam } from './screens/exam.js';
 import { showPlan } from './screens/plan.js';
 import { showCheck } from './screens/check.js';
-import { groupLibrary, collectionOf } from './core/library.js';
+import { groupLibrary, collectionOf, badgeTitle } from './core/library.js';
 import { vocabulary } from './core/vocab.js';
 import { studyPlan, nudgeAfter } from './core/readiness.js';
 import { journeyFor, PHASES } from './core/journey.js';
 import { examFit } from './core/exam-fit.js';
-import { migrateGame, recordRound, todayStatus, describeToday, afterRound, setSettings, recordPoints, latestPoints, planSentence, markStepBase, GOALS, MARGINS } from './core/game.js';
+import { migrateGame, inheritGame, GAME_FROM, recordRound, todayStatus, describeToday, afterRound, setSettings, recordPoints, latestPoints, planSentence, markStepBase, GOALS, MARGINS } from './core/game.js';
 import { roadToReady, pointsChange, weekView, pointsBadge, MARGIN_NAMES, readyTarget } from './core/road.js';
 import { celebrationFor } from './core/celebrate.js';
 import { recordCheck, calibrationOf, weakAreas, verdictFor } from './core/check.js';
@@ -133,11 +133,17 @@ const saveProgress = async (p) => {
 const examKey = (bankId) => 'exam:' + bankId;
 const loadExamRecord = async (bankId) => migrateExam(await storage.get(examKey(bankId)), bankId);
 const gameKey = (collectionId) => 'game:' + collectionId;
-const loadGame = async (collectionId) => migrateGame(await storage.get(gameKey(collectionId)), collectionId);
+// a set with no record yet that replaced another starts from the old set's streak (core/game.js GAME_FROM)
+const formerGame = async (collectionId) => (GAME_FROM[collectionId] ? storage.get(gameKey(GAME_FROM[collectionId])) : null);
+const loadGame = async (collectionId) => {
+  const stored = await storage.get(gameKey(collectionId));
+  return stored ? migrateGame(stored, collectionId) : inheritGame(await formerGame(collectionId), collectionId);
+};
 // Change a collection's game record (a finished round, a setting) and send it to your other devices.
 async function updateGame(collectionId, fn) {
+  const former = await formerGame(collectionId);
   const game = await sync.update(gameKey(collectionId), (stored) => {
-    const g = migrateGame(stored, collectionId);
+    const g = stored ? migrateGame(stored, collectionId) : inheritGame(former, collectionId);
     fn(g);
     g.updatedAt = new Date().toISOString();
     return g;
@@ -246,7 +252,7 @@ async function showLibrary(message) {
       } }, c.title, h('span', { class: 'fold-mark', 'aria-hidden': 'true' }));
     return h('section', { class: 'collection', 'data-id': c.id },
       h('div', { class: 'collection-head' },
-        c.badges.length ? h('div', { class: 'collection-badges' }, c.badges.map((b) => h('a', { href: b.url, target: '_blank', rel: 'noopener', title: `${b.name} on Credly` },
+        c.badges.length ? h('div', { class: 'collection-badges' }, c.badges.map((b) => h('a', { href: b.url, target: '_blank', rel: 'noopener', title: badgeTitle(b) },
           h('img', { src: b.image, alt: `${b.name} badge`, width: 56, height: 56 })))) : null,
         h('h2', { class: 'collection-title' }, fold, c.purpose ? tip(c.purpose, 'Why these decks') : null)),
       body);
@@ -419,7 +425,7 @@ const pct = (x) => `${Math.round(x * 100)}%`;
 // ---------- the path to exam day (pizza tracker) ----------
 
 const OPTION_NAMES = {
-  learn: 'Learn rounds', flashcards: 'Flashcards', match: 'Match', drill: 'Weak-spot drills (7 questions)', 'exam-short': 'Short practice exams (15 or 30)',
+  learn: 'Learn rounds', flashcards: 'Flashcards', match: 'Match', drill: 'Weak-spot drills (up to 7 questions)', 'exam-short': 'Short practice exams (15 or 30)',
   quiz: 'Quiz', retake: 'Retake missed cards', 'study-next': '"Study next" advice', 'exam-full': 'Full practice exam',
   review: 'Spaced review', pass: 'Full passes through a deck',
 };

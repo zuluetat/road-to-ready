@@ -52,6 +52,16 @@ export function migrateGame(body, collectionId) {
   return g;
 }
 
+// A set that replaced another on the home page (the Architect set took over the shared Claude decks):
+// its first record starts from the old set's rounds and settings, so the streak carries on. Points,
+// phase and official checks belonged to the old exam and start fresh.
+export const GAME_FROM = { 'claude-architect': 'claude-certification' };
+export function inheritGame(old, collectionId) {
+  const was = migrateGame(old, collectionId);
+  const g = newGame(collectionId);
+  return { ...g, days: was.days, settings: was.settings, settingsAt: was.settingsAt };
+}
+
 // The starting line for points per Learn step (core/readiness.js): the step each card part-way up
 // stood on when the rule began, so only steps climbed after it count. Taken once, never retaken.
 // progress: deckId -> deck progress; learned: the step that means learned.

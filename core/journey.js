@@ -10,6 +10,7 @@
 //   fresh    — keep it fresh until exam day        (where you stay once the rest is done)
 
 import { learnStage, LEARNED } from './learn.js';
+import { drillLength } from './exam.js';
 
 export const PHASES = [
   { id: 'learn', label: 'Learn', goal: 'Get through every card', options: ['learn', 'flashcards', 'match'] },
@@ -74,7 +75,8 @@ export function journeyFor({ bank, decks, progress, record, plan, target = null 
     const short = domains.filter((d) => (d.readiness ?? 0) < domainReady);
     const ranked = short.some((d) => d.id === plan.next?.domainId) ? plan.next.domainId : null;
     const weakest = [...short].sort((a, b) => (a.readiness ?? 0) - (b.readiness ?? 0))[0];
-    next = { kind: 'drill', domainId: ranked ?? weakest?.id ?? null, length: FOCUS };
+    const domainId = ranked ?? weakest?.id ?? null;
+    next = { kind: 'drill', domainId, length: domainId == null ? FOCUS : drillLength(bank, domainId, FOCUS) };
   }
   else if (current === 'mock') next = { kind: 'exam', length: bank.exam.length };
   else next = { kind: 'review' };

@@ -287,7 +287,7 @@
     {
       "id": "negative-prompts",
       "term": "Negative prompts",
-      "definition": "Image-generation input in Amazon Nova Canvas listing objects or style traits to exclude from the output, such as \"waves, clouds\".",
+      "definition": "Telling a model what to leave out of its output, such as \"do not mention pricing\" for text or \"no clouds\" for an image; common in image generation.",
       "hint": null,
       "tags": [
         "group:prompting",

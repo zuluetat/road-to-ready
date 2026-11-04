@@ -1,7 +1,8 @@
 // Learn: short rounds (about seven cards), each card asked at its own step on the ladder
 // (core/learn.js), shaped like the exam asks: pick the definition, pick the term from look-alikes,
 // then apply it in a scenario question from the practice bank. A missed card comes back once later
-// in the round. Every answer also counts as spaced review. Always runs on a 'learn' session.
+// in the round. Every answer also counts as spaced review. Runs on a 'learn' session, or a 'fresh'
+// one (keep it fresh: due cards, each asked one of the ways in turn, with no ladder to climb).
 // ctx.scenarios(cardId) gives the bank questions that test a card.
 
 import { h, mount } from '../core/dom.js';
@@ -89,7 +90,7 @@ export function start(deck, ctx) {
       // tabindex so focus can rest here after Next: a fast second Enter must not answer anything
       h('p', { class: 'face-label step-label', tabindex: '-1' },
         // name what is actually asked (a scenario step with no fresh scenario asks for the term)
-        `Step ${step.stage + 1} of ${step.steps}: ${STEP_NAMES[question?.kind || step.kind]}`),
+        step.steps ? `Step ${step.stage + 1} of ${step.steps}: ${STEP_NAMES[question?.kind || step.kind]}` : STEP_NAMES[question?.kind || step.kind]),
     ];
   }
 
@@ -254,6 +255,7 @@ export function start(deck, ctx) {
     stopKeys();
     const total = tally.right + tally.wrong;
     if (ctx.options?.only) return finishChosen(total);
+    if (ctx.session.kind === 'fresh') return finishFresh(total);
     const status = learnStatus(ctx.progress, deck.cards.map((c) => c.id));
     const allDone = status.learned === status.total;
     endScreen(ctx, {
@@ -269,6 +271,19 @@ export function start(deck, ctx) {
       counted: total > 0,
     });
     showNudge();
+  }
+
+  // Keep it fresh: the round's score, then the choice of another round while cards are still due.
+  function finishFresh(total) {
+    const left = ctx.session.dueLeft();
+    endScreen(ctx, {
+      heading: total ? `Round done: ${tally.right} of ${total} answers right` : `No cards are due in ${deck.title} today`,
+      lines: [left ? `${left} more ${left === 1 ? 'card is' : 'cards are'} due in ${deck.title}.` : 'Nothing else is due here today.'],
+      missed: tally.missed,
+      again: left ? { label: `Another ${Math.min(left, 10)}`, run: ctx.restart, primary: true } : null,
+      counted: total > 0,
+      retake: false,
+    });
   }
 
   // A round on chosen cards (the ones behind your flags) reports on those cards and goes back to

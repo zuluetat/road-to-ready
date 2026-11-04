@@ -16,7 +16,7 @@ export const PHASES = [
   { id: 'learn', label: 'Learn', goal: 'Get through every card', options: ['learn', 'flashcards', 'match'] },
   { id: 'practice', label: 'Practice', goal: 'Apply it and fix weak spots', options: ['drill', 'exam-short', 'quiz', 'retake', 'study-next'] },
   { id: 'mock', label: 'Full mock', goal: 'Prove it under exam conditions', options: ['exam-full'] },
-  { id: 'fresh', label: 'Keep it fresh', goal: 'Hold it until exam day', options: ['review', 'pass'] },
+  { id: 'fresh', label: 'Keep it fresh', goal: 'Hold it until exam day', options: ['fresh', 'review', 'pass'] },
 ];
 
 const DOMAIN_READY = 0.7;
@@ -26,7 +26,7 @@ const FOCUS = 7; // practice questions per weak-spot drill
 // target: the full mock's bar as a share right (road.js readyTarget), or null for 75%
 // -> { phases: [{ id, label, goal, options, done, progress, detail }], current, next }
 // next: what Continue starts: { kind: 'learn', deckId } | { kind: 'drill', domainId, length } (weak-spot
-// practice questions) | { kind: 'exam', length } (the full mock, once every domain is ready) | { kind: 'review' }
+// practice questions) | { kind: 'exam', length } (the full mock, once every domain is ready) | { kind: 'fresh' }
 export function journeyFor({ bank, decks, progress, record, plan, target = null }) {
   const domainReady = DOMAIN_READY;
   const mockPass = target ? Math.round(target * 100) : MOCK_PASS;
@@ -59,7 +59,7 @@ export function journeyFor({ bank, decks, progress, record, plan, target = null 
     learn: { done: learnDone, progress: total ? learned / total : 0, detail: `${learned} of ${total} cards learned` },
     practice: { done: practiceDone, progress: practiceProgress, detail: `${readyCount} of ${domains.length} exam domains ready (${pct}%+)` },
     mock: { done: mockDone, progress: Math.min(1, best / mockPass), detail: full.length ? `Best full exam: ${best}% (${mockPass}% to pass this step)` : `No full ${bank.exam.length}-question exam yet` },
-    fresh: { done: false, progress: learnDone && practiceDone && mockDone ? 1 : 0, detail: 'A few minutes of spaced review until exam day' },
+    fresh: { done: false, progress: learnDone && practiceDone && mockDone ? 1 : 0, detail: 'Short rounds of due cards, asked the ways the exam asks, until exam day' },
   };
   const current = ['learn', 'practice', 'mock'].find((id) => !status[id].done) ?? 'fresh';
   const phases = PHASES.map((ph) => ({ ...ph, ...status[ph.id] }));
@@ -79,6 +79,6 @@ export function journeyFor({ bank, decks, progress, record, plan, target = null 
     next = { kind: 'drill', domainId, length: domainId == null ? FOCUS : drillLength(bank, domainId, FOCUS) };
   }
   else if (current === 'mock') next = { kind: 'exam', length: bank.exam.length };
-  else next = { kind: 'review' };
+  else next = { kind: 'fresh' };
   return { phases, current, next };
 }

@@ -29,7 +29,8 @@ export function retakeCount(ctx) {
 
 // The end screen every mode uses: a heading, a few result lines, the missed cards, and what to do next.
 // chosen: a round on chosen cards, which goes back where it came from (the deck's retakes aren't its business)
-export function endScreen(ctx, { heading, lines = [], missed = [], again = null, chosen = false, counted = false }) {
+// retake: false leaves out the retake button (keep it fresh: a miss stays due and comes back next round)
+export function endScreen(ctx, { heading, lines = [], missed = [], again = null, chosen = false, counted = false, retake = true }) {
   const left = retakeCount(ctx);
   const inRetake = ctx.session && ctx.session.kind === 'retake';
   const retakeLabel = inRetake
@@ -52,7 +53,7 @@ export function endScreen(ctx, { heading, lines = [], missed = [], again = null,
       h('div', { class: 'actions' },
         // again.primary puts the round's own next step first (Learn's next round) ahead of retakes
         again?.primary ? h('button', { class: 'primary', type: 'button', onclick: again.run }, again.label) : null,
-        chosen ? null : h('button', { class: again?.primary ? null : 'primary', type: 'button', disabled: left === 0, onclick: () => ctx.onRetake(ctx.modeId) }, retakeLabel),
+        chosen || !retake ? null : h('button', { class: again?.primary ? null : 'primary', type: 'button', disabled: left === 0, onclick: () => ctx.onRetake(ctx.modeId) }, retakeLabel),
         again && !again.primary ? h('button', { type: 'button', onclick: again.run }, again.label) : null,
         // a round on chosen cards offers its way back once: as again, or after Continue
         chosen ? (again?.run === ctx.onExit ? null : h('button', { type: 'button', onclick: ctx.onExit }, 'Back to your exam'))

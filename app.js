@@ -427,7 +427,7 @@ const pct = (x) => `${Math.round(x * 100)}%`;
 const OPTION_NAMES = {
   learn: 'Learn rounds', flashcards: 'Flashcards', match: 'Match', drill: 'Weak-spot drills (up to 7 questions)', 'exam-short': 'Short practice exams (15 or 30)',
   quiz: 'Quiz', retake: 'Retake missed cards', 'study-next': '"Study next" advice', 'exam-full': 'Full practice exam',
-  review: 'Spaced review', pass: 'Full passes through a deck',
+  fresh: 'Keep-it-fresh rounds (10 questions)', review: 'Spaced review', pass: 'Full passes through a deck',
 };
 
 // What Continue does: the obvious next step for the phase you're in.
@@ -437,11 +437,11 @@ async function continueJourney(got) {
   if (next.kind === 'learn' && next.deckId) return studyDeck(next.deckId, 'learn', 'learn');
   if (next.kind === 'drill') return navigate(`#/exam/${got.bankId}/${next.length}/d${next.domainId}`);
   if (next.kind === 'exam') return navigate(`#/exam/${got.bankId}/${next.length}`);
-  // keep it fresh: spaced review on the deck with the most cards due
+  // keep it fresh: a short round on the deck with the most cards due, asked the ways the exam asks
   const today = localToday();
   const due = (d) => d.cards.filter((c) => got.progress[d.id]?.cards?.[c.id]?.due <= today).length;
   const deck = [...got.decks].sort((a, b) => due(b) - due(a))[0];
-  if (deck) return startStudy(deck, 'flashcards', 'review');
+  if (deck) return startStudy(deck, 'learn', 'fresh');
   return null;
 }
 
@@ -453,7 +453,7 @@ function continueLabel(got) {
     learn: () => `Continue: Learn ${titles[journey.next.deckId] || ''}`.trim(),
     drill: () => `Continue: ${journey.next.length} questions on ${got.plan.domains.find((d) => d.id === journey.next.domainId)?.name || 'your weakest area'}`,
     exam: () => `Continue: ${journey.next.length}-question practice exam`,
-    review: () => 'Continue: spaced review',
+    fresh: () => 'Continue: keep it fresh (10 questions)',
   }[journey.next.kind]();
 }
 
@@ -795,10 +795,12 @@ async function showDeck(deckId, message, { settingsOpen = false } = {}) {
     ]) : null,
     phaseGroup('fresh', phaseNow, [
       h('section', { class: 'panel' },
-        h('h2', {}, 'Spaced review', tip('A few minutes on the cards due today keeps them from fading.')),
+        h('h2', {}, 'Keep it fresh', tip('Ten of the cards due today, asked the ways the exam asks: pick the definition, pick the term, or a scenario question. Flashcard review shows them all as cards.')),
         h('div', { class: 'actions' },
-          h('button', { class: 'primary', type: 'button', disabled: !reviewSize, onclick: () => go('flashcards', 'review') },
-            `Spaced review (${dueNow} due${reviewSize > dueNow ? `, ${reviewSize - dueNow} new` : ''})`))),
+          h('button', { class: 'primary', type: 'button', disabled: !dueNow, onclick: () => go('learn', 'fresh') },
+            `Keep it fresh (${Math.min(dueNow, 10)} of ${dueNow} due)`),
+          h('button', { type: 'button', disabled: !reviewSize, onclick: () => go('flashcards', 'review') },
+            `Flashcard review (${dueNow} due${reviewSize > dueNow ? `, ${reviewSize - dueNow} new` : ''})`))),
       h('section', { class: 'panel' },
         h('h2', {}, status.targetReached ? `Passes · target reached (${status.completed} done)` : `Passes · pass ${status.number} of ${status.target}`),
         h('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(status.total), 'aria-valuenow': String(status.answered), 'aria-label': 'Cards answered in this pass' },
@@ -1006,10 +1008,11 @@ async function openStudy(deck, modeId, kind, options) {
   const p = await loadProgress(deck.id);
   let lastSave = Promise.resolve();
   const save = () => (lastSave = Promise.all([lastSave, saveProgress(p)])); // keep every pending save in the chain
-  const scenarios = kind === 'learn' ? await loadScenarios() : { byCard: new Map(), failed: false };
+  const asks = kind === 'learn' || kind === 'fresh'; // the rounds that ask multiple choice and scenario questions
+  const scenarios = asks ? await loadScenarios() : { byCard: new Map(), failed: false };
   const collection = collectionOf(await decks.loadCollections(), deck.id);
   const collectionId = collection?.id ?? null;
-  const vocab = kind === 'learn' ? await vocabFor(deck, collection) : [];
+  const vocab = asks ? await vocabFor(deck, collection) : [];
   if (mine !== studyStarts) return;
   const scenariosFor = (cardId) => scenarios.byCard.get(`${deck.id}/${cardId}`) || [];
   // If the bank didn't load, every card keeps its scenario step (nothing is marked learned without one).
@@ -1028,6 +1031,7 @@ async function openStudy(deck, modeId, kind, options) {
     review: () => 'Spaced review',
     sample: () => 'Quiz',
     learn: () => 'Learn',
+    fresh: () => 'Keep it fresh',
   };
   const mode = modeById[modeId];
   setTitle(mode.title, deck.title);
@@ -1053,7 +1057,7 @@ async function openStudy(deck, modeId, kind, options) {
     onRound: () => lastSave.then(() => countRound(collectionId))
       .then((r) => (r ? { celebration: r.celebration, points: r.change && pointsBadge(r.change), lines: [afterRound(r.status)] } : null), () => null),
     label: kind ? labels[kind]() : mode.title,
-    emptyMessage: kind === 'review' ? 'No cards are due today.' : kind === 'retake' ? 'The retake queue is empty.' : '',
+    emptyMessage: kind === 'review' || kind === 'fresh' ? 'No cards are due today.' : kind === 'retake' ? 'The retake queue is empty.' : '',
     record(cardId, correct, context) {
       applyResult(p, { cardId, correct, context, today: localToday(), at: new Date().toISOString() });
       save();

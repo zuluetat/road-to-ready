@@ -7,13 +7,16 @@ import {
 } from './progress.js';
 import { learnRound, learnStage, applyLearnResult, STAGES } from './learn.js';
 
-const CONTEXT = { pass: 'pass', retake: 'retake', review: 'review', sample: 'review', learn: 'learn' };
+const CONTEXT = { pass: 'pass', retake: 'retake', review: 'review', sample: 'review', learn: 'learn', fresh: 'review' };
 const RECENT_KEPT = 20;
 const LEARN_ROUND = 7; // a round fits a few spare minutes
 const LEARN_SCENARIOS = 3; // scenario questions take longest; at most this many per round
+const FRESH_ROUND = 10; // keep it fresh: a short round, then the choice of another
 
 // kind: 'pass' (one full pass), 'retake' (one retake round), 'review' (due cards),
-// 'sample' (count random cards), 'learn' (one Learn round of count cards, 7 by default).
+// 'sample' (count random cards), 'learn' (one Learn round of count cards, 7 by default),
+// 'fresh' (keep it fresh: up to 10 due cards, weakest first, each asked by term, by definition or in a
+// scenario, taking turns; answers are spaced review and leave the Learn ladder alone).
 // lastStep(cardId): a card's final Learn step (2 with a scenario question, else 1); Learn only.
 // only: Learn just these cards, learned or not (the cards behind questions you flagged or missed).
 export function createSession({
@@ -29,12 +32,23 @@ export function createSession({
   const requeued = new Set(); // Learn: a missed card comes back once more in the same round
   const shownAs = new Map(); // Learn: cardId -> the step kind it was last asked as
   const learnKind = (id) => (fairChoice ? STAGES[Math.min(learnStage(p, id), finalStep(id))] : 'recall');
+  // keep it fresh: the ways take turns, each card asked the next way it has after the last card's,
+  // so no two cards in a row are asked alike
+  let lastWay = STAGES[STAGES.length - 1];
+  const freshKind = (id) => {
+    if (!fairChoice) return 'recall';
+    const ways = STAGES.slice(0, lastStep(id) >= 2 ? 3 : 2);
+    const after = STAGES.indexOf(lastWay);
+    lastWay = [...STAGES.slice(after + 1), ...STAGES.slice(0, after + 1)].find((w) => ways.includes(w));
+    return lastWay;
+  };
   let list = null;
 
   if (kind === 'pass') startPass(p, ids, today, shuffle);
   else if (kind === 'retake') list = startRetakeRound(p, shuffle, ids);
   else if (kind === 'review') list = dueCards(p, ids, today, { newLimit });
   else if (kind === 'sample') list = shuffle(ids).slice(0, count === 'all' ? ids.length : count);
+  else if (kind === 'fresh') list = dueCards(p, ids, today, { newLimit: 0 }).slice(0, FRESH_ROUND);
   else if (kind === 'learn' && only) list = shuffle(only.filter((id) => byId.has(id)));
   else if (kind === 'learn') list = shuffle(pickLearnRound(learnRound(p, ids, { size: ids.length, shuffle: (xs) => xs }),
     count === 'all' ? LEARN_ROUND : count, (id) => learnKind(id) === 'scenario'));
@@ -48,10 +62,12 @@ export function createSession({
     kind,
     progress: p,
     remaining: () => queue().length,
+    // keep it fresh: cards still due once this round is over, for "Another 10"
+    dueLeft: () => dueCards(p, ids, today, { newLimit: 0 }).length,
 
     next() {
-      // A Learn round is short and every card in it is due, so spacer cards would only get in the way.
-      const pool = kind === 'learn' ? queue() : ids;
+      // A Learn or keep-it-fresh round is short and every card in it is due, so spacer cards would only get in the way.
+      const pool = kind === 'learn' || kind === 'fresh' ? queue() : ids;
       const pick = nextCard(queue(), p.recent, { window: p.recentWindow, pool, lastSeen: p.lastShown });
       if (!pick) return null;
       p.seq += 1;
@@ -64,6 +80,7 @@ export function createSession({
         step.kind = learnKind(pick.id);
         shownAs.set(pick.id, step.kind);
       }
+      if (kind === 'fresh') step.kind = freshKind(pick.id);
       return step;
     },
 

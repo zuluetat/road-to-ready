@@ -15,13 +15,14 @@ import { vocabulary } from './core/vocab.js';
 import { studyPlan, nudgeAfter } from './core/readiness.js';
 import { journeyFor, PHASES } from './core/journey.js';
 import { examFit } from './core/exam-fit.js';
-import { migrateGame, inheritGame, GAME_FROM, recordRound, todayStatus, describeToday, afterRound, setSettings, recordPoints, latestPoints, planSentence, markStepBase, GOALS, MARGINS } from './core/game.js';
+import { migrateGame, inheritGame, GAME_FROM, recordRound, todayStatus, describeToday, afterRound, setSettings, recordPoints, latestPoints, planSentence, markStepBase, GOALS, MARGINS, STATUSES } from './core/game.js';
 import { roadToReady, pointsChange, weekView, pointsBadge, MARGIN_NAMES, readyTarget } from './core/road.js';
 import { celebrationFor } from './core/celebrate.js';
 import { recordCheck, calibrationOf, weakAreas, verdictFor } from './core/check.js';
 import { migrateExam, recordAttempt, questionsByCard, recordAnswer, kinOf } from './core/exam.js';
 import { currentUser } from './adapters/identity.js';
 import { readCollapsed, setCollapsed } from './core/collapse.js';
+import { shortcutsFor, setsShown, readFocus, setFocus, arrangeSets, setsChecklist } from './core/shortcuts.js';
 import { borrowedCards, cardState } from './core/also.js';
 import { showDeckGuide } from './screens/deck-guide.js';
 import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress } from './core/account.js';
@@ -234,14 +235,28 @@ async function showLibrary(message) {
   const lib = groupLibrary(index);
   const rowById = new Map(rows.map((r) => [r.dataset.id, r]));
   const rowsFor = (list) => list.map((d) => rowById.get(d.id)).filter(Boolean);
+  const copies = []; // background rows, searched along with the rest
+  const backgroundRows = (list) => rowsFor(list).map((row) => { const copy = row.cloneNode(true); copies.push(copy); return copy; });
   const mine = rowsFor(lib.otherDecks.filter((d) => d.source === 'uploaded'));
   const builtIn = rowsFor(lib.otherDecks.filter((d) => d.source !== 'uploaded'));
   // Each study set folds down to its badge and title; this browser remembers which are folded.
   const folded = readCollapsed(prefs());
-  const collections = await Promise.all(lib.collections.map(async (c) => {
+  // Home holds the sets you subscribe to (ticked on the My study sets page), each being studied or, once
+  // passed, kept fresh and listed last. Both sync with the set's other settings.
+  const settingsById = await setSettingsById(lib.collections);
+  const statusById = Object.fromEntries(Object.entries(settingsById).map(([id, st]) => [id, st.status]));
+  const arranged = arrangeSets(lib.collections.map((c) => c.id), settingsById);
+  const setById = new Map(lib.collections.map((c) => [c.id, c]));
+  const shownSets = arranged.shown.map((id) => setById.get(id));
+  const collections = await Promise.all(shownSets.map(async (c) => {
+    const raw = index.collections.find((x) => x.id === c.id);
+    const resting = statusById[c.id] === 'maintenance';
     const body = h('div', { class: 'collection-body', id: `set-${c.id}`, hidden: folded.has(c.id) || null },
-      await homeCard(index.collections.find((raw) => raw.id === c.id)),
+      resting ? await maintenanceCard(raw) : await homeCard(raw),
       h('ul', { class: 'deck-list' }, rowsFor(c.decks)),
+      // another set's deck shown here as course background: a copy of its row, still studied as that set's
+      c.background.length ? [h('h3', { class: 'list-head background-head' }, 'Course background', tip('Material from the courses on this path that this exam treats as background. It belongs to another study set, so it doesn\'t count toward this set\'s readiness.')),
+        h('ul', { class: 'deck-list' }, backgroundRows(c.background))] : null,
       c.exams.length ? h('ul', { class: 'deck-list exam-list' }, await examItems(c.exams)) : null);
     const fold = h('button', { type: 'button', class: 'collection-fold', 'aria-expanded': String(!folded.has(c.id)), 'aria-controls': body.id,
       onclick: () => {
@@ -249,11 +264,12 @@ async function showLibrary(message) {
         body.hidden = !open;
         fold.setAttribute('aria-expanded', String(open));
         setCollapsed(prefs(), c.id, !open);
-      } }, c.title, h('span', { class: 'fold-mark', 'aria-hidden': 'true' }));
-    return h('section', { class: 'collection', 'data-id': c.id },
+      } }, c.title, resting ? h('span', { class: 'pill set-status' }, 'Maintenance') : null, h('span', { class: 'fold-mark', 'aria-hidden': 'true' }));
+    return h('section', { class: 'collection' + (resting ? ' is-maintenance' : ''), 'data-id': c.id },
       h('div', { class: 'collection-head' },
         c.badges.length ? h('div', { class: 'collection-badges' }, c.badges.map((b) => h('a', { href: b.url, target: '_blank', rel: 'noopener', title: badgeTitle(b) },
-          h('img', { src: b.image, alt: `${b.name} badge`, width: 56, height: 56 })))) : null,
+          h('img', { src: b.image, alt: `${b.name} badge`, width: 56, height: 56 }))))
+          : c.icon ? h('div', { class: 'collection-badges' }, h('img', { src: c.icon, class: 'set-icon', alt: '', width: 56, height: 56 })) : null,
         h('h2', { class: 'collection-title' }, fold, c.purpose ? tip(c.purpose, 'Why these decks') : null)),
       body);
   }));
@@ -263,10 +279,45 @@ async function showLibrary(message) {
     'signed-out': 'Your sign-in has expired. Reload the page to sign in again. Until then you\'re seeing this device\'s copy of your decks.',
   }[index.uploads];
 
+  // The shortcut row, like pinned contacts in Messages: tap a set's icon to see only that set (and
+  // open it), tap it again to see every set. This browser remembers the pick.
+  let focus = readFocus(prefs());
+  const showFocus = () => {
+    const shown = new Set(setsShown(arranged.shown, focus));
+    // a search in progress looks through every set; the pick applies again once it's cleared
+    const searching = Boolean(root.querySelector('#deck-filter')?.value.trim());
+    for (const sec of collections) sec.hidden = !searching && !shown.has(sec.dataset.id);
+    for (const b of shortcutRow?.querySelectorAll('.set-shortcut') || []) b.setAttribute('aria-pressed', String(b.dataset.id === focus));
+  };
+  const shortcuts = shortcutsFor(shownSets);
+  const shortcutRow = shortcuts.length > 1 ? h('nav', { class: 'set-shortcuts', 'aria-label': 'Study sets' },
+    h('ul', {}, shortcuts.map((s) => h('li', {}, h('button', {
+      type: 'button', class: 'set-shortcut' + (statusById[s.id] === 'maintenance' ? ' is-maintenance' : ''), 'data-id': s.id,
+      'aria-pressed': String(s.id === focus), title: setById.get(s.id).title,
+      onclick: () => {
+        focus = setFocus(prefs(), s.id);
+        showFocus();
+        const sec = collections.find((x) => x.dataset.id === focus);
+        if (sec) {
+          const body = sec.querySelector('.collection-body');
+          // a picked set opens for now, without changing whether it stays folded next time
+          if (body.hidden) { body.hidden = false; sec.querySelector('.collection-fold').setAttribute('aria-expanded', 'true'); }
+          sec.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }
+      },
+    },
+    s.image ? h('img', { src: s.image, class: setById.get(s.id).icon ? 'set-icon' : null, alt: '', width: 56, height: 56 }) : h('span', { class: 'set-initials', 'aria-hidden': 'true' }, s.initials),
+    h('span', { class: 'set-shortcut-label' }, s.label),
+    statusById[s.id] === 'maintenance' ? h('span', { class: 'sr-only' }, ' (passed, keeping it fresh)') : null))))) : null;
+  showFocus();
+
   const filter = h('input', { type: 'search', id: 'deck-filter', placeholder: 'Find a deck', autocomplete: 'off',
     oninput: (e) => {
       const q = e.target.value.trim().toLowerCase();
-      for (const li of rows) li.hidden = Boolean(q) && !li.dataset.name.includes(q);
+      // a search looks through every set, whichever one is picked; clearing it goes back to the pick
+      if (q) for (const sec of collections) sec.hidden = false;
+      else showFocus();
+      for (const li of [...rows, ...copies]) li.hidden = Boolean(q) && !li.dataset.name.includes(q);
       // while searching, folded sets open so matches are not hidden; clearing the search refolds them
       const stillFolded = readCollapsed(prefs());
       for (const sec of root.querySelectorAll('section.collection')) {
@@ -280,12 +331,16 @@ async function showLibrary(message) {
     message ? h('p', { class: 'flash', role: 'status' }, message) : null,
     uploadsNote ? h('p', { class: 'flash warn', role: 'status' }, uploadsNote) : null,
     SYNC_NOTE[sync.status()] ? h('p', { class: 'flash warn', role: 'status' }, SYNC_NOTE[sync.status()]) : null,
+    shortcutRow,
     rows.length > 6 ? [h('label', { class: 'sr-only', for: 'deck-filter' }, 'Find a deck'), filter] : null,
     collections,
     mine.length ? [h('h2', { class: 'list-head' }, 'Your decks'), h('ul', { class: 'deck-list' }, mine)] : null,
     builtIn.length ? [h('h2', { class: 'list-head' }, mine.length || collections.length ? 'Other decks' : 'Decks'), h('ul', { class: 'deck-list' }, builtIn)] : null,
     rows.length ? null : h('p', {}, 'No decks yet. Add one from a CSV or Markdown file.'),
     lib.otherExams.length ? [h('h2', { class: 'list-head' }, 'Practice exams'), h('ul', { class: 'deck-list' }, await examItems(lib.otherExams))] : null,
+    lib.collections.length ? h('p', { class: 'muted sets-note' },
+      !shownSets.length ? 'No study sets on home. ' : arranged.hidden.length ? `${arranged.hidden.length} more set${arranged.hidden.length === 1 ? '' : 's'} not on home. ` : '',
+      h('a', { class: 'link', href: '#/sets' }, 'Choose your study sets')) : null,
     backupPanel());
 }
 
@@ -347,6 +402,51 @@ async function homeCard(collection) {
     moreMenu(collection, got, game, road));
 }
 
+// A set's status (core/game.js STATUSES): changing it redraws home, where the set moves or hides.
+const STATUS_NAMES = { active: 'Studying', maintenance: 'Passed: keep it fresh' };
+const setStatus = (collectionId, status) => updateGame(collectionId, (g) => setSettings(g, { status }, new Date().toISOString())).then(() => showLibrary());
+function statusPicker(collectionId, status) {
+  return [h('label', { for: `status-${collectionId}` }, 'This set', tip('Studying is the full path. Passed keeps short keep-it-fresh rounds and lists the set last. To take a set off home, untick it on My study sets in the menu; its progress is kept.')),
+    h('select', { id: `status-${collectionId}`, onchange: (e) => setStatus(collectionId, e.target.value) },
+      STATUSES.map((st) => h('option', { value: st, selected: st === status }, STATUS_NAMES[st])))];
+}
+
+const setSettingsById = async (sets) => Object.fromEntries(await Promise.all(sets.map(async (c) => [c.id, (await loadGame(c.id)).settings])));
+
+// My study sets: every set with a tick box. Ticked sets are on home and in the shortcut row; unticked
+// ones leave both, with all their progress kept for when they're ticked again.
+async function showSetsScreen() {
+  setTitle('My study sets');
+  const lib = groupLibrary(await decks.loadIndex());
+  const items = setsChecklist(lib.collections, await setSettingsById(lib.collections));
+  const said = h('p', { class: 'muted', role: 'status' });
+  mount(root,
+    h('header', { class: 'page-head' }, h('a', { class: 'link', href: '#/' }, '← All decks'), h('h1', {}, 'My study sets')),
+    h('p', {}, 'Tick the sets you\'re studying. An unticked set leaves home and the shortcut row, and keeps all its progress, so ticking it again picks up where you left off.'),
+    h('ul', { class: 'set-checklist' }, items.map((it) => h('li', {}, h('label', { class: 'set-check' },
+      h('input', { type: 'checkbox', checked: it.subscribed, onchange: async (e) => {
+        const on = e.target.checked;
+        await updateGame(it.id, (g) => setSettings(g, { subscribed: on }, new Date().toISOString()));
+        said.textContent = `${it.title}: ${on ? 'on home' : 'off home, progress kept'}.`;
+      } }),
+      it.image ? h('img', { src: it.image, alt: '', width: 40, height: 40 }) : h('span', { class: 'set-initials', 'aria-hidden': 'true' }, it.initials),
+      h('span', { class: 'set-check-title' }, it.title, it.passed ? h('span', { class: 'pill set-status' }, 'Passed') : null))))),
+    said,
+    h('div', { class: 'actions' }, h('a', { class: 'button primary-label', href: '#/' }, 'Done')));
+}
+
+// Maintenance: a passed set keeps one thing, short keep-it-fresh rounds on whatever is due.
+async function maintenanceCard(collection) {
+  const [got, game] = await Promise.all([planFor(collection), loadGame(collection.id)]);
+  const today = localToday();
+  const due = got ? got.decks.reduce((n, d) => n + d.cards.filter((c) => got.progress[d.id]?.cards?.[c.id]?.due <= today).length, 0) : 0;
+  return h('section', { class: 'panel home-card' },
+    h('p', { class: 'journey-now' }, h('strong', {}, 'Keeping it fresh'), due ? ` · ${due} card${due === 1 ? '' : 's'} due` : ' · nothing due today'),
+    got && due ? h('div', { class: 'actions' },
+      h('button', { class: 'primary', type: 'button', onclick: () => freshRound(got) }, `Keep it fresh (${Math.min(due, 10)} of ${due})`)) : null,
+    h('div', { class: 'more-section settings-row' }, statusPicker(collection.id, game.settings.status)));
+}
+
 // Everything optional, folded away: like the extra-practice menu under a main path.
 function moreMenu(collection, got, game, road) {
   const fmt = (n) => n.toLocaleString('en-US');
@@ -379,6 +479,7 @@ function moreMenu(collection, got, game, road) {
     h('div', { class: 'more-section settings-row' },
       h('h3', {}, 'Your plan'),
       h('label', { for: `goal-${collection.id}` }, 'Daily goal'), goal,
+      statusPicker(collection.id, game.settings.status),
       road ? [h('label', { for: `margin-${collection.id}` }, 'Margin'), margin] : null,
       h('p', { class: 'muted' }, game.settings.cue ? planSentence(game.settings) + ' ' : 'One round a day keeps your streak. ',
         h('a', { class: 'link', href: `#/plan/${collection.id}` }, game.settings.cue ? 'Change' : 'Pick when you\'ll study'))));
@@ -437,7 +538,11 @@ async function continueJourney(got) {
   if (next.kind === 'learn' && next.deckId) return studyDeck(next.deckId, 'learn', 'learn');
   if (next.kind === 'drill') return navigate(`#/exam/${got.bankId}/${next.length}/d${next.domainId}`);
   if (next.kind === 'exam') return navigate(`#/exam/${got.bankId}/${next.length}`);
-  // keep it fresh: a short round on the deck with the most cards due, asked the ways the exam asks
+  return freshRound(got);
+}
+
+// keep it fresh: a short round on the deck with the most cards due, asked the ways the exam asks
+function freshRound(got) {
   const today = localToday();
   const due = (d) => d.cards.filter((c) => got.progress[d.id]?.cards?.[c.id]?.due <= today).length;
   const deck = [...got.decks].sort((a, b) => due(b) - due(a))[0];
@@ -1120,6 +1225,7 @@ async function route() {
     else if (official) await showCheckScreen(official[1]);
     else if (location.hash === '#/upload') await showUploadScreen();
     else if (location.hash === '#/make-a-deck') showGuideScreen();
+    else if (location.hash === '#/sets') await showSetsScreen();
     else await showLibrary(takeNotice());
   } catch (err) {
     mount(root, h('section', { class: 'panel' },
@@ -1213,6 +1319,7 @@ async function renderTopbar() {
         } },
           h('label', { for: 'your-name' }, 'What should we call you?'),
           h('div', { class: 'menu-row' }, input, h('button', { type: 'submit' }, 'Save'))),
+        h('a', { class: 'button menu-link', href: '#/sets', onclick: (e) => { e.currentTarget.closest('details').open = false; } }, 'My study sets'),
         h('a', { class: 'button menu-link', href: '#/upload', onclick: (e) => { e.currentTarget.closest('details').open = false; } }, '+ Add a deck'),
         h('a', { class: 'link menu-guide', href: '#/make-a-deck', onclick: (e) => { e.currentTarget.closest('details').open = false; } }, 'How to make a deck'),
         h('p', { class: 'muted' }, versionText(acct.version)),

@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-assoc-behaviour",
+  "title": "How Claude Behaves",
+  "description": "The framework from the first Academy courses: the four properties, what training leaves behind, how properties collide, the 4D skills and the three modes of working with AI.",
+  "tags": [
+    "claude-associate"
+  ],
+  "cards": [
+    {
+      "id": "next-token-prediction",
+      "term": "Next Token Prediction",
+      "definition": "Claude writes by predicting what comes next, piece by piece; the same mechanism that makes it fluent lets it invent specifics",
+      "hint": null,
+      "tags": [
+        "group:assoc-properties",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "knowledge-training",
+      "term": "Knowledge (training)",
+      "definition": "What Claude learned in training: frozen at a cutoff date and uneven, thin on rare, recent or local topics",
+      "hint": null,
+      "tags": [
+        "group:assoc-properties",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "working-memory",
+      "term": "Working Memory",
+      "definition": "What Claude can attend to right now, its context window: a fixed size, and empty again in a new chat",
+      "hint": null,
+      "tags": [
+        "group:assoc-properties",
+        "domain:claude-associate:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "steerability",
+      "term": "Steerability",
+      "definition": "How well Claude follows your instructions: best with short, concrete, checkable ones; it can keep the letter and miss the spirit",
+      "hint": null,
+      "tags": [
+        "group:assoc-properties",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "sycophancy",
+      "term": "Sycophancy",
+      "definition": "Going along with your premise or opinion instead of pushing back; the fix is to invite disagreement",
+      "hint": null,
+      "tags": [
+        "group:assoc-fingerprints",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "verbosity",
+      "term": "Verbosity",
+      "definition": "Saying more than the task needs; the fix is to set a length or a format",
+      "hint": null,
+      "tags": [
+        "group:assoc-fingerprints",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "over-caution",
+      "term": "Over-caution",
+      "definition": "Hedging or declining more than the task warrants; the fix is to state the context and the real risk",
+      "hint": null,
+      "tags": [
+        "group:assoc-fingerprints",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "loose-calibration",
+      "term": "Loose confidence calibration",
+      "definition": "Sounding just as sure when wrong as when right; the fix is to check the claims, not the tone",
+      "hint": null,
+      "tags": [
+        "group:assoc-fingerprints",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "fluent-false",
+      "term": "Fluent, specific and false",
+      "definition": "Next Token Prediction plus Knowledge: invented names, dates, numbers or citations. Not a Steerability problem. Fix: verify the specifics, supply sources",
+      "hint": null,
+      "tags": [
+        "group:assoc-collisions",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "rules-dropped",
+      "term": "Rules followed early, dropped later",
+      "definition": "Working Memory plus Steerability in a long chat. Fix: restate the rules, or start fresh with a summary",
+      "hint": null,
+      "tags": [
+        "group:assoc-collisions",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "wrong-arithmetic",
+      "term": "Confident wrong arithmetic",
+      "definition": "Next Token Prediction plus Steerability. Fix: have Claude run the numbers with code execution",
+      "hint": null,
+      "tags": [
+        "group:assoc-collisions",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "bad-premise",
+      "term": "Agreeing with a bad premise",
+      "definition": "Sycophancy plus Next Token Prediction. Fix: ask Claude to challenge the assumption first",
+      "hint": null,
+      "tags": [
+        "group:assoc-collisions",
+        "domain:claude-associate:7"
+      ],
+      "media": null
+    },
+    {
+      "id": "delegation-4d",
+      "term": "Delegation (4D)",
+      "definition": "Setting goals and deciding whether, when and how to bring AI into the work",
+      "hint": null,
+      "tags": [
+        "group:assoc-4d",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "description-4d",
+      "term": "Description (4D)",
+      "definition": "Describing your goals clearly enough to get useful behaviour and output from the AI",
+      "hint": null,
+      "tags": [
+        "group:assoc-4d",
+        "domain:claude-associate:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "discernment-4d",
+      "term": "Discernment (4D)",
+      "definition": "Judging accurately how useful an AI output or behaviour really is",
+      "hint": null,
+      "tags": [
+        "group:assoc-4d",
+        "domain:claude-associate:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "diligence-4d",
+      "term": "Diligence (4D)",
+      "definition": "Taking responsibility for what you do with AI and how you do it",
+      "hint": null,
+      "tags": [
+        "group:assoc-4d",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "automation",
+      "term": "Automation",
+      "definition": "AI carries out a specific task you instructed",
+      "hint": null,
+      "tags": [
+        "group:assoc-modes",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "augmentation",
+      "term": "Augmentation",
+      "definition": "You and AI work a problem through together, as thinking partners",
+      "hint": null,
+      "tags": [
+        "group:assoc-modes",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "agency",
+      "term": "Agency",
+      "definition": "You set AI up to carry out future tasks on your behalf, on its own, within limits you set",
+      "hint": null,
+      "tags": [
+        "group:assoc-modes",
+        "domain:claude-associate:4"
+      ],
+      "media": null
+    }
+  ]
+}

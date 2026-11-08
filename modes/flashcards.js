@@ -1,7 +1,7 @@
 // Flashcards: flip with click, tap or Space. Browse the deck with arrow keys, or work through a
 // session (pass, retake round, due review) where "Got it" and "Missed" record the answer.
 
-import { h, mount } from '../core/dom.js';
+import { h, mount, withCode } from '../core/dom.js';
 import { shuffle } from '../core/progress.js';
 import { topBar, endScreen, keys, inPractice, reportLink, FILLER_NOTE } from './common.js';
 
@@ -34,7 +34,7 @@ export function start(deck, ctx) {
     // No aria-label: it would replace the card text, and a screen reader must read the card itself.
     const card = h('button', { class: 'card' + (flipped ? ' flipped' : ''), type: 'button', onclick: flip },
       h('span', { class: 'face-label' }, flipped ? (swap ? 'Term' : 'Definition') : (swap ? 'Definition' : 'Term')),
-      h('span', { class: 'face-text' + (flipped !== swap ? ' long' : '') }, flipped ? back : front),
+      h('span', { class: 'face-text' + (flipped !== swap ? ' long' : '') }, withCode(flipped ? back : front, undefined, { focusable: false })),
       h('span', { class: 'sr-only' }, flipped ? '. Activate to flip back.' : '. Activate to flip.'));
 
     mount(ctx.root,

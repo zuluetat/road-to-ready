@@ -39,6 +39,12 @@
       "cardCount": 57
     },
     {
+      "id": "claude-assoc-behaviour",
+      "title": "How Claude Behaves",
+      "file": "decks/claude-assoc-behaviour.json",
+      "cardCount": 19
+    },
+    {
       "id": "claude-assoc-prompting",
       "title": "Prompting and Troubleshooting",
       "file": "decks/claude-assoc-prompting.json",
@@ -72,7 +78,7 @@
       "id": "claude-assoc-responsible",
       "title": "Responsible Use and Privacy",
       "file": "decks/claude-assoc-responsible.json",
-      "cardCount": 24
+      "cardCount": 30
     }
   ],
   "exams": [
@@ -86,13 +92,14 @@
       "id": "claude-associate",
       "title": "Claude Certified Associate practice exam",
       "file": "questions/claude-associate.json",
-      "questionCount": 146
+      "questionCount": 150
     }
   ],
   "collections": [
     {
       "id": "aws-ai-practitioner",
       "title": "AWS Certified AI Practitioner (AIF-C01)",
+      "short": "AWS AI",
       "purpose": "Why these decks: I'm studying for the AWS Certified AI Practitioner exam. The decks cover what each exam domain asks for, and the practice exam pulls them together in the exam's own question style.",
       "decks": [
         "aws-ai-fundamentals",
@@ -123,8 +130,10 @@
     {
       "id": "claude-associate",
       "title": "Claude Certified Associate (Foundations)",
+      "short": "Associate",
       "purpose": "Why these decks: the Associate exam is for business users of Claude, not developers. These decks follow its seven domains: prompting, checking output, products and models, workflows, Projects and connectors, responsible use, and troubleshooting.",
       "decks": [
+        "claude-assoc-behaviour",
         "claude-assoc-prompting",
         "claude-assoc-output",
         "claude-assoc-products",

@@ -1,7 +1,7 @@
 // Quiz: four-option multiple choice with wrong answers from the same deck.
 // Always runs on a session: a sample of 10, 20 or all cards, a full pass, or a retake round.
 
-import { h, mount } from '../core/dom.js';
+import { h, mount, withCode } from '../core/dom.js';
 import { questionFor } from '../adapters/questions.js';
 import { topBar, endScreen, keys, FILLER_NOTE, optionList, checkButton } from './common.js';
 import { togglePick, ready } from '../core/choice.js';
@@ -33,7 +33,7 @@ export function start(deck, ctx) {
       step.filler ? h('p', { class: 'note' }, FILLER_NOTE) : null,
       h('section', { class: 'panel question', tabindex: '-1' },
         h('p', { class: 'face-label' }, direction === 'term' ? 'Pick the definition' : 'Pick the term'),
-        h('p', { class: 'prompt' }, question.prompt)),
+        h('p', { class: 'prompt' }, withCode(question.prompt))),
       optionList({ options: question.options, picks: answered ? [chosen] : picks, answer: answered ? [question.answerIndex] : null, onPick: choose }),
       answered ? h('div', { class: 'feedback', role: 'status' },
         h('strong', {}, right ? 'Correct' : 'Not quite'),
@@ -50,7 +50,7 @@ export function start(deck, ctx) {
       topBar(ctx, ctx.label, `${ctx.session.remaining()} left`),
       h('section', { class: 'panel question' },
         h('p', { class: 'face-label' }, 'Previous question'),
-        h('p', { class: 'prompt' }, q.prompt)),
+        h('p', { class: 'prompt' }, withCode(q.prompt))),
       optionList({ options: q.options, picks: [c], answer: [q.answerIndex], onPick: () => {} }),
       h('div', { class: 'feedback', role: 'status' },
         h('strong', {}, c === q.answerIndex ? 'You got it' : 'You missed it'),

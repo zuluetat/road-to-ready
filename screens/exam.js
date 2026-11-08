@@ -7,7 +7,7 @@
 // A scenario bank (exam.scenarios, the Architect format) runs its full and half exams in blocks:
 // each block's scenario is shown above every question in it.
 
-import { h, mount } from '../core/dom.js';
+import { h, mount, withCode, joinWithCode } from '../core/dom.js';
 import { drawExam, shuffleOptions, isCorrect, scoreExam, examConditions, reviewList, gradeAll, kinOf, flagReport, cardsBehind, byDeck, optionVocab, lastFlags, learnFlagsLabel, freshMocks, drawScenarioExam, isScenarioBank, scoreNote, sourceName, drillLength } from '../core/exam.js';
 import { linkText } from '../core/vocab.js';
 import { keys, celebration, optionList, checkButton, reportLink } from '../modes/common.js';
@@ -168,13 +168,13 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         scenarioPanel(q), // a retried scenario question still needs its scenario
         h('section', { class: 'panel question', tabindex: '-1' },
           h('p', { class: 'face-label' }, domainName.get(q.domain)),
-          h('p', { class: 'stem' }, q.stem)),
+          h('p', { class: 'stem' }, withCode(q.stem))),
         // the same as Learn and Quiz: tap selects (blue), Check answer locks it in, then green and red
         // with pills. Like the real exam, an answer can be changed until it's locked in.
         optionList({ options: q.options, picks, answer: answered ? q.answer : null, onPick: pick, whyWrong: q.whyWrong, need: q.answer.length }),
         !answered ? checkButton(picks, q.answer.length, check) : null,
         answered ? h('section', { class: 'panel explain', role: 'status' },
-          h('p', {}, h('strong', {}, right ? 'Correct. ' : 'Not quite. '), q.explanation),
+          h('p', {}, h('strong', {}, right ? 'Correct. ' : 'Not quite. '), withCode(q.explanation)),
           h('p', { class: 'cards-line muted' }),
           h('p', { class: 'muted small' }, 'Generated practice question, checked against ', h('a', { href: q.checkedAgainst, target: '_blank', rel: 'noopener noreferrer' }, sourceName(q.checkedAgainst)), '.'),
           reportLink({ deck: bank.title, question: { id: q.id, bankId: bank.id } }),
@@ -314,12 +314,12 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     const m = byId.get(r.id);
     const s = scenarioById.get(m.scenario);
     return h('details', {},
-      h('summary', {}, h('strong', { class: 'stem-text' }, m.stem)),
+      h('summary', {}, h('strong', { class: 'stem-text' }, withCode(m.stem))),
       s ? h('p', { class: 'muted' }, `Scenario: ${s.title}. ${s.summary}`) : null,
       r.chose && !r.correct ? h('p', {}, h('span', { class: 'pill pill-wrong' }, '✗ Your answer'), ' ',
-        r.chose.length ? r.chose.join(' · ') : 'none') : null,
-      h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', linked(m.answer.map((a) => m.options[a]).join(' · '))),
-      h('p', { class: 'muted' }, m.explanation),
+        r.chose.length ? joinWithCode(r.chose, ' · ') : 'none') : null,
+      h('p', {}, h('span', { class: 'pill pill-correct' }, '✓ Correct'), ' ', joinWithCode(m.answer.map((a) => m.options[a]), ' · ', linked)),
+      h('p', { class: 'muted' }, withCode(m.explanation)),
       otherOptions(m),
       // the cards it tests and terms in its options; a tested card in a deck that didn't load still shows
       studyLine(known ? [...new Set([...cardsBehind(m, known.vocab, new Set(known.cards.keys())), ...(m.cards || [])])] : m.cards || []));
@@ -331,7 +331,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     const wrong = m.options.map((text, i) => ({ text, why: m.whyWrong?.[i] })).filter((_, i) => !m.answer.includes(i));
     return h('div', { class: 'other-options' },
       h('p', {}, h('strong', {}, 'The other options')),
-      h('ul', {}, wrong.map((o) => h('li', {}, h('span', {}, linked(o.text)), o.why ? h('span', { class: 'muted' }, ' — ', o.why) : null))));
+      h('ul', {}, wrong.map((o) => h('li', {}, h('span', {}, withCode(o.text, linked)), o.why ? h('span', { class: 'muted' }, ' — ', withCode(o.why)) : null))));
   }
 
   // text with the set's terms underlined: tapping one shows its definition under the question
@@ -461,7 +461,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         blocks ? scenarioPanel(q, blockLabel[at]) : null,
         h('section', { class: 'panel question', tabindex: '-1' },
           h('p', { class: 'face-label' }, domainName.get(q.domain) + (q.answer.length > 1 ? ` · choose ${q.answer.length}` : '')),
-          h('p', { class: 'stem' }, q.stem)),
+          h('p', { class: 'stem' }, withCode(q.stem))),
         optionList({ options: q.options, picks: picks[at], answer: null, onPick: pick, need: q.answer.length }),
         h('div', { class: 'actions exam-nav' },
           h('button', { type: 'button', disabled: at === 0, onclick: () => go(at - 1) }, '← Previous'),

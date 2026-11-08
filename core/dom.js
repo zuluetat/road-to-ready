@@ -1,5 +1,7 @@
 // Tiny element builder. Strings always become text nodes, so card text can never inject markup.
 
+import { codeParts } from './code.js';
+
 // An ⓘ that opens a short explanation on tap or click (works on phones, where hover tooltips don't).
 export function tip(text, label = 'What this means') {
   return h('details', { class: 'tip' }, h('summary', { 'aria-label': label, title: text }, 'ⓘ'), h('span', { class: 'tip-text' }, text));
@@ -27,6 +29,23 @@ function append(el, children) {
     if (child === null || child === undefined || child === false) continue;
     el.append(child instanceof Node ? child : document.createTextNode(String(child)));
   }
+}
+
+// Card or question text with its code drawn as code (core/code.js): an inline span as <code>, a
+// fenced block in its own box that scrolls sideways on a phone and can be reached by keyboard.
+// plain(text) draws the parts in between (Learn underlines terms to look up there). Inside a button
+// (a card face, a Match tile, an answer option) pass { focusable: false }: a tab stop inside a control
+// is a second stop, and the button already takes the tap.
+export function withCode(text, plain = (t) => t, { focusable = true } = {}) {
+  if (typeof text !== 'string' || !text.includes('`')) return plain(text);
+  return codeParts(text).map((p) => (p.kind === 'text' ? plain(p.text)
+    : p.kind === 'code' ? h('code', {}, p.text)
+      : h('pre', { class: 'code-block', tabindex: focusable ? '0' : null }, h('code', {}, p.text))));
+}
+
+// Several texts in a row, each drawn on its own, so a backtick in one can never pair with the next.
+export function joinWithCode(texts, sep, plain) {
+  return texts.flatMap((t, i) => [i ? sep : null, withCode(t, plain)]).filter((x) => x !== null);
 }
 
 export function mount(root, ...children) {

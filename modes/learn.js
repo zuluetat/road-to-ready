@@ -5,7 +5,7 @@
 // one (keep it fresh: due cards, each asked one of the ways in turn, with no ladder to climb).
 // ctx.scenarios(cardId) gives the bank questions that test a card.
 
-import { h, mount } from '../core/dom.js';
+import { h, mount, withCode } from '../core/dom.js';
 import { questionFor } from '../adapters/questions.js';
 import { shuffleOptions, isCorrect, moreToLearn } from '../core/exam.js';
 import { learnStatus, LEARNED } from '../core/learn.js';
@@ -136,15 +136,15 @@ export function start(deck, ctx) {
       h('section', { class: 'panel question', tabindex: '-1' },
         h('p', { class: 'face-label' }, q.multi ? 'Scenario · choose two' : q.label),
         // the term being asked is never underlined, so a term prompt stays plain
-        h('p', { class: q.label === 'Scenario' ? 'stem' : 'prompt' }, linked(q.prompt, hide))),
+        h('p', { class: q.label === 'Scenario' ? 'stem' : 'prompt' }, withCode(q.prompt, (t) => linked(t, hide)))),
       optionList({
         options: q.options, picks, answer: answered !== null ? q.answer : null, onPick: pick,
-        whyWrong: q.whyWrong, need: q.answer.length, textOf: (text) => linked(text, hide),
+        whyWrong: q.whyWrong, need: q.answer.length, textOf: (text) => withCode(text, (t) => linked(t, hide), { focusable: false }),
       }),
       lookupPill(),
       answered === null ? checkButton(picks, q.answer.length, check) : null,
       // the explanation in its own labeled box, so it doesn't read as a note on the last option
-      answered !== null && q.explanation ? h('section', { class: 'panel explain' }, h('p', {}, h('strong', {}, 'Why: '), q.explanation)) : null,
+      answered !== null && q.explanation ? h('section', { class: 'panel explain' }, h('p', {}, h('strong', {}, 'Why: '), withCode(q.explanation))) : null,
       answered !== null ? inPractice(step.card) : null,
       answered !== null ? reportLink({ deck: ctx.deck.title, card: step.card, question: q.kind === 'scenario' ? q : null }) : null,
       answered !== null ? feedback() : null,
@@ -155,7 +155,7 @@ export function start(deck, ctx) {
   function renderRecall() {
     const card = h('button', { class: 'card' + (revealed ? ' flipped' : ''), type: 'button', onclick: reveal },
       h('span', { class: 'face-label' }, revealed ? 'Definition' : 'Term'),
-      h('span', { class: 'face-text' + (revealed ? ' long' : '') }, revealed ? linked(step.card.definition, hidden()) : step.card.term),
+      h('span', { class: 'face-text' + (revealed ? ' long' : '') }, revealed ? withCode(step.card.definition, (t) => linked(t, hidden()), { focusable: false }) : withCode(step.card.term, undefined, { focusable: false })),
       h('span', { class: 'sr-only' }, revealed ? '. Activate to see the term again.' : '. Activate to see the definition.'));
     mount(ctx.root, header(),
       h('p', { class: 'muted' }, 'Say what it means in your own words, then check.'),
@@ -178,12 +178,12 @@ export function start(deck, ctx) {
       q ? [
         h('section', { class: 'panel question' },
           h('p', { class: 'face-label' }, q.multi ? 'Scenario · choose two' : q.label),
-          h('p', { class: q.label === 'Scenario' ? 'stem' : 'prompt' }, q.prompt)),
+          h('p', { class: q.label === 'Scenario' ? 'stem' : 'prompt' }, withCode(q.prompt))),
         optionList({ options: q.options, picks: p, answer: q.answer, onPick: () => {}, whyWrong: q.whyWrong }),
-        q.explanation ? h('section', { class: 'panel explain' }, h('p', {}, h('strong', {}, 'Why: '), q.explanation)) : null,
+        q.explanation ? h('section', { class: 'panel explain' }, h('p', {}, h('strong', {}, 'Why: '), withCode(q.explanation))) : null,
       ] : h('div', { class: 'card flipped' },
-        h('span', { class: 'face-label' }, s.card.term),
-        h('span', { class: 'face-text long' }, s.card.definition)),
+        h('span', { class: 'face-label' }, withCode(s.card.term)),
+        h('span', { class: 'face-text long' }, withCode(s.card.definition))),
       h('div', { class: 'feedback', role: 'status' },
         h('span', {}, h('strong', {}, a ? 'You got it. ' : 'You missed it. '), m ? movedText(m) : ''),
         h('button', { class: 'primary', type: 'button', onclick: backToCurrent }, 'Back to this card')),

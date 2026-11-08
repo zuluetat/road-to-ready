@@ -270,6 +270,72 @@
         "domain:claude-associate:6"
       ],
       "media": null
+    },
+    {
+      "id": "sensitive-data",
+      "term": "Sensitive data",
+      "definition": "Details that need care before they go into any AI tool: financial and health records, passwords and credentials, confidential business or personal documents",
+      "hint": null,
+      "tags": [
+        "group:assoc-data-handling",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "regulated-personal-data",
+      "term": "Regulated personal data",
+      "definition": "Personal data that law or contract governs, such as customer, patient or employee records; your organization's rules apply whatever the tool",
+      "hint": null,
+      "tags": [
+        "group:assoc-data-handling",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "anonymize-before-upload",
+      "term": "Anonymize before upload",
+      "definition": "Removing or masking names and identifiers before sharing, so the personal data never reaches the tool at all",
+      "hint": null,
+      "tags": [
+        "group:assoc-data-handling",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "ask-not-to-keep",
+      "term": "Asking Claude not to keep it",
+      "definition": "Not a control: a request in the chat doesn't change what is stored or who can see it. A policy control acts before the upload",
+      "hint": null,
+      "tags": [
+        "group:assoc-data-handling",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "org-ai-policy",
+      "term": "Organization AI policy",
+      "definition": "Your employer's rules on which AI tools, plans and data are allowed; they decide before any personal setting does",
+      "hint": null,
+      "tags": [
+        "group:assoc-data-handling",
+        "domain:claude-associate:6"
+      ],
+      "media": null
+    },
+    {
+      "id": "inappropriate-use",
+      "term": "Inappropriate use case",
+      "definition": "A consequential decision about a person left to AI alone, such as hiring or a loan, with no qualified human review",
+      "hint": null,
+      "tags": [
+        "group:assoc-data-handling",
+        "domain:claude-associate:6"
+      ],
+      "media": null
     }
   ]
 }

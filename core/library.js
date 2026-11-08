@@ -2,7 +2,9 @@
 // AWS AI Practitioner exam"). Listed in data/index.json; a deck or exam in no collection is shown
 // on its own.
 
-// -> { collections: [{ id, title, purpose, badges, decks, exams }], otherDecks, otherExams }
+// A set may also list another set's decks as background (course material on its learning path that its
+// exam doesn't test): shown with the set, but owned, counted and studied as part of the other set.
+// -> { collections: [{ id, title, purpose, badges, decks, background, exams }], otherDecks, otherExams }
 export function groupLibrary({ decks = [], exams = [], collections = [] }) {
   const deckById = new Map(decks.map((d) => [d.id, d]));
   const examById = new Map(exams.map((e) => [e.id, e]));
@@ -12,8 +14,9 @@ export function groupLibrary({ decks = [], exams = [], collections = [] }) {
     const examIds = (c.exams || []).filter((id) => examById.has(id));
     for (const id of [...ids, ...examIds]) placed.add(id);
     return {
-      id: c.id, title: c.title, purpose: c.purpose || '', badges: c.badges || [],
+      id: c.id, title: c.title, short: c.short || '', icon: c.icon || null, purpose: c.purpose || '', badges: c.badges || [],
       decks: ids.map((id) => deckById.get(id)), exams: examIds.map((id) => examById.get(id)),
+      background: (c.background || []).filter((id) => deckById.has(id)).map((id) => deckById.get(id)),
     };
   });
   const otherDecks = decks.filter((d) => !placed.has(d.id));

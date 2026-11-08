@@ -1,6 +1,6 @@
 // Pieces shared by the study modes: the top bar, the end-of-round screen, and key handling.
 
-import { h, mount } from '../core/dom.js';
+import { h, mount, withCode } from '../core/dom.js';
 import { retakeIds } from '../core/progress.js';
 import { optionMarks } from '../core/choice.js';
 import { isLocalCopy } from '../core/account.js';
@@ -104,9 +104,9 @@ export function optionList({ options, picks, answer = null, onPick, whyWrong = n
         disabled: Boolean(answer) && !textOf, 'aria-disabled': answer && textOf ? 'true' : null,
         'aria-pressed': answer ? null : String(picks.includes(i)),
       },
-        h('span', { class: 'key' }, String(i + 1)), h('span', { class: 'option-text' }, textOf ? textOf(text, i) : text),
+        h('span', { class: 'key' }, String(i + 1)), h('span', { class: 'option-text' }, textOf ? textOf(text, i) : withCode(text, undefined, { focusable: false })),
         mark ? h('span', { class: `pill pill-${mark.state}` }, mark.pill) : null),
-      answer && whyWrong?.[i] ? h('p', { class: 'why muted' }, whyWrong[i]) : null);
+      answer && whyWrong?.[i] ? h('p', { class: 'why muted' }, withCode(whyWrong[i])) : null);
   }));
 }
 
@@ -132,8 +132,8 @@ export function inPractice(card) {
   let { views, show } = exampleViews(card, rememberedView());
   if (!show) return null;
   const scene = (ex) => [
-    ex.text ? h('p', {}, ex.text) : null,
-    ex.steps?.length ? h('ol', {}, ex.steps.map((s) => h('li', {}, h('strong', {}, s.name + ': '), s.text))) : null,
+    ex.text ? h('div', { class: 'example-text' }, withCode(ex.text)) : null,
+    ex.steps?.length ? h('ol', {}, ex.steps.map((s) => h('li', {}, h('strong', {}, s.name + ': '), withCode(s.text)))) : null,
   ];
   const body = h('div', { class: 'in-practice-body' });
   const tabs = views.length > 1 ? h('div', { class: 'example-toggle', role: 'group', 'aria-label': 'Which example' }) : null;

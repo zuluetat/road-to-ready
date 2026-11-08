@@ -11,11 +11,14 @@
 
 export const GOALS = [1, 2, 3, 5];
 export const MARGINS = ['just', 'some', 'lots'];
+// A subscribed set is being studied, or passed and kept fresh (maintenance). Whether it is on home at
+// all is settings.subscribed, ticked on the My study sets page; unticking loses nothing.
+export const STATUSES = ['active', 'maintenance'];
 const RESTORE_ROUNDS = 2;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 export function newGame(collectionId) {
-  return { schemaVersion: 1, collectionId, days: {}, points: {}, phaseReached: 0, checks: [], settings: { goal: 3, margin: 'some', cue: '' }, settingsAt: '' };
+  return { schemaVersion: 1, collectionId, days: {}, points: {}, phaseReached: 0, checks: [], settings: { goal: 3, margin: 'some', cue: '', status: 'active', subscribed: true }, settingsAt: '' };
 }
 
 // Shape a stored or received record, dropping anything damaged.
@@ -43,6 +46,10 @@ export function migrateGame(body, collectionId) {
   if (GOALS.includes(s.goal)) g.settings.goal = s.goal;
   if (MARGINS.includes(s.margin)) g.settings.margin = s.margin;
   if (typeof s.cue === 'string') g.settings.cue = s.cue.slice(0, 200);
+  if (STATUSES.includes(s.status)) g.settings.status = s.status;
+  if (typeof s.subscribed === 'boolean') g.settings.subscribed = s.subscribed;
+  // 'archived' came from a short-lived build before the checklist: it meant off home, so unsubscribed
+  if (s.status === 'archived') g.settings.subscribed = false;
   if (typeof body.settingsAt === 'string') g.settingsAt = body.settingsAt;
   if (typeof body.updatedAt === 'string') g.updatedAt = body.updatedAt;
   const base = body.stepBase;
@@ -59,7 +66,8 @@ export const GAME_FROM = { 'claude-architect': 'claude-certification' };
 export function inheritGame(old, collectionId) {
   const was = migrateGame(old, collectionId);
   const g = newGame(collectionId);
-  return { ...g, days: was.days, settings: was.settings, settingsAt: was.settingsAt };
+  // the new set is subscribed and being studied, whatever became of the old one
+  return { ...g, days: was.days, settings: { ...was.settings, status: 'active', subscribed: true }, settingsAt: was.settingsAt };
 }
 
 // The starting line for points per Learn step (core/readiness.js): the step each card part-way up
@@ -95,6 +103,8 @@ export function latestPoints(game) {
 export function setSettings(game, changes, at) {
   if ('goal' in changes && !GOALS.includes(changes.goal)) throw new Error('Daily goal must be 1, 2, 3 or 5 rounds');
   if ('margin' in changes && !MARGINS.includes(changes.margin)) throw new Error('Unknown margin');
+  if ('status' in changes && !STATUSES.includes(changes.status)) throw new Error('Unknown status');
+  if ('subscribed' in changes && typeof changes.subscribed !== 'boolean') throw new Error('Subscribed must be true or false');
   game.settings = { ...game.settings, ...changes };
   game.settingsAt = at;
   return game;
@@ -170,6 +180,12 @@ export function mergeGame(a, b) {
   const sb = `${b.settingsAt || ''}|${JSON.stringify(b.settings)}`;
   const from = sa >= sb ? a : b;
   merged.settings = { ...from.settings };
+  // an older page drops settings it doesn't know (status, subscribed) but keeps settingsAt: on the same
+  // change time, a setting only one copy has comes from that copy, the one that knows it
+  const other = from === a ? b : a;
+  if ((other.settingsAt || '') === (from.settingsAt || '')) {
+    for (const [k, v] of Object.entries(other.settings || {})) if (!(k in (from.settings || {}))) merged.settings[k] = v;
+  }
   merged.settingsAt = from.settingsAt || '';
   // the starting line for Learn steps: the first one taken, on whichever device
   const base = [a.stepBase, b.stepBase].filter(Boolean).sort((x, y) => (x.at < y.at ? -1 : x.at > y.at ? 1 : JSON.stringify(x) < JSON.stringify(y) ? -1 : 1))[0];

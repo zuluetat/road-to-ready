@@ -1,7 +1,7 @@
 // Match: six term and definition pairs, a running timer, and a best time per deck.
 // A wrong pairing counts as a miss for both cards, so both go to the retake queue.
 
-import { h, mount } from '../core/dom.js';
+import { h, mount, withCode } from '../core/dom.js';
 import { shuffle } from '../core/progress.js';
 import { topBar, endScreen } from './common.js';
 
@@ -46,7 +46,7 @@ export function start(deck, ctx) {
         return h('button', {
           type: 'button', class: cls, disabled: gone, 'aria-pressed': String(selected === i),
           onclick: () => pick(i),
-        }, tile.text);
+        }, withCode(tile.text, undefined, { focusable: false }));
       })));
     if (focusIndex !== undefined) {
       const buttons = ctx.root.querySelectorAll('.tile');

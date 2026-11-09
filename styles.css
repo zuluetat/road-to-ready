@@ -344,16 +344,16 @@ img.set-icon { background: #fff; padding: 8px; border-radius: 50%; box-sizing: b
 .set-shortcut.is-maintenance::after { content: '✓'; position: absolute; top: 2px; right: 6px; width: 20px; height: 20px; border-radius: 50%;
   display: grid; place-items: center; font-size: 0.75rem; font-weight: 700; background: var(--good); color: var(--surface); }
 .set-status { margin-left: 4px; font-size: 0.75rem; }
-/* A set's marks (core/heat.js): lower right, a fire while it's on a hot streak, ice once it's cold;
-   upper left, today, as cards due (red, grey once started) or a check when nothing is due. A count
-   or a check carries the meaning, colour only backs it up; the words are in the tooltip. */
-.set-heat { position: absolute; top: 38px; right: 0; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
-  font-size: 0.8rem; line-height: 1; background: var(--surface); border: 1px solid var(--rule); box-sizing: border-box; }
-.set-today { position: absolute; top: 2px; left: 0; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; box-sizing: border-box;
-  display: grid; place-items: center; font-size: 0.7rem; font-weight: 700; line-height: 1; color: var(--surface); border: 2px solid var(--surface); }
-.set-today.is-due { background: var(--bad); }
-.set-today.is-started { background: var(--muted); }
-.set-today.is-done { background: var(--good); }
+/* A set's mark (core/heat.js), on the icon's lower right: a fire while it's on a hot streak (ice once
+   it's cold) beside today's rounds left, or a check once the goal is met; red before any rounds,
+   grey once started, green when done. The count or check carries the meaning, colour backs it up;
+   the words are in the tooltip. */
+.set-heat { position: absolute; top: 38px; right: -4px; height: 22px; padding: 0 6px 0 4px; border-radius: 11px; box-sizing: border-box;
+  display: inline-flex; align-items: center; gap: 2px; font-size: 0.72rem; font-weight: 700; line-height: 1;
+  color: var(--surface); background: var(--muted); border: 2px solid var(--surface); white-space: nowrap; }
+.set-heat.is-due { background: var(--bad); }
+.set-heat.is-started { background: var(--muted); }
+.set-heat.is-done { background: var(--good); }
 /* My study sets: one row per set, the whole row is the tick box's label (a large tap target). */
 .set-checklist { list-style: none; margin: 12px 0; padding: 0; display: grid; gap: 8px; }
 .set-check { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; cursor: pointer; }

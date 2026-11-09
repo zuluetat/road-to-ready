@@ -1,6 +1,6 @@
 // A study set's heat, for the marks on its shortcut icon: a fire while the set is on a hot streak
 // (studied day after day), ice once it has gone cold, nothing before it's started; and, apart from
-// that, where today stands: cards due and untouched, started with cards still due, or nothing due.
+// that, where today stands against the set's daily goal: no rounds yet, started, or met.
 // A missed day is forgiven, as one miss doesn't undo a habit (Lally et al., 2010) and a broken
 // streak is when people give up (Silverman & Barasch, 2023); two missed days in a row end it.
 
@@ -20,13 +20,15 @@ export function studyStreak(days, today) {
   return streak;
 }
 
-// decks: [{ progress, cardIds }] for each deck in the set
-// -> { icon: 'fire' | 'ice' | 'none', state: 'new' | 'due' | 'started' | 'done', streak, due }
-export function setHeat(decks, today) {
+// decks: [{ progress }] for each deck in the set; status: the set's today from todayStatus, of which
+// this reads rounds (done today, practice exams included), ring { done, of } and restore { needed }
+// -> { icon: 'fire' | 'ice' | 'none', state: 'new' | 'due' | 'started' | 'done', streak, left }
+export function setHeat(decks, today, { rounds, ring, restore }) {
   const days = decks.flatMap(({ progress }) => progress.days || []);
-  const due = decks.reduce((n, { progress, cardIds }) => n + cardIds.filter((id) => progress.cards[id]?.due <= today).length, 0);
-  const everStudied = days.length > 0 || decks.some(({ progress }) => Object.keys(progress.cards).length > 0);
+  const everStudied = rounds > 0 || days.length > 0 || decks.some(({ progress }) => Object.keys(progress.cards).length > 0);
   const streak = studyStreak(days, today);
-  const state = !everStudied ? 'new' : !due ? 'done' : days.includes(today) ? 'started' : 'due';
-  return { icon: !everStudied ? 'none' : streak >= HOT_STREAK ? 'fire' : 'ice', state, streak, due };
+  // a day that restores the streak needs its extra rounds even once the ring says done
+  const left = Math.max(ring.of - ring.done, restore?.needed ?? 0, 0);
+  const state = !everStudied ? 'new' : !left ? 'done' : rounds > 0 ? 'started' : 'due';
+  return { icon: !everStudied ? 'none' : streak >= HOT_STREAK ? 'fire' : 'ice', state, streak, left };
 }

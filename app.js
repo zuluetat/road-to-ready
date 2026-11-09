@@ -221,7 +221,7 @@ async function showLibrary(message) {
         h('span', { class: 'deck-meta' }, `Could not load this deck: ${err.message}`)));
     }
     const ids = deck.cards.map((c) => c.id);
-    loaded.set(entry.id, { progress: p, cardIds: ids });
+    loaded.set(entry.id, { progress: p });
     const status = passStatus(p, ids);
     const due = ids.filter((id) => p.cards[id] && p.cards[id].due <= today).length;
     const retakes = retakeIds(p, ids).length;
@@ -299,9 +299,10 @@ async function showLibrary(message) {
     for (const b of shortcutRow?.querySelectorAll('.set-shortcut') || []) b.setAttribute('aria-pressed', String(b.dataset.id === focus));
   };
   const shortcuts = shortcutsFor(shownSets);
-  // Each icon's two marks: a fire while the set is on a hot streak (ice once it's cold), and today's
-  // state as a count of cards due (red, grey once started) or a check when nothing is due.
-  const heatById = Object.fromEntries(shownSets.map((c) => [c.id, setHeat(c.decks.map((d) => loaded.get(d.id)).filter(Boolean), today)]));
+  // Each icon's mark: a fire while the set is on a hot streak (ice once it's cold), beside the rounds
+  // left of its daily goal (red, grey once started) or a check once the goal is met.
+  const heatById = Object.fromEntries(await Promise.all(shownSets.map(async (c) => [c.id,
+    setHeat(c.decks.map((d) => loaded.get(d.id)).filter(Boolean), today, todayStatus(await loadGame(c.id), today))])));
   const shortcutRow = shortcuts.length > 1 ? h('nav', { class: 'set-shortcuts', 'aria-label': 'Study sets' },
     h('ul', {}, shortcuts.map((s) => h('li', {}, h('button', {
       type: 'button', class: 'set-shortcut' + (statusById[s.id] === 'maintenance' ? ' is-maintenance' : ''), 'data-id': s.id,
@@ -361,17 +362,18 @@ async function showLibrary(message) {
 // Like a language app's home: your streak, today's goal and your points in one row, the path with a
 // single Continue, and everything optional folded into "More ways to study".
 
-// A set's streak badge and today mark on its shortcut icon; the words are in heatWords.
-function heatMarks({ icon, state, due }) {
-  return [
-    icon === 'none' ? null : h('span', { class: `set-heat is-${icon}`, 'aria-hidden': 'true' }, icon === 'fire' ? '🔥' : '🧊'),
-    state === 'new' ? null : h('span', { class: `set-today is-${state}`, 'aria-hidden': 'true' }, state === 'done' ? '✓' : due > 99 ? '99+' : String(due)),
-  ];
+// A set's one mark on its shortcut icon: the fire or ice beside today's rounds left (a check once
+// the goal is met), coloured by today; nothing before the set is started. The words are in heatWords.
+function heatMarks({ icon, state, left }) {
+  if (state === 'new') return null;
+  return h('span', { class: `set-heat is-${icon} is-${state}`, 'aria-hidden': 'true' },
+    icon === 'fire' ? '🔥' : '🧊', state === 'done' ? '✓' : String(left));
 }
 
 // A set's streak and today in words, for its tooltip (screen readers read it too).
-function heatWords({ icon, state, streak, due }) {
-  const today = { new: 'not started', due: `${due} due`, started: `${due} still due today`, done: 'nothing due' }[state];
+function heatWords({ icon, state, streak, left }) {
+  const rounds = `${left} round${left === 1 ? '' : 's'}`;
+  const today = { new: 'not started', due: `${rounds} to do today`, started: `${rounds} left today`, done: 'today\'s goal done' }[state];
   return icon === 'fire' ? `${streak}-day streak, ${today}` : state === 'new' ? today : `no streak, ${today}`;
 }
 

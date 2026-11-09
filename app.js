@@ -25,7 +25,7 @@ import { readCollapsed, setCollapsed } from './core/collapse.js';
 import { shortcutsFor, setsShown, readFocus, setFocus, arrangeSets, setsChecklist } from './core/shortcuts.js';
 import { borrowedCards, cardState } from './core/also.js';
 import { showDeckGuide } from './screens/deck-guide.js';
-import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress } from './core/account.js';
+import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress, newVersionLive } from './core/account.js';
 import { modeById } from './modes/index.js';
 import { createSession } from './core/session.js';
 import {
@@ -54,10 +54,12 @@ let cleanup = () => {};
 const prefs = () => { try { return window.localStorage; } catch { return null; } };
 let siteTitle = document.title || 'Study'; // the page's own name until the index says otherwise
 let studying = null; // deck id of the session on screen, or exam:<bankId> during a practice exam
+let reloadWhenFree = false; // a new version went live during a session: reload when it ends
 // During a study session the top bar steps aside, so the round has the whole screen.
 function setStudying(v) {
   studying = v;
   document.body.classList.toggle('in-session', Boolean(v));
+  if (v === null && reloadWhenFree) reloadForNewVersion();
 }
 
 // ⓘ tips and the account menu: closed by a tap anywhere else; tips and kept inside the screen on a phone.
@@ -89,7 +91,11 @@ function showWarning(text) {
 
 // Another tab saved progress: drop this tab's copy rather than overwrite the newer one later.
 // Saves arrive in bursts, so redraw once after they settle, keeping any notice for the redraw.
-let notice = null;
+// a message on its way to the next screen when a new version reloaded the page (checkForNewVersion)
+const CARRIED_KEY = 'study.carriedNotice';
+let notice = (() => {
+  try { const m = sessionStorage.getItem(CARRIED_KEY); sessionStorage.removeItem(CARRIED_KEY); return m; } catch { return null; }
+})();
 let refreshTimer = null;
 window.addEventListener('storage', (e) => {
   if (!e.key || !e.key.startsWith('study:v1:progress:')) return;
@@ -1360,5 +1366,31 @@ Promise.race([firstSync.then(() => 'in time'), new Promise((r) => setTimeout(() 
   route();
   if (when === 'late') firstSync.then((changed) => { if (changed.length && !busy()) route(); });
 });
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !studying) syncNow().catch(() => {}); });
+// A page left open across a deploy (a phone's home-screen app, a background tab) keeps running the
+// old code, which can redraw stale settings over what you chose. So it asks which version is live
+// when it comes back on screen and every few minutes; when it's behind, it sends anything unsaved and
+// reloads, skipping the old code's pull so that never merges anything. Never mid-session or while
+// typing (an upload being pasted, the study plan, the name field): the reload waits until you move on.
+const busyForReload = () => Boolean(studying) || /^#\/(upload|plan\/)/.test(location.hash)
+  || Boolean(document.activeElement?.matches?.('input, textarea, select'));
+async function reloadForNewVersion() {
+  reloadWhenFree = false;
+  await sync.flush().catch(() => {});
+  try { if (carried || notice) sessionStorage.setItem(CARRIED_KEY, carried || notice); } catch { /* the message is lost, nothing else */ }
+  location.reload();
+}
+async function checkForNewVersion() {
+  if (LOCAL) return false;
+  const loaded = (await account).version;
+  const live = await currentUser();
+  if (live.status !== 'ok' || !newVersionLive(loaded, live.version)) return false;
+  if (busyForReload()) reloadWhenFree = true;
+  else await reloadForNewVersion();
+  return true;
+}
+setInterval(() => checkForNewVersion().catch(() => {}), 10 * 60 * 1000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  checkForNewVersion().then((reloading) => { if (!reloading && !studying) syncNow(); }).catch(() => {});
+});
 window.addEventListener('online', () => { if (!studying) syncNow().catch(() => {}); });

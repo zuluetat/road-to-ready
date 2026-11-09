@@ -21,6 +21,13 @@ export function versionText(v) {
   return m ? `Version ${v.id} · ${MONTHS[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}` : `Version ${v.id}`;
 }
 
+// loaded: the version this page started with; live: the one /api/me reports now. A different id means
+// a deploy happened while this page was open, so it is running old code. Without both (offline,
+// signed out, the local copy) nothing can be said.
+export function newVersionLive(loaded, live) {
+  return Boolean(loaded?.id && live?.id && loaded.id !== live.id);
+}
+
 // The avatar's letter: the first letter of your name, capitalised; '' without a name.
 export const initial = (name) => ([...String(name || '').trim()][0] || '').toLocaleUpperCase();
 

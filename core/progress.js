@@ -6,6 +6,7 @@ import { schedule, dueFor } from '../adapters/scheduler.js';
 export const SCHEMA_VERSION = 1;
 export const MASTERED_BOX = 4;
 const RETAKE_BOX_CAP = 2;
+export const DAYS_KEPT = 30; // study days remembered per deck, enough for any streak badge
 
 export function newProgress(deckId) {
   return {
@@ -24,6 +25,7 @@ export function newProgress(deckId) {
     lastShown: {},
     seq: 0,
     learn: {},
+    days: [],
   };
 }
 
@@ -38,6 +40,9 @@ export function migrate(stored, deckId) {
   if (p.currentPass !== null && !plain(p.currentPass)) p.currentPass = null;
   if (p.currentPass) for (const list of ['order', 'answered', 'missed']) if (!Array.isArray(p.currentPass[list])) p.currentPass[list] = [];
   p.cards = Object.fromEntries(Object.entries(p.cards).filter(([, c]) => plain(c)));
+  // Study days: older records start from each card's last study day.
+  const seed = Array.isArray(stored.days) ? stored.days : 'days' in stored ? [] : Object.values(p.cards).map((c) => c.lastStudied);
+  p.days = studyDays(seed);
   if (p.currentPass) {
     const answered = p.currentPass.answered || [];
     p.currentPass = {
@@ -49,6 +54,11 @@ export function migrate(stored, deckId) {
     };
   }
   return p;
+}
+
+// Sorted, without repeats or anything that isn't a date, and only the most recent DAYS_KEPT.
+export function studyDays(days) {
+  return [...new Set(days.filter((d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort().slice(-DAYS_KEPT);
 }
 
 export function shuffle(xs, random = Math.random) {
@@ -83,6 +93,7 @@ export function applyResult(p, { cardId, correct, context, today, at = null }) {
     next.due = prev.due;
   }
   p.cards[cardId] = next;
+  p.days = studyDays([...(p.days || []), today]);
 
   if (!correct && context !== 'learn-apply') {
     p.retakeQueue[cardId] = 0;

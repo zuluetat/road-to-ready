@@ -23,6 +23,7 @@ import { migrateExam, recordAttempt, questionsByCard, recordAnswer, kinOf } from
 import { currentUser } from './adapters/identity.js';
 import { readCollapsed, setCollapsed } from './core/collapse.js';
 import { shortcutsFor, setsShown, readFocus, setFocus, arrangeSets, setsChecklist } from './core/shortcuts.js';
+import { setHeat } from './core/heat.js';
 import { borrowedCards, cardState } from './core/also.js';
 import { showDeckGuide } from './screens/deck-guide.js';
 import { handover, greeting, versionText, initial, isLocalCopy, resetAllProgress, newVersionLive } from './core/account.js';
@@ -208,6 +209,7 @@ async function showLibrary(message) {
   const today = localToday();
 
   // One broken deck file must not hide the others, or the backup buttons.
+  const loaded = new Map(); // deck id -> { progress, cardIds }, for each set's streak badge
   const rows = await Promise.all(index.decks.map(async (entry) => {
     let deck;
     let p;
@@ -219,6 +221,7 @@ async function showLibrary(message) {
         h('span', { class: 'deck-meta' }, `Could not load this deck: ${err.message}`)));
     }
     const ids = deck.cards.map((c) => c.id);
+    loaded.set(entry.id, { progress: p, cardIds: ids });
     const status = passStatus(p, ids);
     const due = ids.filter((id) => p.cards[id] && p.cards[id].due <= today).length;
     const retakes = retakeIds(p, ids).length;
@@ -296,10 +299,13 @@ async function showLibrary(message) {
     for (const b of shortcutRow?.querySelectorAll('.set-shortcut') || []) b.setAttribute('aria-pressed', String(b.dataset.id === focus));
   };
   const shortcuts = shortcutsFor(shownSets);
+  // Each icon's two marks: a fire while the set is on a hot streak (ice once it's cold), and today's
+  // state as a count of cards due (red, grey once started) or a check when nothing is due.
+  const heatById = Object.fromEntries(shownSets.map((c) => [c.id, setHeat(c.decks.map((d) => loaded.get(d.id)).filter(Boolean), today)]));
   const shortcutRow = shortcuts.length > 1 ? h('nav', { class: 'set-shortcuts', 'aria-label': 'Study sets' },
     h('ul', {}, shortcuts.map((s) => h('li', {}, h('button', {
       type: 'button', class: 'set-shortcut' + (statusById[s.id] === 'maintenance' ? ' is-maintenance' : ''), 'data-id': s.id,
-      'aria-pressed': String(s.id === focus), title: setById.get(s.id).title,
+      'aria-pressed': String(s.id === focus), title: `${setById.get(s.id).title} · ${heatWords(heatById[s.id])}`,
       onclick: () => {
         focus = setFocus(prefs(), s.id);
         showFocus();
@@ -313,6 +319,7 @@ async function showLibrary(message) {
       },
     },
     s.image ? h('img', { src: s.image, class: setById.get(s.id).icon ? 'set-icon' : null, alt: '', width: 56, height: 56 }) : h('span', { class: 'set-initials', 'aria-hidden': 'true' }, s.initials),
+    heatMarks(heatById[s.id]),
     h('span', { class: 'set-shortcut-label' }, s.label),
     statusById[s.id] === 'maintenance' ? h('span', { class: 'sr-only' }, ' (passed, keeping it fresh)') : null))))) : null;
   showFocus();
@@ -353,6 +360,20 @@ async function showLibrary(message) {
 // ---------- the home card: one main path, with points on top ----------
 // Like a language app's home: your streak, today's goal and your points in one row, the path with a
 // single Continue, and everything optional folded into "More ways to study".
+
+// A set's streak badge and today mark on its shortcut icon; the words are in heatWords.
+function heatMarks({ icon, state, due }) {
+  return [
+    icon === 'none' ? null : h('span', { class: `set-heat is-${icon}`, 'aria-hidden': 'true' }, icon === 'fire' ? '🔥' : '🧊'),
+    state === 'new' ? null : h('span', { class: `set-today is-${state}`, 'aria-hidden': 'true' }, state === 'done' ? '✓' : due > 99 ? '99+' : String(due)),
+  ];
+}
+
+// A set's streak and today in words, for its tooltip (screen readers read it too).
+function heatWords({ icon, state, streak, due }) {
+  const today = { new: 'not started', due: `${due} due`, started: `${due} still due today`, done: 'nothing due' }[state];
+  return icon === 'fire' ? `${streak}-day streak, ${today}` : state === 'new' ? today : `no streak, ${today}`;
+}
 
 async function homeCard(collection) {
   const got = await planFor(collection);

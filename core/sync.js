@@ -2,7 +2,7 @@
 // pulls and by the Worker when a device pushes, so both sides agree. Every merge is
 // order-independent and safe to repeat. Rules: docs/design/2026-10-14-progress-sync.md.
 
-import { migrate } from './progress.js';
+import { migrate, studyDays } from './progress.js';
 import { migrateExam } from './exam.js';
 import { migrateGame, mergeGame } from './game.js';
 
@@ -140,6 +140,9 @@ export function mergeProgress(a, b) {
   // The no-repeat memory follows the copy saved last.
   const memoryFrom = pick(a, b, (p) => p.updatedAt || '', fields(MEMORY_FIELDS));
   for (const k of MEMORY_FIELDS) merged[k] = structuredClone(memoryFrom[k]);
+
+  // Study days from both copies, so a streak built across two devices survives.
+  merged.days = studyDays([...(a.days || []), ...(b.days || [])]);
 
   const times = [a.matchBestSeconds, b.matchBestSeconds].filter((t) => typeof t === 'number');
   merged.matchBestSeconds = times.length ? Math.min(...times) : null;

@@ -176,16 +176,18 @@ export function mergeGame(a, b) {
     if (!had || JSON.stringify(c) > JSON.stringify(had)) checks.set(c.at, structuredClone(c));
   }
   merged.checks = [...checks.values()].sort((x, y) => (x.at < y.at ? -1 : x.at > y.at ? 1 : 0));
-  const sa = `${a.settingsAt || ''}|${JSON.stringify(a.settings)}`;
-  const sb = `${b.settingsAt || ''}|${JSON.stringify(b.settings)}`;
-  const from = sa >= sb ? a : b;
+  // the later change wins (never changed counts as oldest); the same time falls back to the content,
+  // so the merge is the same either way round. Joining the two into one string would not do: a blank
+  // time puts "|" first, which sorts after every date.
+  const ta = a.settingsAt || '';
+  const tb = b.settingsAt || '';
+  const from = ta !== tb ? (ta > tb ? a : b) : JSON.stringify(a.settings) >= JSON.stringify(b.settings) ? a : b;
   merged.settings = { ...from.settings };
-  // an older page drops settings it doesn't know (status, subscribed) but keeps settingsAt: on the same
-  // change time, a setting only one copy has comes from that copy, the one that knows it
+  // an older page drops settings it doesn't know (status, subscribed), and may still make the newest
+  // change (a new daily goal). A setting only one copy has comes from that copy, the one that knows it,
+  // whichever is newer. Settings are only ever added, never removed, so a missing one means "unknown".
   const other = from === a ? b : a;
-  if ((other.settingsAt || '') === (from.settingsAt || '')) {
-    for (const [k, v] of Object.entries(other.settings || {})) if (!(k in (from.settings || {}))) merged.settings[k] = v;
-  }
+  for (const [k, v] of Object.entries(other.settings || {})) if (!(k in (from.settings || {}))) merged.settings[k] = v;
   merged.settingsAt = from.settingsAt || '';
   // the starting line for Learn steps: the first one taken, on whichever device
   const base = [a.stepBase, b.stepBase].filter(Boolean).sort((x, y) => (x.at < y.at ? -1 : x.at > y.at ? 1 : JSON.stringify(x) < JSON.stringify(y) ? -1 : 1))[0];

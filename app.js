@@ -425,9 +425,15 @@ async function showSetsScreen() {
     h('p', {}, 'Tick the sets you\'re studying. An unticked set leaves home and the shortcut row, and keeps all its progress, so ticking it again picks up where you left off.'),
     h('ul', { class: 'set-checklist' }, items.map((it) => h('li', {}, h('label', { class: 'set-check' },
       h('input', { type: 'checkbox', checked: it.subscribed, onchange: async (e) => {
-        const on = e.target.checked;
-        await updateGame(it.id, (g) => setSettings(g, { subscribed: on }, new Date().toISOString()));
-        said.textContent = `${it.title}: ${on ? 'on home' : 'off home, progress kept'}.`;
+        const box = e.target;
+        const on = box.checked;
+        try {
+          await updateGame(it.id, (g) => setSettings(g, { subscribed: on }, new Date().toISOString()));
+          said.textContent = `${it.title}: ${on ? 'on home' : 'off home, progress kept'}.`;
+        } catch (err) {
+          box.checked = !on; // nothing was saved, so the box goes back to what is true
+          said.textContent = `${it.title}: not changed. ${err.message}`;
+        }
       } }),
       it.image ? h('img', { src: it.image, alt: '', width: 40, height: 40 }) : h('span', { class: 'set-initials', 'aria-hidden': 'true' }, it.initials),
       h('span', { class: 'set-check-title' }, it.title, it.passed ? h('span', { class: 'pill set-status' }, 'Passed') : null))))),
@@ -668,7 +674,7 @@ async function showExamScreen(bankId, startLength = null, notice = null, startDo
         const [deckId, cardId] = ref.split('/');
         const deck = await decks.loadDeck(deckId).catch(() => null);
         const card = deck?.cards.find((c) => c.id === cardId);
-        if (card) found.push({ deckId, term: card.term });
+        if (card) found.push({ id: ref, deckId, term: card.term, definition: card.definition });
       }
       return found;
     },

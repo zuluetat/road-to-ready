@@ -329,7 +329,7 @@ code {
 .collection-badges img { display: block; width: 56px; height: 56px; }
 /* The shortcut row of study sets (core/shortcuts.js), like pinned contacts in Messages: round icons,
    a short name under each, the picked one ringed. It wraps on a phone rather than scrolling sideways. */
-.set-shortcuts ul { list-style: none; margin: 8px 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 4px; }
+.set-shortcuts ul { list-style: none; margin: 8px 0 14px; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px clamp(4px, 3vw, 28px); }
 .set-shortcut { all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 64px; text-align: center; border-radius: 10px; padding: 4px 0; }
 .set-shortcut img, .set-initials { width: 56px; height: 56px; border-radius: 50%; object-fit: contain; box-sizing: border-box; border: 3px solid transparent; }
 .set-initials { display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 1.15rem; }

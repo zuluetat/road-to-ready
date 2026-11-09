@@ -32,7 +32,7 @@
     {
       "id": "working-memory",
       "term": "Working Memory",
-      "definition": "What Claude can attend to right now, its context window: a fixed size, and empty again in a new chat",
+      "definition": "What Claude can attend to right now, its context window: a fixed size, and it starts fresh in a new chat unless memory or project knowledge is loaded in",
       "hint": null,
       "tags": [
         "group:assoc-properties",
@@ -120,7 +120,7 @@
     {
       "id": "wrong-arithmetic",
       "term": "Confident wrong arithmetic",
-      "definition": "Next Token Prediction plus Steerability. Fix: have Claude run the numbers with code execution",
+      "definition": "Next Token Prediction plus Steerability: exact precision is an instruction it can't reliably follow. Fix: have Claude run the numbers with code execution",
       "hint": null,
       "tags": [
         "group:assoc-collisions",
@@ -131,7 +131,7 @@
     {
       "id": "bad-premise",
       "term": "Agreeing with a bad premise",
-      "definition": "Sycophancy plus Next Token Prediction. Fix: ask Claude to challenge the assumption first",
+      "definition": "Sycophancy, a fingerprint of training, plus Next Token Prediction. Fix: ask Claude to challenge the assumption first",
       "hint": null,
       "tags": [
         "group:assoc-collisions",

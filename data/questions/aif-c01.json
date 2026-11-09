@@ -11799,6 +11799,953 @@
       "source": "generated",
       "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/genops01-bp01.html",
       "examOnly": true
+    },
+    {
+      "id": "t-d1-autoencoder-normal-only",
+      "domain": 1,
+      "objective": "1.2.3",
+      "type": "single",
+      "stem": "A security team logs millions of staff sign-ins with time, place, and device. Confirmed attacks are rare and were never labeled. The team wants a neural network that learns ordinary sign-in behavior and raises an alert on sign-ins that don't fit it. Which approach fits?",
+      "options": [
+        "Train a classifier on labeled examples of attacks and of safe sign-ins",
+        "Train an autoencoder on ordinary sign-ins and flag poor reconstructions",
+        "Fit a linear regression that predicts the hour of each person's next sign-in",
+        "Group the staff into departments with a fixed number of clusters"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "An autoencoder learns to compress and rebuild ordinary data. Trained only on ordinary sign-ins, it rebuilds unusual ones poorly, so a high reconstruction error flags an anomaly without any labeled attacks.",
+      "whyWrong": [
+        "A classifier needs labeled attacks, and the team has none.",
+        null,
+        "Regression predicts a number from labeled targets; it does not say whether a sign-in is abnormal.",
+        "Grouping staff does not score individual sign-ins as unusual."
+      ],
+      "cards": [
+        "aws-practice-traps/autoencoder",
+        "aws-ai-fundamentals/unsupervised-learning"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/an-autoencoder/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d1-rcf-score-transactions",
+      "domain": 1,
+      "objective": "1.2.3",
+      "type": "single",
+      "stem": "A payments team wants a SageMaker AI built-in algorithm that gives every incoming transaction a score for how unusual it is. The team has no labels that mark fraud. Which algorithm should it use?",
+      "options": [
+        "XGBoost",
+        "Linear Learner",
+        "Random Cut Forest (RCF)",
+        "k-nearest neighbors (k-NN)"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "Random Cut Forest is an unsupervised SageMaker AI built-in algorithm that assigns each data point an anomaly score; high scores mark anomalies. It needs no labels.",
+      "whyWrong": [
+        "XGBoost is supervised; it needs labeled examples to learn from.",
+        "Linear Learner is supervised regression or classification and needs labels.",
+        null,
+        "The SageMaker AI k-NN algorithm is supervised classification or regression and needs labels."
+      ],
+      "cards": [
+        "aws-practice-traps/random-cut-forest"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/randomcutforest.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d1-clustering-store-groups",
+      "domain": 1,
+      "objective": "1.2.3",
+      "type": "single",
+      "stem": "A grocery chain wants to find natural groupings among its 400 stores based on sales mix, foot traffic, and basket size, so it can plan store formats. Nobody has defined the groups in advance. Which type of ML task is this?",
+      "options": [
+        "Anomaly detection",
+        "Dimensionality reduction (PCA)",
+        "Clustering",
+        "Time-series forecasting"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "Clustering is unsupervised: it finds groups in unlabeled data on its own. No predefined group labels exist here, so the algorithm must discover them.",
+      "whyWrong": [
+        "Anomaly detection finds the few stores that are unusual; it does not sort all stores into groups.",
+        "PCA shrinks many measures into fewer ones; it does not assign stores to groups.",
+        null,
+        "Forecasting predicts future values over time, such as next month's sales; it does not group stores."
+      ],
+      "cards": [
+        "aws-ai-fundamentals/clustering",
+        "aws-ai-fundamentals/unsupervised-learning"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/k-means.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d1-overfit-no-new-data",
+      "domain": 1,
+      "objective": "1.2.4",
+      "type": "multi",
+      "stem": "A team's neural network scores 99% accuracy on its training data but 71% on validation data. The team cannot collect more data this quarter. Which two changes most directly address the problem? (Choose two.)",
+      "options": [
+        "Add dropout layers to the network during training",
+        "Train for many more epochs on the same data",
+        "Increase the strength of L2 regularization",
+        "Fold the validation set into the training data",
+        "Add more layers and parameters to the network"
+      ],
+      "answer": [
+        0,
+        2
+      ],
+      "explanation": "The gap between training and validation accuracy is overfitting. Dropout and L2 regularization are regularization techniques that discourage memorizing the training data, and neither needs new data.",
+      "whyWrong": [
+        null,
+        "More epochs on the same data usually deepens overfitting.",
+        null,
+        "Losing the validation set removes the way to see overfitting; it does not fix it.",
+        "A bigger network can memorize even more and overfit worse."
+      ],
+      "cards": [
+        "aws-practice-traps/dropout",
+        "aws-practice-traps/regularization",
+        "aws-ai-fundamentals/overfitting"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/overfitting/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d1-registry-approval",
+      "domain": 1,
+      "objective": "1.3.4",
+      "type": "single",
+      "stem": "An ML team must keep a record of every trained model version, with its metrics and whether a reviewer approved it for production, before anything is deployed. Which SageMaker AI capability fits?",
+      "options": [
+        "SageMaker Model Registry",
+        "SageMaker Feature Store",
+        "SageMaker Ground Truth",
+        "SageMaker Data Wrangler"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "Model Registry catalogs model versions with their metadata and an approval status, so only approved versions move to deployment.",
+      "whyWrong": [
+        null,
+        "Feature Store keeps reusable features for training and inference, not model versions.",
+        "Ground Truth labels data; it does not track models.",
+        "Data Wrangler prepares data; it does not record model approvals."
+      ],
+      "cards": [
+        "aws-practice-traps/sagemaker-model-registry"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d2-contextual-embeddings",
+      "domain": 2,
+      "objective": "2.1.1",
+      "type": "single",
+      "stem": "A legal search tool keeps returning passages about riverbanks when lawyers search for bank mergers. Its embedding model gives every word one fixed vector, whatever sentence it appears in. Which change addresses the cause?",
+      "options": [
+        "Retrain static word vectors, such as GloVe, on legal text",
+        "Lower the temperature of the answer-writing model",
+        "Switch to a contextual embedding model such as BERT",
+        "Add more documents about banking to the index"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "A static model such as Word2Vec gives \"bank\" one vector in every sentence. A contextual model such as BERT reads the surrounding words, so \"bank\" in a merger sentence gets a different embedding from \"bank\" by a river.",
+      "whyWrong": [
+        "Retrained static vectors still give each word one vector, so both meanings stay mixed.",
+        "Temperature affects generated text, not how documents are matched.",
+        null,
+        "More documents do not separate the two meanings in the vectors."
+      ],
+      "cards": [
+        "aws-practice-traps/bert",
+        "aws-practice-traps/word2vec",
+        "aws-genai-foundation-models/embedding"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/embeddings-in-machine-learning/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d2-unified-studio-projects",
+      "domain": 2,
+      "objective": "2.3.1",
+      "type": "single",
+      "stem": "At a retailer, SQL analysts, data engineers, and ML developers each sign in to different consoles. An administrator wants them to sign in once, work on shared projects with access-controlled data, and include Amazon Bedrock capabilities. Which AWS offering fits?",
+      "options": [
+        "AWS Glue Studio",
+        "SageMaker Unified Studio",
+        "Amazon Q Developer",
+        "Amazon SageMaker Canvas"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "SageMaker Unified Studio brings AWS data, analytics, ML, and generative AI tools into one environment, where administrators give people access and teams work in governed projects.",
+      "whyWrong": [
+        "Glue Studio builds data integration jobs; it is one data tool, not a shared environment for all three roles.",
+        null,
+        "Q Developer helps individual developers write code; it is not a shared data and AI workspace.",
+        "Canvas lets business analysts build ML models without code; it does not bring all three roles into shared projects."
+      ],
+      "cards": [
+        "aws-practice-traps/sagemaker-unified-studio"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/what-is-sagemaker-unified-studio.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d2-partyrock-learn-prompts",
+      "domain": 2,
+      "objective": "2.3.1",
+      "type": "single",
+      "stem": "A training lead wants staff to practice prompting by building small generative AI apps from plain-language descriptions, with no code to write and no AWS account to set up. Which option fits?",
+      "options": [
+        "Amazon SageMaker Canvas",
+        "Amazon Bedrock AgentCore",
+        "Amazon SageMaker Unified Studio",
+        "PartyRock"
+      ],
+      "answer": [
+        3
+      ],
+      "explanation": "PartyRock is an Amazon Bedrock playground for building and sharing no-code generative AI mini-apps, made for learning and experimenting.",
+      "whyWrong": [
+        "Canvas builds ML models without code, but inside an AWS account; it is not a prompt playground.",
+        "AgentCore runs production agents and needs engineering work.",
+        "Unified Studio is a governed team environment in an AWS account, more than a practice tool needs.",
+        null
+      ],
+      "cards": [
+        "aws-practice-traps/partyrock"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/blogs/aws/build-ai-apps-with-partyrock-and-amazon-bedrock/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d2-jumpstart-own-instances",
+      "domain": 2,
+      "objective": "2.3.1",
+      "type": "single",
+      "stem": "A team wants to fine-tune an open-weight model and host it on instance types it selects and manages itself. Which service fits best?",
+      "options": [
+        "Amazon SageMaker JumpStart",
+        "Amazon Bedrock model customization",
+        "Amazon Q Business",
+        "Amazon Comprehend"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "JumpStart offers pretrained models that you can fine-tune and deploy on SageMaker AI instances you choose and control.",
+      "whyWrong": [
+        null,
+        "Bedrock runs customization as a managed service; you do not choose or manage the instances.",
+        "Q Business is a ready-made assistant over company data, not a model hub.",
+        "Comprehend is a pretrained text analysis service; you do not fine-tune open models with it."
+      ],
+      "cards": [
+        "aws-ai-services/sagemaker-jumpstart"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/studio-jumpstart.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d2-generate-hotel-copy",
+      "domain": 2,
+      "objective": "2.1.2",
+      "type": "single",
+      "stem": "A travel company wants to turn each hotel's amenity list into a short, friendly paragraph for its website. Which AWS service fits?",
+      "options": [
+        "Amazon Textract",
+        "Amazon Bedrock",
+        "Amazon Translate",
+        "Amazon Kendra"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Writing new text from a few facts is a generative task, which Amazon Bedrock's foundation models do.",
+      "whyWrong": [
+        "Textract reads text out of documents; it does not write new text.",
+        null,
+        "Translate changes text from one language to another; it does not compose paragraphs.",
+        "Kendra finds answers in existing documents; it does not write new copy."
+      ],
+      "cards": [
+        "aws-ai-services/amazon-bedrock",
+        "aws-ai-services/amazon-textract"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d3-domain-adaptation-reports",
+      "domain": 3,
+      "objective": "3.1.5",
+      "type": "single",
+      "stem": "A mining company has thousands of internal geology reports, with no question-and-answer pairs, and wants the model itself to learn its specialist vocabulary. It plans to use SageMaker JumpStart. Which fine-tuning approach fits?",
+      "options": [
+        "Domain adaptation fine-tuning",
+        "Instruction-based fine-tuning on prompt and response pairs",
+        "Reinforcement learning from human ratings of answers",
+        "A knowledge base that leaves the model weights unchanged"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "JumpStart's domain adaptation fine-tuning trains on plain domain text, with no prompt-response pairs, so the model learns industry jargon. It changes the model's weights.",
+      "whyWrong": [
+        null,
+        "Instruction-based fine-tuning needs prompt and response pairs, which the company does not have.",
+        "Human-rating methods tune behavior; they need people to rate answers and do not teach vocabulary from documents.",
+        "A knowledge base retrieves passages at answer time; the model itself learns nothing."
+      ],
+      "cards": [
+        "aws-practice-traps/domain-adaptation-fine-tuning",
+        "aws-genai-foundation-models/fine-tuning"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-fine-tuning-domain-adaptation.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d3-cpt-and-ft-data",
+      "domain": 3,
+      "objective": "3.3.1",
+      "type": "single",
+      "stem": "An equipment maker has 40,000 unlabeled engineering manuals and 900 pairs of a support question with its ideal answer. It will use both to customize a model in Amazon Bedrock. Which plan matches each dataset to the right method?",
+      "options": [
+        "Manuals for fine-tuning, question-answer pairs for continued pre-training",
+        "Label the manuals by hand, then use both for continued pre-training",
+        "Manuals for continued pre-training, question-answer pairs for fine-tuning",
+        "Use the manuals' text as answers and fine-tune on both datasets"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "Continued pre-training learns domain knowledge from unlabeled text, so it suits the manuals. Fine-tuning learns a task from labeled input and output pairs, so it suits the question-answer pairs.",
+      "whyWrong": [
+        "This swaps them: continued pre-training takes unlabeled text and fine-tuning takes labeled pairs.",
+        "Continued pre-training does not need labels, so hand-labeling 40,000 manuals is wasted work.",
+        null,
+        "Manual text is not an answer to any question, so it makes poor fine-tuning pairs."
+      ],
+      "cards": [
+        "aws-genai-foundation-models/continued-pre-training",
+        "aws-genai-foundation-models/fine-tuning"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/blogs/aws/customize-models-in-amazon-bedrock-with-your-own-data-using-fine-tuning-and-continued-pre-training/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d3-top-k-fixed-pool",
+      "domain": 3,
+      "objective": "3.1.2",
+      "type": "single",
+      "stem": "A developer wants the model to pick each next token from exactly the 20 most likely candidates, however the probability is spread among them. Which inference parameter should the developer set?",
+      "options": [
+        "Top P",
+        "Temperature",
+        "Top K",
+        "Response length"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "Top K sets the number of most-likely candidates the model considers for the next token, so the pool is a fixed size.",
+      "whyWrong": [
+        "Top P keeps a percentage of the probability, so the number of candidates changes from token to token.",
+        "Temperature reshapes the probabilities; it does not set how many candidates are considered.",
+        null,
+        "Response length limits how long the response is, not which tokens are considered."
+      ],
+      "cards": [
+        "aws-genai-foundation-models/top-k",
+        "aws-genai-foundation-models/top-p-nucleus-sampling"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/inference-parameters.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d3-top-p-share",
+      "domain": 3,
+      "objective": "3.1.2",
+      "type": "single",
+      "stem": "A team wants the set of candidate tokens to shrink when the model is confident and grow when it is unsure, keeping only the likeliest tokens that together make up 90% of the probability. Which parameter does this?",
+      "options": [
+        "Temperature",
+        "Top P",
+        "Top K",
+        "Repetition penalty"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Top P sets the percentage of most-likely candidates the model considers: the top P% of the cumulative probability. The number of tokens in that share changes with how the probability is spread.",
+      "whyWrong": [
+        "Temperature reshapes the probabilities but does not cut the pool to a share.",
+        null,
+        "Top K always considers the same number of candidates.",
+        "A repetition penalty discourages repeated tokens; it does not set the candidate pool."
+      ],
+      "cards": [
+        "aws-genai-foundation-models/top-p-nucleus-sampling",
+        "aws-genai-foundation-models/top-k"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/inference-parameters.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d3-few-shot-due-dates",
+      "domain": 3,
+      "objective": "3.2.1",
+      "type": "single",
+      "stem": "An accounts team wants a model to pull the payment due date out of supplier emails and always return it as YYYY-MM-DD. They will put a few examples in the prompt. What should each example contain?",
+      "options": [
+        "The YYYY-MM-DD format on its own, with no sample emails",
+        "A sample supplier email paired with its due date as YYYY-MM-DD",
+        "A sample supplier email paired with a polite reply to it",
+        "A sample due date paired with the supplier's company name"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Few-shot examples show the mapping the model should copy: an input like the ones it will see, paired with exactly the output it should give.",
+      "whyWrong": [
+        "A format alone is zero-shot; it shows no email-to-date examples.",
+        null,
+        "A reply shows how to answer the email, not how to extract the date.",
+        "A date and a name leave out the email the model has to read."
+      ],
+      "cards": [
+        "aws-genai-foundation-models/few-shot-prompting"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d4-augment-skin-tones",
+      "domain": 4,
+      "objective": "4.1.7",
+      "type": "single",
+      "stem": "A skin-condition model is less accurate for patients with darker skin tones, who make up a small share of its training images. Which step most directly addresses the cause?",
+      "options": [
+        "Add stronger L2 regularization to the training job",
+        "Lower the decision threshold for all patients alike",
+        "Augment the dataset for the groups with few examples",
+        "Encrypt the training images with AWS KMS keys"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "The cause is imbalanced data. Data augmentation adds new examples for the underrepresented group, which balances the dataset and reduces the biased results.",
+      "whyWrong": [
+        "Regularization reduces overfitting; it does not fix a group missing from the data.",
+        "One threshold change for everyone does not fix what the model never learned about one group.",
+        null,
+        "Encryption protects the data but does not change what the model learns."
+      ],
+      "cards": [
+        "aws-practice-traps/data-augmentation",
+        "aws-responsible-ai/bias-in-ai"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/data-augmentation/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d4-shap-and-pdp-lender",
+      "domain": 4,
+      "objective": "4.2.3",
+      "type": "single",
+      "stem": "A lender must tell one rejected applicant which factors drove that decision, and separately show regulators how income affects approvals across all applicants. Which pairing fits?",
+      "options": [
+        "A partial dependence plot for the applicant, Shapley values for regulators",
+        "A confusion matrix for the applicant, ROUGE scores for the regulators",
+        "Shapley values for the applicant, a partial dependence plot for regulators",
+        "Invocation logs for the applicant, a model card for the regulators"
+      ],
+      "answer": [
+        2
+      ],
+      "explanation": "Shapley values explain one prediction (local), which suits the single applicant. A partial dependence plot shows a feature's effect across the dataset (global), which suits the regulators.",
+      "whyWrong": [
+        "This swaps them: a partial dependence plot is global and Shapley values explain one decision.",
+        "A confusion matrix and ROUGE measure quality; neither explains a decision.",
+        null,
+        "Logs record requests and a model card documents the model; neither shows which factors drove a decision."
+      ],
+      "cards": [
+        "aws-practice-traps/shapley-values",
+        "aws-practice-traps/partial-dependence-plot"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-explainability.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d4-denied-topic-crypto",
+      "domain": 4,
+      "objective": "4.1.2",
+      "type": "single",
+      "stem": "A bank's savings assistant must not discuss cryptocurrency investing, even when customers ask politely and use no harmful language. Which Amazon Bedrock Guardrails feature fits?",
+      "options": [
+        "Content filters",
+        "Denied topics",
+        "Automated Reasoning checks",
+        "Sensitive information filters"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Denied topics block a subject you describe in plain language, by meaning, whatever words are used. Content filters cover predefined harm categories, and a polite investing question is not harmful.",
+      "whyWrong": [
+        "Content filters catch harmful categories such as hate or violence; a polite investing question falls in none.",
+        null,
+        "Automated Reasoning checks test answers against logic rules you define; they do not block a subject.",
+        "Sensitive information filters find PII, not subjects."
+      ],
+      "cards": [
+        "aws-practice-traps/guardrails-denied-topics",
+        "aws-practice-traps/guardrails-content-filters"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-components.html",
+      "examOnly": true
+    },
+    {
+      "id": "t-d5-deidentify-hr-chats",
+      "domain": 5,
+      "objective": "5.1.1",
+      "type": "multi",
+      "stem": "A company will fine-tune a model on HR chat transcripts, which include employee names and staff IDs, so it can draft answers to policy questions. The model must not be able to learn or repeat any real employee's details. Which two steps meet this goal? (Choose two.)",
+      "options": [
+        "Require MFA for everyone who opens the transcript bucket",
+        "Swap names and staff IDs for surrogate tokens before training",
+        "Lower the temperature of the fine-tuned model",
+        "Generate synthetic transcripts that keep the real patterns",
+        "Add a manager approval step before the model is deployed"
+      ],
+      "answer": [
+        1,
+        3
+      ],
+      "explanation": "De-identifying the data (swapping identifiers for surrogate tokens) and training on synthetic records both keep real people out of the training data, so the model cannot memorize them.",
+      "whyWrong": [
+        "MFA controls who opens the bucket; the model still trains on real details.",
+        null,
+        "Temperature changes randomness; the model has still learned the details.",
+        null,
+        "An approval step reviews the model; it does not take real details out of what it learned."
+      ],
+      "cards": [
+        "aws-practice-traps/de-identification",
+        "aws-practice-traps/synthetic-data"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/synthetic-data/",
+      "examOnly": true
+    },
+    {
+      "id": "t-d5-regex-mask-contract-numbers",
+      "domain": 5,
+      "objective": "5.1.1",
+      "type": "single",
+      "stem": "An internal help assistant answers from a Bedrock knowledge base and sometimes quotes vendor contract numbers found in the documents it retrieves. The numbers follow a fixed pattern, and the documents must stay in the knowledge base. What should the team do?",
+      "options": [
+        "Mask the numbers with a Guardrails sensitive information regex filter",
+        "Lower the temperature so the assistant quotes documents less often",
+        "Ask in the system prompt that contract numbers never be written out",
+        "Turn on AWS CloudTrail to keep a record of every assistant response"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "A sensitive information filter can use a custom regex to find a pattern in responses and mask it, while the documents stay as they are. It enforces the rule outside the model.",
+      "whyWrong": [
+        null,
+        "Temperature changes randomness; retrieved numbers can still be quoted.",
+        "A prompt instruction is a request the model may not follow; it is not enforcement.",
+        "CloudTrail records API activity; it does not change what the assistant returns."
+      ],
+      "cards": [
+        "aws-practice-traps/guardrails-sensitive-information-filters"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-sensitive-filters.html",
+      "examOnly": true
+    },
+    {
+      "id": "p-d1-rcf-output-is-a-score",
+      "domain": 1,
+      "objective": "1.2.3",
+      "type": "single",
+      "stem": "A team runs SageMaker AI Random Cut Forest (RCF) over hourly website traffic to catch sudden spikes. What does RCF give back for each data point?",
+      "options": [
+        "An anomaly score, where higher means more unusual",
+        "A fraud or not-fraud label learned from labeled examples",
+        "The number of the cluster each point was assigned to",
+        "A forecast of the next hour's traffic for the website"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "RCF associates each data point with an anomaly score: low means normal, high means anomalous. Where to draw the line between them is up to the team.",
+      "whyWrong": [
+        null,
+        "RCF is unsupervised; it does not learn labels from examples.",
+        "Cluster numbers come from clustering algorithms such as k-means.",
+        "Predicting the next value is forecasting, not anomaly scoring."
+      ],
+      "cards": [
+        "aws-practice-traps/random-cut-forest"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/randomcutforest.html"
+    },
+    {
+      "id": "p-d1-early-stopping-signal",
+      "domain": 1,
+      "objective": "1.2.4",
+      "type": "single",
+      "stem": "While training, a team watches validation loss fall until epoch 12 and then rise, while training loss keeps falling. Which technique acts on exactly this signal?",
+      "options": [
+        "Dropout, which switches off random neurons during training",
+        "Early stopping, which ends training when validation stops improving",
+        "Data augmentation, which creates new examples from existing data",
+        "Incremental training, which continues from an existing model"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Validation loss rising while training loss falls is the point where the model starts learning noise. Early stopping ends training there.",
+      "whyWrong": [
+        "Dropout also reduces overfitting, but it changes training throughout rather than reacting to the validation curve.",
+        null,
+        "Augmentation adds varied examples; it does not watch the validation curve.",
+        "Incremental training is for updating a model with new data, not for deciding when to stop."
+      ],
+      "cards": [
+        "aws-practice-traps/early-stopping",
+        "aws-practice-traps/dropout"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/overfitting/"
+    },
+    {
+      "id": "p-d2-bert-reads-context",
+      "domain": 2,
+      "objective": "2.1.1",
+      "type": "single",
+      "stem": "Which of these produces a different vector for \"charge\" in \"charge the battery\" than in \"a late-payment charge\"?",
+      "options": [
+        "BERT",
+        "Word2Vec",
+        "GloVe",
+        "Principal component analysis (PCA)"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "BERT reads the words around each word, so the same word gets different embeddings in different sentences. Word2Vec and GloVe give each word one vector everywhere.",
+      "whyWrong": [
+        null,
+        "Word2Vec gives \"charge\" one vector in every sentence, so the two meanings stay mixed.",
+        "GloVe also gives each word a single fixed vector.",
+        "PCA reduces dimensions; it does not read context."
+      ],
+      "cards": [
+        "aws-practice-traps/bert",
+        "aws-practice-traps/word2vec"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/embeddings-in-machine-learning/"
+    },
+    {
+      "id": "p-d2-partyrock-statement",
+      "domain": 2,
+      "objective": "2.3.1",
+      "type": "single",
+      "stem": "Which statement about PartyRock is correct?",
+      "options": [
+        "It is an Amazon Bedrock playground for building no-code generative AI apps",
+        "It is a governed workspace where data and ML teams share projects",
+        "It is a SageMaker hub of models you deploy on instances you manage",
+        "It is an IDE where AI agents turn written specs into working code"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "PartyRock is an Amazon Bedrock playground for building and sharing no-code generative AI apps, made for learning and experimenting.",
+      "whyWrong": [
+        null,
+        "That describes SageMaker Unified Studio.",
+        "That describes SageMaker JumpStart.",
+        "That describes Kiro."
+      ],
+      "cards": [
+        "aws-practice-traps/partyrock",
+        "aws-practice-traps/sagemaker-unified-studio"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/blogs/aws/build-ai-apps-with-partyrock-and-amazon-bedrock/"
+    },
+    {
+      "id": "p-d3-top-p-worked",
+      "domain": 3,
+      "objective": "3.1.2",
+      "type": "single",
+      "stem": "For its next token, a model ranks four candidates with probabilities 0.6, 0.25, 0.1, and 0.05. Top P is set to 0.85. Which candidates can the model choose from?",
+      "options": [
+        "Only the likeliest one, at 0.6",
+        "The two likeliest, which together reach 0.85",
+        "The three likeliest, up to 0.95",
+        "All four, since Top P only reweights them"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Top P keeps the likeliest candidates until their probabilities add up to P. Here 0.6 + 0.25 = 0.85, so the two likeliest stay in the pool. AWS's own example works the same way: at Top P 0.9, candidates at 0.7 and 0.2 are both kept.",
+      "whyWrong": [
+        "One candidate covers only 0.6, short of 0.85.",
+        null,
+        "The third candidate is beyond what 0.85 needs.",
+        "Top P cuts the pool; it is temperature that reshapes the probabilities."
+      ],
+      "cards": [
+        "aws-practice-traps/top-p-nucleus-sampling",
+        "aws-practice-traps/top-k"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/inference-parameters.html"
+    },
+    {
+      "id": "p-d3-cpt-vs-ft-statement",
+      "domain": 3,
+      "objective": "3.3.1",
+      "type": "single",
+      "stem": "Which statement correctly compares continued pre-training with fine-tuning?",
+      "options": [
+        "Continued pre-training learns from unlabeled text; fine-tuning learns from labeled pairs",
+        "Continued pre-training learns from labeled pairs; fine-tuning learns from unlabeled text",
+        "Continued pre-training is only for images; fine-tuning is only for text models",
+        "Continued pre-training retrieves documents at answer time; fine-tuning trains"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "Continued pre-training adds domain knowledge from unlabeled text. Fine-tuning teaches a task from labeled input and output examples.",
+      "whyWrong": [
+        null,
+        "This swaps the two.",
+        "Neither method is limited to one kind of model in this way.",
+        "Retrieving documents at answer time is RAG; continued pre-training trains the model."
+      ],
+      "cards": [
+        "aws-practice-traps/continued-pre-training",
+        "aws-practice-traps/fine-tuning"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/blogs/aws/customize-models-in-amazon-bedrock-with-your-own-data-using-fine-tuning-and-continued-pre-training/"
+    },
+    {
+      "id": "p-d3-instruction-pairs",
+      "domain": 3,
+      "objective": "3.1.5",
+      "type": "single",
+      "stem": "A team has 2,000 examples, each a customer request paired with the ideal written response, and wants the model itself to answer new requests in that way. Which customization fits?",
+      "options": [
+        "A few of the examples in each prompt, with no training",
+        "Instruction tuning on the request-response pairs",
+        "Continued pre-training on unlabeled text",
+        "A higher Top K setting so answers vary more"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Instruction tuning is fine-tuning on instruction and response pairs, which is exactly what the team has, and it changes how the model itself responds.",
+      "whyWrong": [
+        "Few-shot examples guide one prompt at a time; the model itself does not change.",
+        null,
+        "Continued pre-training uses unlabeled text and would ignore the pairing.",
+        "Top K changes how varied the output is, not what the model has learned."
+      ],
+      "cards": [
+        "aws-practice-traps/instruction-tuning",
+        "aws-practice-traps/fine-tuning"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-fine-tuning.html"
+    },
+    {
+      "id": "p-d4-word-filter-competitors",
+      "domain": 4,
+      "objective": "4.1.2",
+      "type": "single",
+      "stem": "A retailer's shopping assistant must never write the names of two competitors. Which Amazon Bedrock Guardrails feature fits most directly?",
+      "options": [
+        "Denied topics",
+        "Word filters",
+        "Content filters",
+        "Contextual grounding checks"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Word filters block exact words or phrases you list, such as competitor names. Denied topics block a whole subject by meaning, which is broader than two names.",
+      "whyWrong": [
+        "Denied topics block a subject by meaning; two specific names are an exact-match job.",
+        null,
+        "Content filters cover harm categories such as hate or violence; a competitor name is not one.",
+        "Grounding checks catch answers not supported by a source."
+      ],
+      "cards": [
+        "aws-practice-traps/guardrails-word-filters",
+        "aws-practice-traps/guardrails-denied-topics"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-components.html"
+    },
+    {
+      "id": "p-d4-content-filter-strength",
+      "domain": 4,
+      "objective": "4.1.2",
+      "type": "single",
+      "stem": "A game studio's chat assistant must block insulting or hateful replies, and the team wants to set how strictly each kind is filtered. Which Amazon Bedrock Guardrails feature fits?",
+      "options": [
+        "Content filters",
+        "Word filters",
+        "Denied topics",
+        "Sensitive information filters"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "Content filters detect predefined harm categories, including hate and insults, with a strength you set for each category.",
+      "whyWrong": [
+        null,
+        "Word filters need every offending word listed and have no strength setting.",
+        "Denied topics block subjects you define, not harm categories by strength.",
+        "Sensitive information filters find PII, not insults."
+      ],
+      "cards": [
+        "aws-practice-traps/guardrails-content-filters",
+        "aws-practice-traps/guardrails-word-filters"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-components.html"
+    },
+    {
+      "id": "p-d4-problem-and-fix",
+      "domain": 4,
+      "objective": "4.1.7",
+      "type": "single",
+      "stem": "Which pairing of training problem and fix is right?",
+      "options": [
+        "Few examples of one class: augment the data. Memorizing the training data: regularize",
+        "Few examples of one class: regularize. Memorizing the training data: augment the data",
+        "Few examples of one class: more epochs. Memorizing the training data: more layers",
+        "Few examples of one class: encrypt the data. Memorizing: lower the temperature"
+      ],
+      "answer": [
+        0
+      ],
+      "explanation": "Too few examples of a class is an imbalance, which data augmentation fixes by adding examples. Memorizing the training data is overfitting, which regularization curbs.",
+      "whyWrong": [
+        null,
+        "This swaps the two fixes.",
+        "More epochs and more layers both tend to make memorizing worse, and neither adds examples.",
+        "Encryption and temperature affect neither problem."
+      ],
+      "cards": [
+        "aws-practice-traps/data-augmentation"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/data-augmentation/"
+    },
+    {
+      "id": "p-d5-tokenize-identifiers",
+      "domain": 5,
+      "objective": "5.1.1",
+      "type": "single",
+      "stem": "A bank wants to keep its real transaction records for training but replace account numbers with stand-in values that only a protected lookup table can turn back. What is this called?",
+      "options": [
+        "Synthetic data generation",
+        "Data tokenization",
+        "Encryption at rest with AWS KMS",
+        "Model invocation logging"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Data tokenization swaps sensitive values for random stand-ins, with the link back kept in a secured token vault, so the records stay real but the identifiers are hidden.",
+      "whyWrong": [
+        "Synthetic data replaces the records themselves with generated ones.",
+        null,
+        "Encryption protects stored data, but training decrypts it and sees the real numbers.",
+        "Invocation logging records model requests; it does not hide identifiers."
+      ],
+      "cards": [
+        "aws-practice-traps/de-identification",
+        "aws-practice-traps/synthetic-data"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/blogs/compute/building-a-serverless-tokenization-solution-to-mask-sensitive-data/"
+    },
+    {
+      "id": "p-d5-synthetic-for-testing",
+      "domain": 5,
+      "objective": "5.1.1",
+      "type": "single",
+      "stem": "A hospital wants developers to build and test a model on realistic patient records without any developer seeing a real patient's data. Which approach fits best?",
+      "options": [
+        "Encrypt the real records with AWS KMS keys",
+        "Generate realistic artificial patient records",
+        "Lock the real records with S3 Object Lock",
+        "Give developers read-only access to real records"
+      ],
+      "answer": [
+        1
+      ],
+      "explanation": "Synthetic data keeps the statistical patterns of real data without containing real people, so developers work with realistic records and see no one's real data.",
+      "whyWrong": [
+        "Developers who use the data still see it decrypted.",
+        null,
+        "Object Lock stops changes or deletion; it does not hide the data.",
+        "Read-only access still shows real patients."
+      ],
+      "cards": [
+        "aws-practice-traps/synthetic-data",
+        "aws-practice-traps/de-identification"
+      ],
+      "source": "generated",
+      "checkedAgainst": "https://aws.amazon.com/what-is/synthetic-data/"
     }
   ]
 }

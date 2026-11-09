@@ -16,7 +16,7 @@ import { togglePick, ready } from '../core/choice.js';
 const LENGTHS = [15, 30];
 
 // showExam(root, { bank, record, loadRecord() -> Promise<record>, saveAttempt({ ids, results, flagged, half }) -> Promise<record>,
-//   cardTerms(refs) -> Promise<[{ deckId, term }]>, onExit, onRound() -> Promise<{ lines, celebration } | null>,
+//   cardTerms(refs) -> Promise<[{ id, deckId, term, definition }]>, onExit, onRound() -> Promise<{ lines, celebration } | null>,
 //   loadTerms() -> Promise<{ vocab, cards }> (the set's cards: vocabulary with ids "deckId/cardId",
 //   and every loaded card by "deckId/cardId"),
 //   learnCards([{ deckId, cardIds }]): a Learn round on just those cards, a deck at a time })
@@ -190,7 +190,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
       if (!refs.length || !el) return;
       const found = await cardTerms(refs).catch(() => []);
       if (!found.length || !el.isConnected) return;
-      el.append('Flashcards: ', ...found.flatMap((c, i) => [i ? ', ' : '', h('a', { href: '#/deck/' + c.deckId, target: '_blank', rel: 'noopener', title: 'Opens in a new tab, so this exam keeps going' }, c.term)]));
+      el.append('Flashcards: ', ...found.flatMap((c, i) => [i ? ', ' : '', lookup(c, c.term)]));
     }
 
     function pick(i) {
@@ -250,7 +250,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
         // With enough picked, Enter checks, even from an option, instead of un-picking it.
         if (!answered && ready(picks, q.answer.length) && !e.target.closest('a, button:not(.option)')) {
           e.preventDefault(); check();
-        } else if (answered && !e.target.closest('button, a')) { e.preventDefault(); next(); }
+        } else if (answered && !e.target.closest('button, a, .vocab')) { e.preventDefault(); next(); }
       }
     });
     load();
@@ -341,16 +341,20 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     return linkText(text, optionVocab(known.vocab)).map((x) => (typeof x === 'string' ? x : term(x.id, x.text)));
   }
 
-  function term(id, text) {
+  const term = (id, text) => lookup(known.cards.get(id), text);
+
+  // card: { id, term, definition }. Tapping shows the card under the line tapped, without leaving
+  // the exam; one open per question, and a second tap on the same term closes it.
+  function lookup(card, text) {
+    const id = card.id;
     const open = (e) => {
       e.preventDefault();
       const el = e.currentTarget;
-      const box = el.closest('details') || el.parentElement; // one definition open per question
+      const box = el.closest('details, .explain') || el.parentElement; // one definition open per question
       const shown = box.querySelector('.lookup');
       box.querySelectorAll('.vocab.open').forEach((x) => { x.classList.remove('open'); x.setAttribute('aria-expanded', 'false'); });
       shown?.remove();
       if (shown?.opener === el) return; // a second tap on the same term closes it
-      const card = known.cards.get(id);
       el.classList.add('open');
       el.setAttribute('aria-expanded', 'true');
       const close = () => { pill.remove(); el.classList.remove('open'); el.setAttribute('aria-expanded', 'false'); el.focus(); };
@@ -371,8 +375,6 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     }, text);
   }
 
-  const deckLink = (deckId, text) => h('a', { href: '#/deck/' + deckId, target: '_blank', rel: 'noopener', title: 'Opens in a new tab, so your results stay here' }, text);
-
   // One button for the cards behind the flagged questions (and terms in their options), whatever
   // decks they sit in: the round takes them a deck at a time, with Continue between.
   function flagLearn(flaggedIds) {
@@ -391,7 +393,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
   // Where to study a question on the score screen: the flashcards it tests, or a note that none does yet.
   function studyLine(refs) {
     const el = h('p', { class: 'cards-line muted' }, refs.length ? '' : 'No flashcard covers this yet.');
-    // a card whose deck loaded looks up in place; any other (a deck that didn't load) links to its deck
+    // every card looks up in place: those in the set's decks at once, any other once its deck loads
     const here = known ? refs.filter((ref) => known.cards.has(ref)) : [];
     const away = refs.filter((ref) => !here.includes(ref));
     const parts = here.map((ref) => term(ref, known.cards.get(ref).term));
@@ -402,7 +404,7 @@ export function showExam(root, { bank, record: initial, loadRecord, saveAttempt,
     };
     if (parts.length) el.replaceChildren('Study: ', ...parts.flatMap((x, i) => [i ? ', ' : '', x])); // drawn before the screen mounts
     if (away.length) {
-      cardTerms(away).catch(() => []).then((found) => show(found.map((c) => deckLink(c.deckId, c.term))));
+      cardTerms(away).catch(() => []).then((found) => show(found.map((c) => lookup(c, c.term))));
     }
     return el;
   }

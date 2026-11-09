@@ -39,6 +39,12 @@
       "cardCount": 57
     },
     {
+      "id": "aws-practice-traps",
+      "title": "Practice Test Traps",
+      "file": "decks/aws-practice-traps.json",
+      "cardCount": 27
+    },
+    {
       "id": "claude-assoc-behaviour",
       "title": "How Claude Behaves",
       "file": "decks/claude-assoc-behaviour.json",
@@ -86,7 +92,7 @@
       "id": "aif-c01",
       "title": "AWS Certified AI Practitioner (AIF-C01) practice exam",
       "file": "questions/aif-c01.json",
-      "questionCount": 389
+      "questionCount": 421
     },
     {
       "id": "claude-associate",
@@ -107,7 +113,8 @@
         "aws-ai-services",
         "aws-responsible-ai",
         "aws-frameworks",
-        "aws-2026-guide"
+        "aws-2026-guide",
+        "aws-practice-traps"
       ],
       "exams": [
         "aif-c01"

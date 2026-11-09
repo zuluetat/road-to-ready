@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "id": "aws-practice-traps",
+  "title": "Practice Test Traps",
+  "description": "Look-alikes a full practice test caught: the four Guardrails filters, fixes for overfitting and for imbalanced data, anomaly detection without labels, explanation methods, embeddings, and a few services. Most cards are learned here and listed on their topic's own deck too. A few pairs from the foundation-models deck (Top K and Top P, fine-tuning and continued pre-training) are copied in so they're set against each other; those copies keep their own progress.",
+  "tags": [
+    "aws-ai-practitioner"
+  ],
+  "cards": [
+    {
+      "id": "guardrails-content-filters",
+      "term": "Guardrails content filters",
+      "definition": "Bedrock Guardrails filter that detects harmful text or images in prompts and responses by predefined categories (hate, insults, sexual, violence, misconduct, prompt attack), each with a strength you set",
+      "hint": null,
+      "tags": [
+        "group:guardrail-filters",
+        "domain:aif-c01:4",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "guardrails-denied-topics",
+      "term": "Guardrails denied topics",
+      "definition": "Bedrock Guardrails filter that blocks subjects you describe in plain language, such as investment advice in a banking assistant, by meaning rather than by keyword",
+      "hint": null,
+      "tags": [
+        "group:guardrail-filters",
+        "domain:aif-c01:4",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "guardrails-word-filters",
+      "term": "Guardrails word filters",
+      "definition": "Bedrock Guardrails filter that blocks exact custom words or phrases, such as competitor names, plus a ready-made profanity list",
+      "hint": null,
+      "tags": [
+        "group:guardrail-filters",
+        "domain:aif-c01:4",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "guardrails-sensitive-information-filters",
+      "term": "Guardrails sensitive information filters",
+      "definition": "Bedrock Guardrails filter that detects PII, or custom patterns you define with regex, in prompts and responses and blocks or masks it, with no retraining of the model",
+      "hint": null,
+      "tags": [
+        "group:guardrail-filters",
+        "domain:aif-c01:4",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "autoencoder",
+      "term": "Autoencoder",
+      "definition": "Unsupervised neural network that compresses its input and rebuilds it; trained only on normal data, it rebuilds unusual data poorly, so a high reconstruction error flags an anomaly",
+      "hint": null,
+      "tags": [
+        "group:anomaly-detection",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "random-cut-forest",
+      "term": "Random Cut Forest (RCF)",
+      "definition": "SageMaker AI built-in unsupervised algorithm that gives each data point an anomaly score; high scores mark anomalies such as unexpected spikes in time series data",
+      "hint": null,
+      "tags": [
+        "group:anomaly-detection",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "regularization",
+      "term": "Regularization",
+      "definition": "Penalty during training, such as L1 (Lasso) or L2 (Ridge), that discourages an overly complex model; reduces overfitting but does not fix biased or imbalanced data",
+      "hint": null,
+      "tags": [
+        "group:overfitting-fixes",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "dropout",
+      "term": "Dropout",
+      "definition": "Regularization for neural networks that randomly switches off some neurons during training, so the network can't lean on memorized paths; reduces overfitting",
+      "hint": null,
+      "tags": [
+        "group:overfitting-fixes",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "early-stopping",
+      "term": "Early stopping",
+      "definition": "Ending training once results on validation data stop improving, before the model starts learning noise; reduces overfitting",
+      "hint": null,
+      "tags": [
+        "group:overfitting-fixes",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "hyperparameter-tuning",
+      "term": "Hyperparameter tuning",
+      "definition": "Trying different settings chosen before training, such as learning rate, regularization strength, dropout rate, and epochs, to find the version that performs best on validation data; can reduce overfitting without new data",
+      "hint": null,
+      "tags": [
+        "group:overfitting-fixes",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "data-augmentation",
+      "term": "Data augmentation",
+      "definition": "Creating new training examples from existing data, by small changes such as flips and rotations or by generating synthetic examples; adds examples for underrepresented groups to reduce bias, and reduces overfitting",
+      "hint": null,
+      "tags": [
+        "group:overfitting-fixes",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "domain-adaptation-fine-tuning",
+      "term": "Domain adaptation fine-tuning",
+      "definition": "Fine-tuning a pretrained model on plain domain-specific text, with no prompt-response pairs, so it learns industry jargon and terminology; changes the model's weights (SageMaker JumpStart)",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "home:aws-genai-foundation-models",
+        "kind-of:fine-tuning",
+        "same:learns-from-domain-text"
+      ],
+      "media": null
+    },
+    {
+      "id": "incremental-training",
+      "term": "Incremental training",
+      "definition": "Training a new model from an existing model's artifacts plus an expanded dataset, instead of from scratch, to save time; used when predictions have slipped because new data has patterns the old model never saw",
+      "hint": null,
+      "tags": [
+        "group:learning-types",
+        "domain:aif-c01:1",
+        "home:aws-ai-fundamentals"
+      ],
+      "media": null
+    },
+    {
+      "id": "shapley-values",
+      "term": "Shapley values (SHAP)",
+      "definition": "Feature attribution from game theory that gives each feature an importance value for one particular prediction: a local explanation (used by SageMaker Clarify)",
+      "hint": null,
+      "tags": [
+        "group:explanation-methods",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "partial-dependence-plot",
+      "term": "Partial dependence plot (PDP)",
+      "definition": "Chart of the marginal effect a feature has on the model's predicted outcome across the dataset: a global explanation (produced by SageMaker Clarify)",
+      "hint": null,
+      "tags": [
+        "group:explanation-methods",
+        "domain:aif-c01:4",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "word2vec",
+      "term": "Word2Vec",
+      "definition": "Word embedding algorithm that gives each word one vector, so it can't tell apart the meanings of the same word in different sentences",
+      "hint": null,
+      "tags": [
+        "group:embedding-models",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "bert",
+      "term": "BERT",
+      "definition": "Transformer-based language model that reads the words on both sides, so the same word gets different embeddings in different contexts, like play the noun and play the verb",
+      "hint": null,
+      "tags": [
+        "group:embedding-models",
+        "domain:aif-c01:2",
+        "home:aws-genai-foundation-models"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-unified-studio",
+      "term": "SageMaker Unified Studio",
+      "definition": "One development environment that brings AWS data, analytics, ML, and generative AI tools together, where teams build and share work in governed projects",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "partyrock",
+      "term": "PartyRock",
+      "definition": "Amazon Bedrock playground for building and sharing no-code generative AI mini-apps; for learning and experimenting, not governed enterprise work",
+      "hint": null,
+      "tags": [
+        "group:bedrock",
+        "domain:aif-c01:2",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "sagemaker-model-registry",
+      "term": "SageMaker Model Registry",
+      "definition": "SageMaker catalog of model versions, with their metadata such as training metrics and an approval status; used to deploy approved versions, including through CI/CD pipelines, but it doesn't train models",
+      "hint": null,
+      "tags": [
+        "group:sagemaker",
+        "domain:aif-c01:1",
+        "home:aws-ai-services"
+      ],
+      "media": null
+    },
+    {
+      "id": "synthetic-data",
+      "term": "Synthetic data",
+      "definition": "Generated records that keep the statistical patterns of real data without containing real people; used to train when real data is sensitive or scarce",
+      "hint": null,
+      "tags": [
+        "group:data-governance",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "de-identification",
+      "term": "De-identification (masking and data tokenization)",
+      "definition": "Hiding direct identifiers before training: masking hides the values, and data tokenization swaps them for surrogate tokens that only a protected lookup table can reverse. Encryption alone doesn't do this, since the training job decrypts the data",
+      "hint": null,
+      "tags": [
+        "group:data-governance",
+        "domain:aif-c01:5",
+        "home:aws-responsible-ai"
+      ],
+      "media": null
+    },
+    {
+      "id": "top-k",
+      "term": "Top-k",
+      "definition": "Inference parameter that sets the number of most-likely candidates the model considers for the next token: a fixed-size pool, such as the 50 likeliest",
+      "hint": null,
+      "tags": [
+        "group:inference-params",
+        "domain:aif-c01:3",
+        "same:top-k"
+      ],
+      "media": null
+    },
+    {
+      "id": "top-p-nucleus-sampling",
+      "term": "Top-p (nucleus sampling)",
+      "definition": "Inference parameter that sets the percentage of most-likely candidates the model considers for the next token: the top P% of the cumulative probability, so the pool size varies",
+      "hint": null,
+      "tags": [
+        "group:inference-params",
+        "domain:aif-c01:3",
+        "same:top-p"
+      ],
+      "media": null
+    },
+    {
+      "id": "fine-tuning",
+      "term": "Fine-tuning",
+      "definition": "Further training a pretrained model on a smaller, task-specific labeled dataset",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "same:fine-tuning"
+      ],
+      "media": null
+    },
+    {
+      "id": "continued-pre-training",
+      "term": "Continued pre-training",
+      "definition": "Training a model on additional domain-specific unlabeled data",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "same:continued-pre-training",
+        "same:learns-from-domain-text"
+      ],
+      "media": null
+    },
+    {
+      "id": "instruction-tuning",
+      "term": "Instruction tuning",
+      "definition": "Fine-tuning on instruction and response pairs so the model follows user directions",
+      "hint": null,
+      "tags": [
+        "group:customization",
+        "domain:aif-c01:3",
+        "kind-of:fine-tuning",
+        "same:instruction-tuning"
+      ],
+      "media": null
+    }
+  ]
+}

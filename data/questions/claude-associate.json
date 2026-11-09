@@ -4346,7 +4346,7 @@
       "domain": 6,
       "stem": "An HR partner wants Claude to find themes in exit-interview notes that name each employee. Company policy says personal data must not go into AI tools. What should happen before the notes are shared?",
       "options": [
-        "Upload them, and tell Claude not to keep any of the names",
+        "Ask IT whether Claude is an approved tool for HR",
         "Paste them into an incognito chat so nothing is saved",
         "Remove or mask the names and identifiers before sharing them",
         "Share them in a Team plan, whose chats aren't used for training"
@@ -4356,14 +4356,14 @@
       ],
       "explanation": "The policy keeps personal data out of the tool, so the control has to act before the upload: anonymize first, then ask for themes. Settings and requests inside the tool don't change what was shared.",
       "whyWrong": [
-        "A request in the chat doesn't control what is stored or seen; the names have already been shared.",
-        "Incognito keeps the chat out of history and training, but the personal data still went into the tool.",
+        "The policy already settles it: approved tool or not, personal data must stay out of it.",
+        "Incognito chats aren't used to improve Claude, but the personal data still went into the tool.",
         null,
         "Training settings don't make sharing personal data allowed under a policy that forbids it."
       ],
       "cards": [
         "claude-assoc-responsible/anonymize-before-upload",
-        "claude-assoc-responsible/ask-not-to-keep"
+        "claude-assoc-responsible/org-ai-policy"
       ],
       "checkedAgainst": "https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations"
     },
@@ -4383,9 +4383,9 @@
       "answer": [
         3
       ],
-      "explanation": "Agency is setting AI up to carry out future tasks on your behalf. Automation is a single task carried out when you instruct it.",
+      "explanation": "In Anthropic's AI Fluency framework, Agency is configuring AI to perform future tasks on your behalf, on its own. Automation is AI executing specific tasks on your instructions; here no one instructs it each week.",
       "whyWrong": [
-        "Automation is a specific task done when you ask; here no one asks each week.",
+        "Automation is AI executing tasks on your instructions; here it was configured once to act on its own each week.",
         "Augmentation is working a problem through together, live.",
         "Delegation is one of the 4D skills, deciding what to hand to AI, not a mode of interaction.",
         null

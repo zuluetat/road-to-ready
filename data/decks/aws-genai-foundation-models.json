@@ -132,22 +132,24 @@
     {
       "id": "top-p-nucleus-sampling",
       "term": "Top-p (nucleus sampling)",
-      "definition": "Inference parameter that samples from the smallest set of tokens whose cumulative probability reaches p",
+      "definition": "Inference parameter that sets the percentage of most-likely candidates the model considers for the next token: the top P% of the cumulative probability, so the pool size varies",
       "hint": null,
       "tags": [
         "group:inference-params",
-        "domain:aif-c01:3"
+        "domain:aif-c01:3",
+        "same:top-p"
       ],
       "media": null
     },
     {
       "id": "top-k",
       "term": "Top-k",
-      "definition": "Inference parameter that limits sampling to the k most likely next tokens",
+      "definition": "Inference parameter that sets the number of most-likely candidates the model considers for the next token: a fixed-size pool, such as the 50 likeliest",
       "hint": null,
       "tags": [
         "group:inference-params",
-        "domain:aif-c01:3"
+        "domain:aif-c01:3",
+        "same:top-k"
       ],
       "media": null
     },
@@ -224,7 +226,8 @@
       "hint": null,
       "tags": [
         "group:customization",
-        "domain:aif-c01:3"
+        "domain:aif-c01:3",
+        "same:fine-tuning"
       ],
       "media": null
     },
@@ -235,7 +238,8 @@
       "hint": null,
       "tags": [
         "group:customization",
-        "domain:aif-c01:3"
+        "domain:aif-c01:3",
+        "same:continued-pre-training"
       ],
       "media": null
     },
@@ -247,7 +251,8 @@
       "tags": [
         "group:customization",
         "domain:aif-c01:3",
-        "kind-of:fine-tuning"
+        "kind-of:fine-tuning",
+        "same:instruction-tuning"
       ],
       "media": null
     },

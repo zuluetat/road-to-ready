@@ -90,7 +90,7 @@ export function celebration({ kind, title, detail }) {
 // The answer options, the same in Learn and Quiz: a selection is blue (never judged); after Check
 // the answers are green and a wrong pick red, each with a pill. -> <ol>
 //   options: texts; picks: selected indices; answer: correct indices, or null until checked;
-//   onPick(i); whyWrong: optional notes per option, shown after checking; need: 1 or 2
+//   onPick(i); whyWrong: optional notes per option, shown after checking; need: how many to pick (1, 2 or 3)
 // textOf: optional, renders an option's text (Learn underlines terms to look up). Its options
 // then stay tappable after answering, marked aria-disabled, so a looked-up word still answers.
 export function optionList({ options, picks, answer = null, onPick, whyWrong = null, need = 1, textOf = null }) {

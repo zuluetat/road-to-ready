@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 1,
+  "id": "aib-readiness-transformation",
+  "title": "AI Strategist: Readiness and Transformation",
+  "description": "Domain 4 (24%): readiness and maturity, AWS CAF, data foundations, sponsors and champions, culture and AI literacy, and scaling from pilot to enterprise with a CoE.",
+  "tags": [],
+  "cards": [
+    {
+      "id": "aib-ai-readiness-assessment",
+      "term": "AI readiness assessment",
+      "definition": "Checking leadership alignment, data quality, cultural preparedness, technical infrastructure, and governance before scaling AI, to find the gap that will actually block it.",
+      "hint": null,
+      "tags": [
+        "group:aib-readiness-assessment",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A survey finds leaders keen on AI agents, yet only 13% rate their data ready, 11% their governance, and 5% their workforce. The gaps, not the technology, are the blocker.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/agentic-ai-bridging-the-widening-gap-between-ambition-and-execution/"
+      }
+    },
+    {
+      "id": "aib-aws-caf",
+      "term": "AWS Cloud Adoption Framework (AWS CAF)",
+      "definition": "AWS guidance that groups the capabilities behind a successful transformation into six perspectives: Business, People, Governance, Platform, Security, and Operations.",
+      "hint": null,
+      "tags": [
+        "group:aib-readiness-assessment",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "AWS CAF",
+        "CAF"
+      ]
+    },
+    {
+      "id": "aib-capability-gap-analysis",
+      "term": "Capability gap analysis",
+      "definition": "Naming what is missing across people, process, technology, and governance that stops an AI program moving forward, so investment goes to the real gap.",
+      "hint": null,
+      "tags": [
+        "group:aib-readiness-assessment",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-genai-maturity-model",
+      "term": "Generative AI maturity model",
+      "definition": "AWS's four-level model (Envision, Experiment, Launch, Scale) for placing an organization; each aspect is assessed separately and no level is inherently better.",
+      "hint": null,
+      "tags": [
+        "group:aib-adoption-phases",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "AI maturity model"
+      ]
+    },
+    {
+      "id": "aib-envision-phase",
+      "term": "Envision (phase)",
+      "definition": "Building awareness, exploring use cases, and assessing cultural readiness and governance needs, with no formal AI projects or budget yet.",
+      "hint": null,
+      "tags": [
+        "group:aib-adoption-phases",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-experiment-phase",
+      "term": "Experiment (phase)",
+      "definition": "Running structured pilots and proofs of concept with small cross-functional teams to validate business value and build core skills and governance.",
+      "hint": null,
+      "tags": [
+        "group:aib-adoption-phases",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-launch-phase",
+      "term": "Launch (phase)",
+      "definition": "Putting a few proven AI applications into production with risk, governance, and responsible-AI policies, monitoring, and operations and support teams.",
+      "hint": null,
+      "tags": [
+        "group:aib-adoption-phases",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-scale-phase",
+      "term": "Scale (phase)",
+      "definition": "Many AI applications across departments, built from reusable components and self-service platforms, with a formal operating model, RACI, and automated governance.",
+      "hint": null,
+      "tags": [
+        "group:aib-adoption-phases",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A dozen teams at a bank launch new AI apps from a shared library of approved patterns through an internal portal, instead of each starting from scratch.",
+        "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-4.html"
+      }
+    },
+    {
+      "id": "aib-caf-ai-adoption-cycle",
+      "term": "CAF-AI adoption cycle",
+      "definition": "The CAF for AI's four repeating stages: Envision, Align, Launch, Scale. Its second stage is Align (capabilities, stakeholders), not the maturity model's Experiment.",
+      "hint": null,
+      "tags": [
+        "group:aib-adoption-phases",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-transformation-strategy",
+      "term": "Transformation strategy (to the next level)",
+      "definition": "The incremental plan for moving up a maturity level: an AI roadmap and data strategy, alignment with business goals, investment in talent and tools, and governance.",
+      "hint": null,
+      "tags": [
+        "group:aib-readiness-assessment",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "An Envision-level firm moves up by forming cross-functional squads, shortlisting its top use cases, securing budget for small proofs of concept, and defining success metrics for each.",
+        "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-1.html"
+      }
+    },
+    {
+      "id": "aib-data-readiness",
+      "term": "Data readiness",
+      "definition": "Whether the data a use case needs exists, is good enough in quality, and can be reached by the people and systems that need it.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-foundations",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-data-silos",
+      "term": "Data silos",
+      "definition": "Data held in systems or departments where others cannot easily reach or share it, which lowers its value and leads to duplicates, errors, and manual work.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-foundations",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "Customer history sits in a legacy billing system and a separate sales tool that do not talk to each other. Reports conflict and staff copy data by hand until the systems are integrated.",
+        "checkedAgainst": "https://aws.amazon.com/what-is/data-silos/"
+      }
+    },
+    {
+      "id": "aib-data-strategy",
+      "term": "Data strategy",
+      "definition": "The plan for which data an organization collects, curates, governs, and shares to fuel AI; CAF-AI calls it what keeps the AI flywheel in motion.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-foundations",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-data-mesh",
+      "term": "Data mesh",
+      "definition": "A data-sharing model where each business domain owns its data and serves it to others as a product, under organization-wide standards and federated governance.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-foundations",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-data-owner",
+      "term": "Data owner",
+      "definition": "Sets policy for a dataset: who may access it and when, how regulations apply, and what key terms mean.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-roles",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-data-steward",
+      "term": "Data steward",
+      "definition": "A business-side role that applies data governance day to day in projects, spots data issues, monitors compliance, and escalates problems.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-roles",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-managed-vs-custom-platform",
+      "term": "Managed vs. custom AI platform",
+      "definition": "Amazon Bedrock is the fully managed, serverless default, with RAG, safeguards and customization built in; Amazon SageMaker AI is for models Bedrock lacks or more control over hosting and training.",
+      "hint": null,
+      "tags": [
+        "group:aib-platform-foundations",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "Bedrock vs. SageMaker AI"
+      ],
+      "example": {
+        "text": "A team that only needs answers from existing models starts on Bedrock. A team that must train its own model moves to SageMaker AI, accepting more operational work for more control.",
+        "checkedAgainst": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/genai-guide.html"
+      }
+    },
+    {
+      "id": "aib-enterprise-genai-platform",
+      "term": "Enterprise-ready generative AI platform",
+      "definition": "AWS's four-layer approach: reliable infrastructure, foundation model selection, security and governance, and repeatable application patterns.",
+      "hint": null,
+      "tags": [
+        "group:aib-platform-foundations",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-executive-sponsor",
+      "term": "Executive sponsor",
+      "definition": "A senior leader whose support champions the AI program from the top, backed by clear leadership roles for decision-making and accountability.",
+      "hint": null,
+      "tags": [
+        "group:aib-leadership-sponsorship",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-champions",
+      "term": "AI champions",
+      "definition": "People inside the organization, identified early, who lead the exploration of AI opportunities in their own areas and keep momentum going.",
+      "hint": null,
+      "tags": [
+        "group:aib-leadership-sponsorship",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-cross-functional-ai-squad",
+      "term": "Cross-functional AI squad",
+      "definition": "A small team with clear roles mixing business, IT, security and governance, and AI experts; AWS sees it as the forerunner of a formal AI CoE.",
+      "hint": null,
+      "tags": [
+        "group:aib-team-accountability",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "cross-functional team"
+      ]
+    },
+    {
+      "id": "aib-raci-matrix",
+      "term": "RACI matrix",
+      "definition": "A chart naming who is Responsible, Accountable, Consulted, and Informed for each AI activity; a first version is signed off at Launch and formalized at Scale.",
+      "hint": null,
+      "tags": [
+        "group:aib-team-accountability",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "RACI"
+      ]
+    },
+    {
+      "id": "aib-accountable-business-owner",
+      "term": "Accountable owner (business result)",
+      "definition": "One named person accountable for the business result of an AI initiative, not just for deploying it.",
+      "hint": null,
+      "tags": [
+        "group:aib-team-accountability",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-transparent-ai-communication",
+      "term": "Transparent AI communication",
+      "definition": "Telling the workforce openly what AI will change, when, what outcomes to expect, and how roles and job security are affected, including upskilling plans.",
+      "hint": null,
+      "tags": [
+        "group:aib-change-and-culture",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-cultural-barriers",
+      "term": "Cultural barriers to AI adoption",
+      "definition": "Risk aversion, resistance to change, and fear of failure; leaders respond by making it safe to question assumptions, experiment, and learn new skills.",
+      "hint": null,
+      "tags": [
+        "group:aib-change-and-culture",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A firm trains its existing staff rather than hiring an elite AI team. It builds talent that knows the business and eases the fear of people worried about their jobs.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/making-artificial-intelligence-real/"
+      }
+    },
+    {
+      "id": "aib-organizational-debt",
+      "term": "Organizational debt",
+      "definition": "Built-up outdated processes, rigid hierarchies, too many approval layers, and resistance to change; adding AI on top compounds it rather than transforming the business.",
+      "hint": null,
+      "tags": [
+        "group:aib-change-and-culture",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-literacy",
+      "term": "AI literacy",
+      "definition": "A shared basic understanding of AI across the organization, from the C-suite down, so people can spot real uses and discuss AI in common terms.",
+      "hint": null,
+      "tags": [
+        "group:aib-workforce-development",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "ML fluency"
+      ]
+    },
+    {
+      "id": "aib-poc-program",
+      "term": "Proof of concept (POC) program",
+      "definition": "Small, limited-scope builds on real use cases with clear success metrics, used to test business value and give teams hands-on AI experience.",
+      "hint": null,
+      "tags": [
+        "group:aib-workforce-development",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "POC",
+        "proof of concept"
+      ]
+    },
+    {
+      "id": "aib-hackathon",
+      "term": "Hackathon",
+      "definition": "A short internal event where teams try AI hands-on, used to encourage experimentation and foster innovation.",
+      "hint": null,
+      "tags": [
+        "group:aib-workforce-development",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-responsible-ai-training",
+      "term": "Responsible AI training",
+      "definition": "Training people on the organization's ethical and responsible-AI guidelines alongside technical skills, so they can apply them in their work.",
+      "hint": null,
+      "tags": [
+        "group:aib-workforce-development",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-augmentation-vs-automation",
+      "term": "Augmentation vs. automation",
+      "definition": "Augmentation uses AI to help a person do each step better; automation hands the step to AI. Much of AI's gain may come from empowering people rather than replacing steps.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-ai-roles",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-human-oversight-role-shift",
+      "term": "Shift to human oversight",
+      "definition": "As AI takes routine tasks, people move to solving problems and checking AI output for accuracy, and managers move from task oversight to mentoring and quality assurance.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-ai-roles",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "Claims handlers stop keying data and instead review AI-drafted decisions, judging when to trust the draft and when to step in.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/agentic-ai-bridging-the-widening-gap-between-ambition-and-execution/"
+      }
+    },
+    {
+      "id": "aib-human-strengths",
+      "term": "Human strengths alongside AI",
+      "definition": "Critical thinking, empathy, and creativity: the human strengths the exam guide says to balance against AI capabilities when redesigning roles.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-ai-roles",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-short-term-wins",
+      "term": "Short-term wins",
+      "definition": "Early, visible AI successes that build faith in the program and help people see where else AI could help; a base for scaling up.",
+      "hint": null,
+      "tags": [
+        "group:aib-scaling-approach",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "small wins"
+      ]
+    },
+    {
+      "id": "aib-pilot-fatigue",
+      "term": "Pilot fatigue",
+      "definition": "Weariness from funding pilots that never reach production, which can stifle innovation and discourage further experimentation with AI.",
+      "hint": null,
+      "tags": [
+        "group:aib-scaling-approach",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-reusable-ai-components",
+      "term": "Reusable AI components",
+      "definition": "Proven AI capabilities and patterns packaged so other teams can reuse them, letting one success spread across business units at low extra cost.",
+      "hint": null,
+      "tags": [
+        "group:aib-scaling-approach",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "example": {
+        "text": "A search-and-summarize tool built for a product research team is reused by legal for due diligence, by auditors to surface risks, and by sales for buyer research.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/navigating-the-generative-ai-landscape-a-strategic-blueprint-for-ceos-and-cios/"
+      }
+    },
+    {
+      "id": "aib-ai-center-of-excellence",
+      "term": "AI center of excellence (CoE)",
+      "definition": "A dedicated unit that guides AI across the organization with best practices and shared technical capabilities, working with business units to find opportunities.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-coe",
+        "domain:aib-c01:4"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "AI COE",
+        "AI/ML CoE"
+      ],
+      "example": {
+        "text": "An AI unit set up far from the C-suite, with incentives not tied to the business or customers, drifts into work with no business value, a common mistake CAF-AI warns about.",
+        "checkedAgainst": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf"
+      }
+    },
+    {
+      "id": "aib-centralized-vs-federated-coe",
+      "term": "Centralized vs. federated CoE",
+      "definition": "A centralized CoE coordinates and runs AI work from one unit; a federated one keeps a small central team for shared standards while business units run their own.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-coe",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-roi-dashboard",
+      "term": "ROI dashboard",
+      "definition": "A live view combining AI costs (cost per interaction, infrastructure spend) with value (hours saved, revenue lift, CSAT); AWS calls it a primary production artifact.",
+      "hint": null,
+      "tags": [
+        "group:aib-value-tracking",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-continuous-feedback-loop",
+      "term": "Continuous feedback loop",
+      "definition": "Feeding monitoring results and user feedback back into regular improvements, because a live AI application is a living system whose value can degrade.",
+      "hint": null,
+      "tags": [
+        "group:aib-value-tracking",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-production-readiness",
+      "term": "Production readiness",
+      "definition": "What must be in place before go-live: governance and responsible-AI policies, monitoring and alerts, a human-in-the-loop process, SLAs, and support teams.",
+      "hint": null,
+      "tags": [
+        "group:aib-production-transition",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-preproduction-vs-production",
+      "term": "Preproduction vs. production",
+      "definition": "Preproduction hardens, tests, and de-risks (load, security, compliance); production shifts the goal to steady user value, strategic goals, and clear ROI.",
+      "hint": null,
+      "tags": [
+        "group:aib-production-transition",
+        "domain:aib-c01:4"
+      ],
+      "media": null
+    }
+  ]
+}

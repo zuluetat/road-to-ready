@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "id": "aib-strategy-value",
+  "title": "AI Strategist: Strategy and Business Value",
+  "description": "Domain 2 (28%): use cases, build-buy-partner, prioritizing and stopping initiatives, when AI is the wrong tool, KPIs, baselines, ROI, cost, and competitive positioning.",
+  "tags": [],
+  "cards": [
+    {
+      "id": "aib-working-backwards",
+      "term": "Working backwards",
+      "definition": "Start from the business or customer problem and the result you want, then ask whether and how AI helps, rather than starting from the technology.",
+      "hint": null,
+      "tags": [
+        "group:aib-use-case-selection",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "A sales leader asks for 'an AI tool'. The strategist first pins down the outcome that matters, faster and better-targeted proposals, and only then picks the AI capability that serves it.",
+        "checkedAgainst": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf"
+      }
+    },
+    {
+      "id": "aib-capability-to-outcome-mapping",
+      "term": "Capability-to-outcome mapping",
+      "definition": "Tying each AI capability to a measurable business outcome, such as reduced business risk, better ESG performance, revenue growth, or operational efficiency.",
+      "hint": null,
+      "tags": [
+        "group:aib-use-case-selection",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "Spotting faulty parts on a production line maps to reduced business risk. Personalized product recommendations map to revenue growth, and auto-coding travel receipts maps to operational efficiency.",
+        "checkedAgainst": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf"
+      }
+    },
+    {
+      "id": "aib-build-buy-partner",
+      "term": "Build-buy-partner decision",
+      "definition": "Choosing to buy a ready-made AI product, build or customize your own, or bring in a partner, weighed on budget, timelines, in-house skills, vendor proposals, and compliance.",
+      "hint": null,
+      "tags": [
+        "group:aib-build-buy-partner",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "A firm with no ML staff wants a document assistant this year. It customizes an existing model rather than creating one from scratch, and pushes back on the 'not invented here' urge to rebuild what already exists.",
+        "checkedAgainst": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf"
+      }
+    },
+    {
+      "id": "aib-buy-off-the-shelf-ai",
+      "term": "Buy (off-the-shelf AI)",
+      "definition": "Adopting a ready-made AI application: least in-house build effort, but you take a buyer's view and rely on the vendor's enterprise agreement and data terms.",
+      "hint": null,
+      "tags": [
+        "group:aib-build-buy-partner",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "adopt an existing AI system"
+      ]
+    },
+    {
+      "id": "aib-build-custom-ai",
+      "term": "Build (custom or tuned AI)",
+      "definition": "Developing or customizing your own AI solution: more control over data and fit, but a builder's view, with more responsibility for protecting data and threat modeling.",
+      "hint": null,
+      "tags": [
+        "group:aib-build-buy-partner",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-partner-for-ai",
+      "term": "Partner (for AI)",
+      "definition": "Bringing in outside specialists, such as AWS Partners, AWS Professional Services or the AWS Generative AI Innovation Center, to co-build a proof of concept, support you, and transfer knowledge.",
+      "hint": null,
+      "tags": [
+        "group:aib-build-buy-partner",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-aws-marketplace-ai",
+      "term": "AWS Marketplace",
+      "definition": "AWS's catalog for buying pre-built AI agents, agent tools, software with AI built in, and partner professional services: a ready shelf for buy and partner choices.",
+      "hint": null,
+      "tags": [
+        "group:aib-build-buy-partner",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-use-case-prioritization-matrix",
+      "term": "Use case prioritization matrix",
+      "definition": "A grid that ranks candidate AI initiatives by business impact, feasibility, and alignment with strategic goals, so the top few get funded first.",
+      "hint": null,
+      "tags": [
+        "group:aib-initiative-prioritization",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "use case matrix"
+      ],
+      "example": {
+        "text": "A workshop produces ten AI ideas. Scored on impact, feasibility, and fit with company goals, two rise to the top and become the first proofs of concept with their own budget.",
+        "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-1.html"
+      }
+    },
+    {
+      "id": "aib-sustainability-prioritization",
+      "term": "Sustainability (as a prioritization factor)",
+      "definition": "Whether an initiative can keep delivering value over time rather than a one-off win; AWS also uses 'sustainability' for environmental impact, a different idea.",
+      "hint": null,
+      "tags": [
+        "group:aib-initiative-prioritization",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-scale-pause-terminate",
+      "term": "Scale, pause, or terminate",
+      "definition": "The portfolio call at each checkpoint: scale what proves value, pause what isn't ready yet, and stop what will not deliver, moving the money to better bets.",
+      "hint": null,
+      "tags": [
+        "group:aib-initiative-prioritization",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "One pilot hits its targets and is expanded. Another isn't ready yet, so it is put on hold. A third shows no business gain, so it is stopped and its budget goes to the next idea.",
+        "checkedAgainst": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain2.html"
+      }
+    },
+    {
+      "id": "aib-verify-ai-is-required",
+      "term": "When AI is not the right solution",
+      "definition": "Choose AI only for a clear, substantial benefit; if ordinary software or a manual process would do, or reliable examples to build and test it are lacking, reframe or pick another solution.",
+      "hint": null,
+      "tags": [
+        "group:aib-use-case-selection",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "verify that AI is required"
+      ]
+    },
+    {
+      "id": "aib-ai-transition-considerations",
+      "term": "AI transition considerations",
+      "definition": "What to plan before moving a process onto AI or between AI platforms: business continuity, cost implications, data readiness, and performance impact.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-transition",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-model-end-of-life",
+      "term": "Model end-of-life (EOL)",
+      "definition": "Bedrock models move from Active to Legacy to End-of-Life; check the model card's EOL dates and plan migration before EOL, because nothing migrates automatically.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-transition",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-parallel-run",
+      "term": "Parallel run",
+      "definition": "Running the old process alongside the new AI-based one until the AI proves it meets quality and performance targets, keeping a fallback for business continuity.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-transition",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-tangible-benefits",
+      "term": "Tangible benefits",
+      "definition": "Hard gains that are measurable in the short term, such as cost reduction and revenue growth.",
+      "hint": null,
+      "tags": [
+        "group:aib-benefit-types",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-intangible-benefits",
+      "term": "Intangible benefits",
+      "definition": "Real but harder-to-measure gains that often show up over the longer term, such as customer satisfaction and employee productivity.",
+      "hint": null,
+      "tags": [
+        "group:aib-benefit-types",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-kpi",
+      "term": "AI key performance indicator (KPI)",
+      "definition": "A business measure of an AI initiative's success; AWS guidance says every technical metric should trace to a meaningful business outcome.",
+      "hint": null,
+      "tags": [
+        "group:aib-kpi-baseline-indicators",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "KPI"
+      ]
+    },
+    {
+      "id": "aib-baseline-metric",
+      "term": "Baseline metric",
+      "definition": "A measurement of the process before AI touches it, so the change after adoption can be proven rather than assumed.",
+      "hint": null,
+      "tags": [
+        "group:aib-kpi-baseline-indicators",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "pre-AI baseline"
+      ],
+      "example": {
+        "text": "A team fixed 5 bugs a week before AI and 15 after. Only the 10 extra count as AI's effect, and that is impossible to show without the 'before' number.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/aws-cloud-financial-management/calculating-the-roi-of-ai/"
+      }
+    },
+    {
+      "id": "aib-leading-indicator",
+      "term": "Leading indicator",
+      "definition": "An early signal that predicts whether an AI initiative will succeed, such as adoption, repeat usage, task completion, and user satisfaction, seen before financial results.",
+      "hint": null,
+      "tags": [
+        "group:aib-kpi-baseline-indicators",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-lagging-indicator",
+      "term": "Lagging indicator",
+      "definition": "A measure that confirms results after the fact, such as revenue growth, cost savings, or ROI; it proves value but arrives too late to steer early.",
+      "hint": null,
+      "tags": [
+        "group:aib-kpi-baseline-indicators",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-roi",
+      "term": "AI return on investment (ROI)",
+      "definition": "What each AI-driven outcome is worth against what it costs, recalculated at regular intervals rather than estimated once.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-roi",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "ROI"
+      ]
+    },
+    {
+      "id": "aib-cost-per-outcome",
+      "term": "Cost per outcome",
+      "definition": "AI cost divided by a business value metric, such as cost per bug fixed; AWS calls it the building block for ROI, not ROI itself.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-roi",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-tco",
+      "term": "AI total cost of ownership (TCO)",
+      "definition": "Direct AI service costs plus indirect ones: storage and vector databases, data transfer, monitoring and reporting, and agent calls to other services.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-roi",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "TCO"
+      ]
+    },
+    {
+      "id": "aib-time-savings-vs-impact",
+      "term": "Time savings vs. business impact",
+      "definition": "Hours saved count as value only when someone commits to turning them into a business result; otherwise the freed capacity is quietly absorbed.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-roi",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-consumption-based-pricing",
+      "term": "Consumption-based pricing",
+      "definition": "Paying only for what you use, such as on-demand model calls on Amazon Bedrock, with no cost while the application sits idle.",
+      "hint": null,
+      "tags": [
+        "group:aib-pricing-structures",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "With usage hard to predict, a finance leader avoids long, fixed-quantity contracts and picks consumption-based pricing, so spend can grow with adoption and shrink as efficiency improves.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/you-can-manage-forecast-and-evaluate-ai-costs/"
+      }
+    },
+    {
+      "id": "aib-instance-based-pricing",
+      "term": "Instance-based pricing",
+      "definition": "Paying for the compute instances you run by the hour, such as Amazon SageMaker AI training and inference instances; Savings Plans can lower the rate.",
+      "hint": null,
+      "tags": [
+        "group:aib-pricing-structures",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-seat-based-pricing",
+      "term": "Seat-based pricing",
+      "definition": "A set price per user per month, such as Amazon Quick's Plus plan, so cost grows with the number of users.",
+      "hint": null,
+      "tags": [
+        "group:aib-pricing-structures",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-savings-plans",
+      "term": "Savings Plans",
+      "definition": "A 1- or 3-year commitment to a set amount of compute usage per hour in exchange for lower prices, including SageMaker AI Savings Plans.",
+      "hint": null,
+      "tags": [
+        "group:aib-cost-controls",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-pricing-calculator",
+      "term": "AWS Pricing Calculator",
+      "definition": "A free AWS tool for estimating costs before you build; no AWS experience needed, and estimates can be saved or exported to share.",
+      "hint": null,
+      "tags": [
+        "group:aib-cost-controls",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-phased-ai-investment",
+      "term": "Phases of AI investment",
+      "definition": "Early AI spend is mostly fixed foundation cost: data readiness, integration, governance, upskilling. Later, usage grows, unit costs fall, and spend ties to business impact.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-investment-levels",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "In year one a firm spends most of its AI budget on data preparation, security, and training, with compute only 10–15%. As adoption grows, total spend rises but cost per outcome drops.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/you-can-manage-forecast-and-evaluate-ai-costs/"
+      }
+    },
+    {
+      "id": "aib-industry-ai-maturity",
+      "term": "Industry AI maturity",
+      "definition": "How far AI is already used across your industry; the further competitors have gone, the higher the cost of waiting and the stronger the case to invest more.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-investment-levels",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-rising-customer-expectations",
+      "term": "Rising customer expectations",
+      "definition": "As AI spreads, customers raise their expectations of products and services, and AI-powered capabilities become part of what they expect.",
+      "hint": null,
+      "tags": [
+        "group:aib-competitive-advantage",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-first-mover-advantage",
+      "term": "First-mover advantage (AI)",
+      "definition": "Starting early builds experience, an AI-ready culture, and a talent pool that later entrants must catch up on.",
+      "hint": null,
+      "tags": [
+        "group:aib-competitive-advantage",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-defensive-data-moat",
+      "term": "Defensive data moat",
+      "definition": "Data you own that is rare and costly for others to acquire, so the AI products built on it are hard to copy.",
+      "hint": null,
+      "tags": [
+        "group:aib-competitive-advantage",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "Two insurers use the same foundation model. The one with decades of its own claims data and its adjusters' know-how gets better results, because the model alone is not a differentiator.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/announcing-the-new-aws-reimagine-report-on-ai/"
+      }
+    },
+    {
+      "id": "aib-ai-flywheel",
+      "term": "AI flywheel",
+      "definition": "A self-reinforcing cycle: quality data trains an AI system, its predictions improve outcomes, deeper customer relationships follow, and they produce more data.",
+      "hint": null,
+      "tags": [
+        "group:aib-competitive-advantage",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "data flywheel",
+        "data network effect"
+      ]
+    },
+    {
+      "id": "aib-optimize-vs-transform",
+      "term": "Optimize vs. transform",
+      "definition": "Using AI to do today's work faster or cheaper versus redesigning the process or business model; AWS research finds most firms still fix AI, not the process around it.",
+      "hint": null,
+      "tags": [
+        "group:aib-business-model-transformation",
+        "domain:aib-c01:2"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-business-model-transformation",
+      "term": "Business model transformation",
+      "definition": "CAF-AI's Product domain: reimagining the business model by creating new value propositions (products, services) and revenue models that use AI.",
+      "hint": null,
+      "tags": [
+        "group:aib-business-model-transformation",
+        "domain:aib-c01:2"
+      ],
+      "media": null,
+      "example": {
+        "text": "A retailer stops at using AI to cut support costs, while a rival launches a paid personalized styling service built on AI. The first optimizes; the second transforms its business model.",
+        "checkedAgainst": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf"
+      }
+    }
+  ]
+}

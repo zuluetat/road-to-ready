@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "id": "aib-governance",
+  "title": "AI Strategist: Governance and Responsible AI",
+  "description": "Domain 3 (24%): the six responsible AI dimensions, governance by design, human oversight, accountability, regulation, risk classification, bias, IP and reliability risks.",
+  "tags": [],
+  "cards": [
+    {
+      "id": "aib-rai-dimensions",
+      "term": "Responsible AI dimensions (exam list)",
+      "definition": "The six the exam names: fairness, explainability, privacy, safety, transparency and robustness. AWS's own list adds more, such as controllability, veracity and governance.",
+      "hint": null,
+      "tags": [
+        "group:aib-rai-by-design",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-governance-by-design",
+      "term": "Governance by design",
+      "definition": "Building responsible AI and governance into a project from the design stage and across its lifecycle, rather than adding checks just before launch.",
+      "hint": null,
+      "tags": [
+        "group:aib-rai-by-design",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "responsible by design"
+      ],
+      "example": {
+        "text": "A team planning a claims chatbot runs its risk review and agrees its responsible AI tests at the design stage. The cost comes early but saves rework and damage later.",
+        "checkedAgainst": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf"
+      }
+    },
+    {
+      "id": "aib-responsible-ai-lens",
+      "term": "Well-Architected Responsible AI Lens",
+      "definition": "AWS best-practice guidance in eight focus areas that follow the AI lifecycle, from use case to monitoring; advisory, not a compliance checklist.",
+      "hint": null,
+      "tags": [
+        "group:aib-rai-by-design",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "Responsible AI Lens"
+      ]
+    },
+    {
+      "id": "aib-tradeoff-tenets",
+      "term": "Trade-off criteria (tenets)",
+      "definition": "Agreed, written rules for which goal wins when objectives clash, such as accuracy vs. coverage, or more false alarms vs. a faster response.",
+      "hint": null,
+      "tags": [
+        "group:aib-rai-tradeoffs",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A fraud team agrees in advance that a faster response is worth a few more false alarms. When the trade-off comes up later, the tenet settles it.",
+        "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/raibr04-bp02.html"
+      }
+    },
+    {
+      "id": "aib-narrow-use-case",
+      "term": "Narrow the use case",
+      "definition": "Shrink scope to the minimum viable use case (one domain, region or user group, with restricted inputs and outputs) to keep the value while cutting risk.",
+      "hint": null,
+      "tags": [
+        "group:aib-rai-tradeoffs",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "Instead of a general diagnosis assistant, a team launches one that reads only structured lab results for a single condition.",
+        "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/raibr04-bp01.html"
+      }
+    },
+    {
+      "id": "aib-where-human-review",
+      "term": "Where to place human review",
+      "definition": "Put people where outputs are hard to judge or errors are costly, and give reviewers explanations and confidence scores to decide well.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-oversight",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-escalation-criteria",
+      "term": "Escalation criteria",
+      "definition": "Pre-set triggers that send a case to a person, based on alert severity, confidence thresholds and business impact, with clear decision rights.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-oversight",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "An invoice assistant posts routine, low-value invoices automatically. Any exception or large amount is flagged for a person to review.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/enterprise-strategy/responsible-ai-from-principles-to-production/"
+      }
+    },
+    {
+      "id": "aib-ai-governance-board",
+      "term": "AI governance board",
+      "definition": "A board with representatives from many business units (such as legal, HR, procurement, communications, and government and regulatory affairs) that oversees responsible AI and regulatory alignment.",
+      "hint": null,
+      "tags": [
+        "group:aib-governance-bodies",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "AI governance council"
+      ]
+    },
+    {
+      "id": "aib-model-governance-committee",
+      "term": "Model governance committee",
+      "definition": "Sets criteria for evaluating foundation models, reviews requests to use them, and checks compliance, working with legal and compliance teams.",
+      "hint": null,
+      "tags": [
+        "group:aib-governance-bodies",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-executive-accountability",
+      "term": "Executive accountability",
+      "definition": "A named senior leader answerable for responsible AI outcomes, backed by cross-functional review boards and policy templates; distinct from sponsoring the program or owning a business result.",
+      "hint": null,
+      "tags": [
+        "group:aib-governance-bodies",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-eu-ai-act",
+      "term": "EU AI Act",
+      "definition": "EU law with a risk-based approach: the higher the risk, the stricter the rules. High-risk uses such as healthcare face duties like human oversight, and some uses are banned outright.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-regulation",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-regulatory-geographic-scope",
+      "term": "Geographic regulatory scope",
+      "definition": "Which laws apply depends on where data is collected and processed and where decisions apply, so name the exact countries and involve legal early.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-regulation",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A lender builds a credit-scoring tool in one country but will score applicants in three others. Legal reviews each country's rules before the use case is approved.",
+        "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/raiuc05-bp01.html"
+      }
+    },
+    {
+      "id": "aib-nist-ai-rmf",
+      "term": "NIST AI Risk Management Framework",
+      "definition": "A voluntary US framework for managing AI risk; AWS advises aligning your own AI risk approach with it and adapting controls for AI-specific risks.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-regulation",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "NIST AI RMF"
+      ]
+    },
+    {
+      "id": "aib-bedrock-data-commitments",
+      "term": "Bedrock data commitments",
+      "definition": "In Amazon Bedrock, your content isn't used to improve the base models or shared with model providers, and it is encrypted in transit and at rest.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-and-ip-risk",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-risk-matrix",
+      "term": "AI risk matrix",
+      "definition": "Rate each potential harm for likelihood and severity (for example 1 to 5 each) and combine them into a risk level: low, medium, high or critical.",
+      "hint": null,
+      "tags": [
+        "group:aib-risk-classification",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-risk-registry",
+      "term": "Risk registry",
+      "definition": "A living record of each AI risk: use case, harmful examples, affected stakeholders, likelihood, severity, risk level and mitigation, kept current.",
+      "hint": null,
+      "tags": [
+        "group:aib-risk-classification",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "risk register"
+      ]
+    },
+    {
+      "id": "aib-calibrate-to-exposure",
+      "term": "Calibrate controls to exposure",
+      "definition": "Set controls by deployment context and user exposure: a public-facing system warrants different controls than an internal one, and safety limits may need to be stricter than security ones.",
+      "hint": null,
+      "tags": [
+        "group:aib-risk-classification",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A bank uses the same model for a staff summarizer and a public chatbot. The public chatbot gets stricter limits on harmful content and hallucinations.",
+        "checkedAgainst": "https://docs.aws.amazon.com/whitepapers/latest/navigating-security-landscape-genai/optimizing-generative-ai-security-and-responsible-ai.html"
+      }
+    },
+    {
+      "id": "aib-production-ai-monitoring",
+      "term": "Production AI monitoring",
+      "definition": "Ongoing watch over system health, business and user outcomes, model quality, and compliance and risk signals, with alerts and a planned response.",
+      "hint": null,
+      "tags": [
+        "group:aib-production-oversight",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-ai-inventory",
+      "term": "AI inventory",
+      "definition": "A list of every AI workload in use, approved and shadow, so the organization knows where AI runs before trying to control it.",
+      "hint": null,
+      "tags": [
+        "group:aib-production-oversight",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "model inventory"
+      ]
+    },
+    {
+      "id": "aib-bias-across-lifecycle",
+      "term": "Bias across the AI lifecycle",
+      "definition": "Bias can enter through the data, the training or the deployed model, so check for it during data preparation, after training and in production.",
+      "hint": null,
+      "tags": [
+        "group:aib-bias-lifecycle",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-bias-drift",
+      "term": "Bias drift",
+      "definition": "A deployed model becoming biased over time because live data differs from its training data, so fairness needs ongoing monitoring, not a one-off check.",
+      "hint": null,
+      "tags": [
+        "group:aib-bias-lifecycle",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "example": {
+        "text": "A home-price model trained when mortgage rates were low starts to skew once rates change. Ongoing bias monitoring catches the shift.",
+        "checkedAgainst": "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift.html"
+      }
+    },
+    {
+      "id": "aib-genai-ip-indemnity",
+      "term": "Generative AI IP indemnity",
+      "definition": "A buy-or-build factor: AWS defends customers against third-party IP claims over output of listed AWS generative AI services, but not if your inputs infringe or you disable its filters.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-and-ip-risk",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "IP indemnification"
+      ]
+    },
+    {
+      "id": "aib-ip-risk-both-ways",
+      "term": "AI IP risk in both directions",
+      "definition": "AI can leak your confidential data out and can produce output that infringes others' copyright; ask how each vendor handles both.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-and-ip-risk",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-hallucination-mitigations",
+      "term": "Reducing hallucinations",
+      "definition": "Ground answers in trusted documents with RAG, write clear and specific prompts, train on good data, and add guardrails that check outputs.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-oversight",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-genai-scoping-matrix",
+      "term": "Generative AI Security Scoping Matrix",
+      "definition": "AWS sorts generative AI use into five scopes, from a public consumer app (1) or enterprise app (2) to building on, fine-tuning or training your own model (3-5); more scope, more you own.",
+      "hint": null,
+      "tags": [
+        "group:aib-risk-classification",
+        "domain:aib-c01:3"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-content-safeguards",
+      "term": "Content safeguards (business view)",
+      "definition": "Configurable filters, such as Amazon Bedrock Guardrails, that block harmful content and denied topics, redact sensitive information and flag likely hallucinations before users see them.",
+      "hint": null,
+      "tags": [
+        "group:aib-human-oversight",
+        "domain:aib-c01:3"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "content filters"
+      ]
+    }
+  ]
+}

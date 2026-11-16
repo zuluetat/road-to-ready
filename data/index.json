@@ -45,6 +45,30 @@
       "cardCount": 27
     },
     {
+      "id": "aib-fundamentals",
+      "title": "AI Strategist: Fundamentals and Literacy",
+      "file": "decks/aib-fundamentals.json",
+      "cardCount": 33
+    },
+    {
+      "id": "aib-strategy-value",
+      "title": "AI Strategist: Strategy and Business Value",
+      "file": "decks/aib-strategy-value.json",
+      "cardCount": 37
+    },
+    {
+      "id": "aib-governance",
+      "title": "AI Strategist: Governance and Responsible AI",
+      "file": "decks/aib-governance.json",
+      "cardCount": 26
+    },
+    {
+      "id": "aib-readiness-transformation",
+      "title": "AI Strategist: Readiness and Transformation",
+      "file": "decks/aib-readiness-transformation.json",
+      "cardCount": 42
+    },
+    {
       "id": "claude-assoc-behaviour",
       "title": "How Claude Behaves",
       "file": "decks/claude-assoc-behaviour.json",
@@ -95,6 +119,12 @@
       "questionCount": 421
     },
     {
+      "id": "aib-c01",
+      "title": "AWS Certified AI Business Strategist (AIB-C01) practice exam",
+      "file": "questions/aib-c01.json",
+      "questionCount": 150
+    },
+    {
       "id": "claude-associate",
       "title": "Claude Certified Associate practice exam",
       "file": "questions/claude-associate.json",
@@ -133,6 +163,32 @@
         "name": "the Official Practice Exam on AWS Skill Builder",
         "url": "https://skillbuilder.aws/"
       }
+    },
+    {
+      "id": "aws-ai-business-strategist",
+      "title": "AWS Certified AI Business Strategist (AIB-C01)",
+      "short": "Strategist",
+      "purpose": "Why these decks: AWS's AI Business Strategist exam tests business judgement about AI: where it pays off, how to measure it, how to govern it, and how to scale it. One deck per exam domain; the AI Practitioner decks on responsible AI and frameworks show as background.",
+      "decks": [
+        "aib-fundamentals",
+        "aib-strategy-value",
+        "aib-governance",
+        "aib-readiness-transformation"
+      ],
+      "background": [
+        "aws-responsible-ai",
+        "aws-frameworks"
+      ],
+      "officialPractice": {
+        "name": "the Official Practice Question Set on AWS Skill Builder",
+        "url": "https://skillbuilder.aws/category/exam-prep/ai-business-strategist-business-AIB-C01"
+      },
+      "exams": [
+        "aib-c01"
+      ],
+      "foundations": [
+        1
+      ]
     },
     {
       "id": "claude-associate",

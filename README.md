@@ -4,7 +4,7 @@
 ![No sign-in](https://img.shields.io/badge/sign--in-none-brightgreen)
 ![No build step](https://img.shields.io/badge/build-none-blue)
 
-A free study app for two certification exams: **AWS Certified AI Practitioner (AIF-C01)** and **Claude Certified Associate (Foundations)**. It has flashcards, guided lessons, quick games and full practice exams, and it remembers what you got wrong so those cards come back sooner. Open it at **https://zuluetat.github.io/road-to-ready/** and start studying.
+A free study app for three certification exams: **AWS Certified AI Practitioner (AIF-C01)**, **AWS Certified AI Business Strategist (AIB-C01)** and **Claude Certified Associate (Foundations)**. It has flashcards, guided lessons, quick games and full practice exams, and it remembers what you got wrong so those cards come back sooner. Open it at **https://zuluetat.github.io/road-to-ready/** and start studying.
 
 > ⚠️ **Unofficial.** This isn't affiliated with or endorsed by Amazon Web Services or Anthropic. The practice questions are written from the public exam guides and product docs. They aren't real exam questions, and a good score here doesn't guarantee a pass.
 
@@ -19,6 +19,7 @@ A free study app for two certification exams: **AWS Certified AI Practitioner (A
 | Study set | Decks | Cards | Practice questions |
 |---|---|---|---|
 | AWS Certified AI Practitioner (AIF-C01) | 7: AI and ML fundamentals, generative AI and foundation models, AWS AI services, responsible AI and governance, frameworks, what's new in the 2026 guide, practice-test traps | 227 | 421 |
+| AWS Certified AI Business Strategist (AIB-C01) | 4: fundamentals and literacy, strategy and business value, governance and responsible AI, readiness and transformation (plus the AI Practitioner responsible-AI and frameworks decks as background) | 138 | 150 |
 | Claude Certified Associate (Foundations) | 7: how Claude behaves, prompting and troubleshooting, checking output, products and models, workflows, Projects and connectors, responsible use | 158 | 150 |
 
 | Way to study | What it does |

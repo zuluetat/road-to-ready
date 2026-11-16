@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 1,
+  "id": "aib-fundamentals",
+  "title": "AI Strategist: Fundamentals and Literacy",
+  "description": "Domain 1 (24%): AI, ML and generative AI in business terms, data, choosing rules or AI, agents, shadow AI, prompting and model adaptation at a decision level.",
+  "tags": [],
+  "cards": [
+    {
+      "id": "aib-algorithm-vs-model",
+      "term": "Algorithm vs. model",
+      "definition": "The algorithm is the learning method; the model is what it produces after training on data, and the model is what a business uses to make predictions.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-building-blocks",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-probabilistic-prediction",
+      "term": "Prediction",
+      "definition": "A model's output for new input: a likely answer with some chance of being wrong, not a guaranteed fact, so processes must allow for errors.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-building-blocks",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "probabilistic output"
+      ],
+      "example": {
+        "text": "A fraud model scores a card payment as probably fraudulent. Because the score is a likelihood, not proof, the bank sends it for a quick check instead of closing the account.",
+        "checkedAgainst": "https://aws.amazon.com/what-is/machine-learning/"
+      }
+    },
+    {
+      "id": "aib-ai-ml-genai",
+      "term": "AI vs. ML vs. generative AI",
+      "definition": "AI is the umbrella; machine learning is the branch that learns from data instead of fixed instructions; generative AI, inside deep learning, creates new content.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-family",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-choosing-ai-type",
+      "term": "Choosing the type of AI",
+      "definition": "Patterns in pre-defined data point to traditional ML; varied natural-language input or new content points to GenAI; multi-step goals point to agentic AI.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-family",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A retailer uses traditional ML to forecast demand, generative AI to draft product descriptions, and an agentic assistant to plan and book multi-step business trips.",
+        "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/raiuc03-bp03.html"
+      }
+    },
+    {
+      "id": "aib-structured-data",
+      "term": "Structured data",
+      "definition": "Data that fits neatly into tables with a fixed format, such as numbers, short text and dates; the easiest kind to search and analyze.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-types",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-unstructured-data",
+      "term": "Unstructured data",
+      "definition": "Data that doesn't fit a table, such as long documents, audio, video and chat transcripts; making use of it usually takes ML or other AI.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-types",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-data-quality",
+      "term": "Data quality",
+      "definition": "AI results depend on the data behind them: missing values, inconsistent entries and noise all lower accuracy.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-quality",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-representative-data",
+      "term": "Representative data",
+      "definition": "Data that reflects the full range of real users and cases; groups that are under-represented in it tend to get less accurate, less fair results.",
+      "hint": null,
+      "tags": [
+        "group:aib-data-quality",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-historical-data-repeats-past",
+      "term": "Historical data repeats the past",
+      "definition": "A model trained on past records learns their patterns, including old bias, so it can carry yesterday's decisions into today.",
+      "hint": null,
+      "tags": [
+        "group:aib-training-data",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A screening model trained on years of past hiring data keeps favouring the profile the company used to hire, even after hiring policy has changed.",
+        "checkedAgainst": "https://aws.amazon.com/what-is/machine-learning/"
+      }
+    },
+    {
+      "id": "aib-labeled-data",
+      "term": "Labeled data",
+      "definition": "Examples tagged with the right answer (such as 'fraud' or 'genuine') that supervised models learn from; labeling large volumes takes real effort.",
+      "hint": null,
+      "tags": [
+        "group:aib-training-data",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-iso-42001",
+      "term": "ISO/IEC 42001",
+      "definition": "The international standard for an AI management system (AIMS) that an organization can be certified against; AWS holding it does not certify its customers.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-standards",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "AIMS",
+        "AI management system"
+      ]
+    },
+    {
+      "id": "aib-iso-23053",
+      "term": "ISO/IEC 23053",
+      "definition": "A framework standard that describes the parts of a generic AI system using machine learning and what each part does, so teams describe ML systems the same way.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-standards",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-iso-42005",
+      "term": "ISO/IEC 42005",
+      "definition": "Guidance on AI system impact assessments: how to judge an AI system's effects on people, groups and society, and fit that into existing risk reviews.",
+      "hint": null,
+      "tags": [
+        "group:aib-ai-standards",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "AI impact assessment standard"
+      ]
+    },
+    {
+      "id": "aib-rule-based-automation",
+      "term": "Rule-based automation",
+      "definition": "Automation that follows explicit steps and conditions set in advance; it is deterministic and easy to audit, so it suits tasks whose rules can be written down.",
+      "hint": null,
+      "tags": [
+        "group:aib-rules-vs-ai",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "traditional automation"
+      ]
+    },
+    {
+      "id": "aib-clear-rules-test",
+      "term": "Clear-and-compact-rules test",
+      "definition": "Before choosing AI, ask whether the problem can be solved by writing down a clear, compact set of rules; if it can, rules or ordinary software may be better.",
+      "hint": null,
+      "tags": [
+        "group:aib-rules-vs-ai",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "Checking whether two images are identical needs only a few simple rules. Deciding whether two face photos show the same person can't be written as compact rules, so it needs AI.",
+        "checkedAgainst": "https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/raiuc01-bp02.html"
+      }
+    },
+    {
+      "id": "aib-agentic-vs-traditional-ai",
+      "term": "Agentic AI vs. traditional AI vs. software agents",
+      "definition": "Traditional AI predicts or classifies; software agents follow rules within set bounds; agentic AI takes a delegated goal and plans, acts and adapts.",
+      "hint": null,
+      "tags": [
+        "group:aib-agent-capabilities",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-delegated-intent",
+      "term": "Delegated intent",
+      "definition": "Humans set the goal and the agent chooses the steps itself, such as deciding whether it can resolve a customer query or must hand it to a person.",
+      "hint": null,
+      "tags": [
+        "group:aib-agent-capabilities",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-agent-to-agent",
+      "term": "Agent-to-agent communication",
+      "definition": "Agents communicating, coordinating and sharing tasks with each other (and with people), so specialist agents can split a larger workflow between them instead of one agent doing it all.",
+      "hint": null,
+      "tags": [
+        "group:aib-agent-capabilities",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "A2A"
+      ]
+    },
+    {
+      "id": "aib-rule-vs-ai-orchestration",
+      "term": "Rule-based vs. AI-native orchestration",
+      "definition": "Rule-based orchestration runs steps developers define, which is predictable and auditable; AI-native orchestration lets agents plan the steps from intent and context.",
+      "hint": null,
+      "tags": [
+        "group:aib-rules-vs-ai",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-agent-autonomy-levels",
+      "term": "Agent autonomy levels",
+      "definition": "AWS names four: fully autonomous, human in the loop, co-pilot, and human-led with agent support; the higher the risk, the more the human leads.",
+      "hint": null,
+      "tags": [
+        "group:aib-agent-capabilities",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "A firm lets an agent route documents fully on its own, but for investment decisions the agent only recommends and a person makes the final call.",
+        "checkedAgainst": "https://docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-economics/understanding.html"
+      }
+    },
+    {
+      "id": "aib-ai-performance-decay",
+      "term": "AI performance decay",
+      "definition": "Unlike regular software, an AI application can get worse over time through data drift, concept drift and changing user expectations, so it must be actively managed.",
+      "hint": null,
+      "tags": [
+        "group:aib-model-upkeep",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-drift-detection",
+      "term": "Performance baseline and drift detection",
+      "definition": "Record how the system really performs in production, then flag when results move away from that baseline so owners can retrain or fix it.",
+      "hint": null,
+      "tags": [
+        "group:aib-model-upkeep",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-shadow-ai",
+      "term": "Shadow AI",
+      "definition": "Staff using AI tools the organization hasn't approved, often consumer apps, so company data leaves without oversight; outright bans tend to make it worse.",
+      "hint": null,
+      "tags": [
+        "group:aib-tool-classification",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "example": {
+        "text": "Staff paste customer notes into a free chatbot because the company tool is slow. The company launches one approved summarizer with single sign-on, then blocks the free tool.",
+        "checkedAgainst": "https://aws.amazon.com/blogs/migration-and-modernization/govern-ai-adoption-before-it-governs-you/"
+      }
+    },
+    {
+      "id": "aib-approved-ai-tool",
+      "term": "Approved AI tool",
+      "definition": "A sanctioned tool staff may use for stated tasks and data; making it the easiest path is the main way to draw people away from shadow tools.",
+      "hint": null,
+      "tags": [
+        "group:aib-tool-classification",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "sanctioned tool",
+        "allowlisted tool"
+      ]
+    },
+    {
+      "id": "aib-blocked-ai-tool",
+      "term": "Blocked AI tool",
+      "definition": "A tool staff may not use, typically a high-risk consumer app; block it only once an approved alternative is live, so people have somewhere to go.",
+      "hint": null,
+      "tags": [
+        "group:aib-tool-classification",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "restricted tool"
+      ]
+    },
+    {
+      "id": "aib-under-evaluation-ai-tool",
+      "term": "Under-evaluation AI tool",
+      "definition": "A tool still going through security, privacy and procurement review, which can take a long time; it isn't approved for use until that review is done.",
+      "hint": null,
+      "tags": [
+        "group:aib-tool-classification",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-prompt-elements",
+      "term": "Parts of a good prompt",
+      "definition": "A clear task instruction, context about the domain, a few examples of the output wanted, and the input to work on; vague prompts get vague answers.",
+      "hint": null,
+      "tags": [
+        "group:aib-prompting",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-prompt-iteration",
+      "term": "Iterative prompt refinement",
+      "definition": "Prompt engineering is trial and error: check the output, adjust wording, context or examples, and repeat until the results are what you need.",
+      "hint": null,
+      "tags": [
+        "group:aib-prompting",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-context-window-limit",
+      "term": "Hitting the context window limit",
+      "definition": "What a business notices when input outgrows a model's context window: earlier parts of a long document or chat get ignored and answers drift off target.",
+      "hint": null,
+      "tags": [
+        "group:aib-context-limits",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-token-cost",
+      "term": "Token cost of long inputs",
+      "definition": "Long documents, long chat histories and long answers each raise the cost of a GenAI request, because both input and output tokens are billed.",
+      "hint": null,
+      "tags": [
+        "group:aib-context-limits",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-data-quality-degradation",
+      "term": "Data quality degradation",
+      "definition": "The quality of the data feeding a live model slips (more missing values, inconsistent entries or noise), so results decline quietly; alerts let owners retrain, audit upstream systems or fix the data.",
+      "hint": null,
+      "tags": [
+        "group:aib-model-upkeep",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    },
+    {
+      "id": "aib-rag-business",
+      "term": "Retrieval Augmented Generation (business view)",
+      "definition": "The model looks up your current, authoritative documents when it answers, so it can use company facts without being retrained.",
+      "hint": null,
+      "tags": [
+        "group:aib-model-adaptation",
+        "domain:aib-c01:1"
+      ],
+      "media": null,
+      "alsoCalled": [
+        "RAG"
+      ]
+    },
+    {
+      "id": "aib-fine-tuning-business",
+      "term": "Fine-tuning (business view)",
+      "definition": "Retraining a model on thousands of labeled examples to change its tone, format or task behaviour; worth it only when prompting and RAG fall short.",
+      "hint": null,
+      "tags": [
+        "group:aib-model-adaptation",
+        "domain:aib-c01:1"
+      ],
+      "media": null
+    }
+  ]
+}

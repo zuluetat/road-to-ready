@@ -10,7 +10,7 @@ import { showUpload } from './screens/upload.js';
 import { showExam } from './screens/exam.js';
 import { showPlan } from './screens/plan.js';
 import { showCheck } from './screens/check.js';
-import { groupLibrary, collectionOf, badgeTitle } from './core/library.js';
+import { groupLibrary, collectionOf, badgeTitle, termDecks } from './core/library.js';
 import { vocabulary } from './core/vocab.js';
 import { studyPlan, nudgeAfter } from './core/readiness.js';
 import { journeyFor, PHASES } from './core/journey.js';
@@ -710,7 +710,7 @@ async function showExamScreen(bankId, startLength = null, notice = null, startDo
     // the set's terms for the score screen: option terms link to their decks and can be learned
     loadTerms: async () => {
       const owner = (await decks.loadCollections()).collections.find((c) => (c.exams || []).includes(bankId));
-      const loaded = (await Promise.all((owner?.decks || []).map((id) => decks.loadDeck(id).catch(() => null)))).filter(Boolean);
+      const loaded = (await Promise.all(termDecks(owner).map((id) => decks.loadDeck(id).catch(() => null)))).filter(Boolean);
       const cards = loaded.flatMap((d) => d.cards.map((c) => ({ ...c, id: `${d.id}/${c.id}` })));
       return { vocab: vocabulary(cards), cards: new Map(cards.map((c) => [c.id, c])) };
     },
@@ -1112,7 +1112,7 @@ function loadScenarios() {
 // Learn underlines terms from the whole collection: LoRA's card names PEFT from the same deck,
 // but a card may name one from a sibling deck. A deck that won't load just adds nothing.
 async function vocabFor(deck, collection) {
-  const others = (collection?.decks || []).filter((id) => id !== deck.id);
+  const others = termDecks(collection).filter((id) => id !== deck.id);
   const loaded = await Promise.all(others.map((id) => decks.loadDeck(id).catch(() => null)));
   return vocabulary([deck, ...loaded.filter(Boolean)].flatMap((d) => d.cards || []));
 }

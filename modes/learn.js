@@ -134,7 +134,7 @@ export function start(deck, ctx) {
     const hide = hidden();
     mount(ctx.root, header(),
       h('section', { class: 'panel question', tabindex: '-1' },
-        h('p', { class: 'face-label' }, q.multi ? 'Scenario · choose two' : q.label),
+        h('p', { class: 'face-label' }, q.multi ? `Scenario · choose ${q.answer.length === 3 ? 'three' : 'two'}` : q.label),
         // the term being asked is never underlined, so a term prompt stays plain
         h('p', { class: q.label === 'Scenario' ? 'stem' : 'prompt' }, withCode(q.prompt, (t) => linked(t, hide)))),
       optionList({
@@ -177,7 +177,7 @@ export function start(deck, ctx) {
       h('p', { class: 'face-label step-label', tabindex: '-1' }, 'Previous card'),
       q ? [
         h('section', { class: 'panel question' },
-          h('p', { class: 'face-label' }, q.multi ? 'Scenario · choose two' : q.label),
+          h('p', { class: 'face-label' }, q.multi ? `Scenario · choose ${q.answer.length === 3 ? 'three' : 'two'}` : q.label),
           h('p', { class: q.label === 'Scenario' ? 'stem' : 'prompt' }, withCode(q.prompt))),
         optionList({ options: q.options, picks: p, answer: q.answer, onPick: () => {}, whyWrong: q.whyWrong }),
         q.explanation ? h('section', { class: 'panel explain' }, h('p', {}, h('strong', {}, 'Why: '), withCode(q.explanation))) : null,
@@ -212,7 +212,7 @@ export function start(deck, ctx) {
     if (answered !== null || !question || i >= question.options.length) return;
     picks = togglePick(picks, i, question.answer.length);
     render();
-    // one answer: focus moves to Check; choose two: stay on the question to pick the second
+    // one answer: focus moves to Check; several: stay on the question to pick the rest
     if (!question.multi && ready(picks, 1)) ctx.root.querySelector('.check-row .primary')?.focus({ preventScroll: true });
     else ctx.root.querySelector('.question').focus({ preventScroll: true });
   }

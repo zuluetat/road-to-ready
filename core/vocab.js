@@ -2,7 +2,7 @@
 // underline them (PEFT in LoRA's definition) and show their definitions on a tap.
 
 // Known to everyone, or so common in these decks that underlining them would mark every line.
-const PLAIN = new Set(['ai', 'ml', 'prompt', 'edit', 'skill', 'grep', 'glob', 'feature']);
+const PLAIN = new Set(['ai', 'ml', 'prompt', 'edit', 'skill', 'grep', 'glob', 'feature', 'description']);
 
 // "PEFT", "LoRA", "FM": a short form, matched only in capitals.
 const isAbbreviation = (s) => /^[A-Z][A-Za-z0-9-]*[A-Z][A-Za-z0-9-]*$/.test(s);
@@ -19,11 +19,12 @@ function namesOf(term) {
 }
 
 // cards -> [{ id, term, definition, names }]; a name two cards share goes to the first.
+// alsoCalled: other names questions use for the card ("PostToolUse" for "PostToolUse hook").
 export function vocabulary(cards) {
   const taken = new Set();
   const out = [];
   for (const c of cards) {
-    const names = namesOf(c.term).filter((n) => n && !PLAIN.has(n.toLowerCase()) && !taken.has(n.toLowerCase()));
+    const names = [...namesOf(c.term), ...(c.alsoCalled || [])].filter((n) => n && !PLAIN.has(n.toLowerCase()) && !taken.has(n.toLowerCase()));
     if (!names.length) continue;
     for (const n of names) taken.add(n.toLowerCase());
     out.push({ id: c.id, term: c.term, definition: c.definition, names });

@@ -12,7 +12,7 @@ export function groupLibrary({ decks = [], exams = [], collections = [] }) {
   const grouped = collections.map((c) => {
     const ids = (c.decks || []).filter((id) => deckById.has(id));
     const examIds = (c.exams || []).filter((id) => examById.has(id));
-    for (const id of [...ids, ...examIds]) placed.add(id);
+    for (const id of [...ids, ...examIds, ...(c.lookup || [])]) placed.add(id);
     return {
       id: c.id, title: c.title, short: c.short || '', icon: c.icon || null, purpose: c.purpose || '', badges: c.badges || [],
       decks: ids.map((id) => deckById.get(id)), exams: examIds.map((id) => examById.get(id)),
@@ -25,6 +25,12 @@ export function groupLibrary({ decks = [], exams = [], collections = [] }) {
     otherDecks: [...otherDecks.filter((d) => d.source === 'uploaded'), ...otherDecks.filter((d) => d.source !== 'uploaded')],
     otherExams: exams.filter((e) => !placed.has(e.id)),
   };
+}
+
+// A set may also keep look-up decks: detail cards that open where a question names them, never
+// listed or studied. -> the deck ids whose terms the set can look up
+export function termDecks(collection) {
+  return [...(collection?.decks || []), ...(collection?.lookup || [])];
 }
 
 // The collection a deck belongs to, or null.

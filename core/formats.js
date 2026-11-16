@@ -121,9 +121,10 @@ export function keepCardIds(next, old) {
     if (id && !used.has(id)) {
       used.add(id);
       const kept = { ...c, id, tags: c.tags?.length ? c.tags : (prev.tags || []) };
-      // the real-world examples stay too
+      // the real-world examples and other look-up names stay too
       if (!kept.example && prev.example) kept.example = prev.example;
       if (!kept.mine && prev.mine) kept.mine = prev.mine;
+      if (!kept.alsoCalled && prev.alsoCalled) kept.alsoCalled = prev.alsoCalled;
       return kept;
     }
     return { ...c, id: null };

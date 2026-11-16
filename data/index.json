@@ -188,6 +188,13 @@
       ],
       "foundations": [
         1
+      ],
+      "badges": [
+        {
+          "image": "assets/badges/aws-ai-business-strategist.png",
+          "name": "AWS Certified AI Business Strategist",
+          "url": "https://www.credly.com/org/amazon-web-services/badge/aws-certified-ai-business-strategist"
+        }
       ]
     },
     {
